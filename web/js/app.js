@@ -205,18 +205,15 @@ async function iniciarMapa() {
       const incidenciasIniciales = await incidenciasResponse.json();
       let reportes = [];
       try {
-        let responseReportes = await fetch("/api/reports?format=geojson", { cache: "no-store" }).catch(() => null);
-        if (!responseReportes || !responseReportes.ok) {
-          responseReportes = await fetch("../espoch-pulse-demo/reports.geojson", { cache: "no-store" });
+        const responseReportes = await fetch("/api/reports?format=geojson", { cache: "no-store" }).catch(() => null);
+        if (responseReportes && responseReportes.ok) {
+          const recibidos = await responseReportes.json();
+          if (recibidos.type === "FeatureCollection" && Array.isArray(recibidos.features)) {
+            reportes = recibidos.features.map(normalizarReporte).filter(Boolean);
+          }
         }
-        if (!responseReportes.ok) throw new Error(`HTTP ${responseReportes.status}`);
-        const recibidos = await responseReportes.json();
-        if (recibidos.type !== "FeatureCollection" || !Array.isArray(recibidos.features)) {
-          throw new Error("La colección de reportes no es válida.");
-        }
-        reportes = recibidos.features.map(normalizarReporte).filter(Boolean);
       } catch (error) {
-        console.error("ESPOCH Pulse: no se pudieron incorporar los reportes recibidos.", error);
+        console.error("ESPOCH Pulse: no se pudieron incorporar los reportes recibidos desde SQLite.", error);
       }
       // Colección compartida por puntos, indicadores, filtros y análisis; no altera las fuentes.
       const incidenciasDatos = {

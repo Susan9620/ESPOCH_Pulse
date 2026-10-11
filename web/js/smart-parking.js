@@ -2418,35 +2418,19 @@ function update() {
 
 async function load() {
   try {
-    let occ = null;
-    let histJson = null;
-    let isSqlite = false;
+    const [apiOcc, apiHist] = await Promise.all([
+      fetch('/api/parking'),
+      fetch('/api/parking/historical')
+    ]);
 
-    try {
-      const [apiOcc, apiHist] = await Promise.all([
-        fetch('/api/parking'),
-        fetch('/api/parking/historical')
-      ]);
-      if (apiOcc.ok && apiHist.ok) {
-        occ = await apiOcc.json();
-        histJson = await apiHist.json();
-        isSqlite = true;
-      }
-    } catch (e) {
-      // Servidor API no disponible
+    if (!apiOcc.ok || !apiHist.ok) {
+      throw new Error(`Error consultando la base de datos SQLite (/api/parking: ${apiOcc.status}, /api/parking/historical: ${apiHist.status})`);
     }
 
-    if (!occ || !histJson) {
-      const [fallbackOcc, fallbackHist] = await Promise.all([
-        fetch(ROOT + 'simulated/parking_occupancy_demo.json'),
-        fetch(ROOT + 'simulated/parking_historical_predictions.json')
-      ]);
-      occ = await fallbackOcc.json();
-      histJson = await fallbackHist.json();
-      isSqlite = false;
-    }
+    const occ = await apiOcc.json();
+    const histJson = await apiHist.json();
 
-    updateDbStatusUI(isSqlite, 'SQLite');
+    updateDbStatusUI(true, 'SQLite');
 
     const [ps, vs, bs] = await Promise.all([
       fetch(ROOT + 'processed/parqueaderos.geojson'),

@@ -12,10 +12,111 @@ PROJECT_DIR = MODULE_DIR.parent
 DATA_DIR = PROJECT_DIR / "data"
 DB_PATH = DATA_DIR / "espoch_pulse.db"
 
-# Fuentes de datos iniciales para seeding
-JSON_OCCUPANCY = DATA_DIR / "simulated/parking_occupancy_demo.json"
-JSON_PREDICTIONS = DATA_DIR / "simulated/parking_historical_predictions.json"
-JSON_REPORTS = MODULE_DIR / "reports.json"
+INITIAL_PARQUEADEROS = [
+    {
+        "id": "P-FIE1",
+        "osm_id": 747151945,
+        "etiqueta": "Estacionamiento FIE1",
+        "capacidad": 45,
+        "fuente_capacidad": "OSM (no verificado)",
+        "libres_iniciales": 30,
+        "plazas_discapacidad": 2,
+        "tipo_acceso": "restringido",
+        "descripcion_acceso": "Sector FIE1 reservado para docentes, personal administrativo y personas con discapacidad.",
+        "perfiles_permitidos": ["docente", "administrativo", "discapacidad"]
+    },
+    {
+        "id": "P-OESTE",
+        "osm_id": 747153215,
+        "etiqueta": "Estacionamiento Software",
+        "capacidad": 50,
+        "fuente_capacidad": "OSM (no verificado)",
+        "libres_iniciales": 30,
+        "plazas_discapacidad": 4,
+        "tipo_acceso": "universal",
+        "descripcion_acceso": "Acceso universal para la comunidad politécnica con alta rotación.",
+        "perfiles_permitidos": ["estudiante", "docente", "administrativo", "discapacidad"]
+    },
+    {
+        "id": "P-AULAS",
+        "osm_id": 747154783,
+        "etiqueta": "Estacionamiento Ciencias Básicas I",
+        "capacidad": 20,
+        "fuente_capacidad": "SIMULADA",
+        "libres_iniciales": 11,
+        "plazas_discapacidad": 2,
+        "tipo_acceso": "mixto",
+        "descripcion_acceso": "Sector Ciencias Básicas I para estudiantes, docentes y personas con discapacidad.",
+        "perfiles_permitidos": ["estudiante", "docente", "discapacidad"]
+    },
+    {
+        "id": "P-DISENO",
+        "osm_id": 819653549,
+        "etiqueta": "Estacionamiento Diseño",
+        "capacidad": 18,
+        "fuente_capacidad": "SIMULADA",
+        "libres_iniciales": 8,
+        "plazas_discapacidad": 2,
+        "tipo_acceso": "universal",
+        "descripcion_acceso": "Acceso general politécnico junto al taller de diseño.",
+        "perfiles_permitidos": ["estudiante", "docente", "administrativo", "discapacidad"]
+    },
+    {
+        "id": "P-FIE2",
+        "osm_id": 819653548,
+        "etiqueta": "Estacionamiento FIE2",
+        "capacidad": 12,
+        "fuente_capacidad": "SIMULADA",
+        "libres_iniciales": 6,
+        "plazas_discapacidad": 2,
+        "tipo_acceso": "restringido",
+        "descripcion_acceso": "Área exclusiva para docentes, administrativos y PCD.",
+        "perfiles_permitidos": ["docente", "administrativo", "discapacidad"]
+    }
+]
+
+INITIAL_PREDICCIONES = {
+    "P-FIE1": {
+        "nombre": "Estacionamiento FIE",
+        "capacidad": 10,
+        "pico_horario": "07:00, 13:00 y 17:00",
+        "sensibilidad": "Muy alta (pocas plazas cerca a decanato y aulas FIE)",
+        "curva_laborable": {"07:00": 90, "08:00": 60, "09:00": 50, "10:00": 45, "11:00": 40, "12:00": 55, "13:00": 90, "14:00": 60, "15:00": 50, "16:00": 45, "17:00": 70, "18:00": 20},
+        "curva_sabado": {"07:00": 10, "08:00": 40, "09:00": 60, "10:00": 65, "11:00": 55, "12:00": 50, "13:00": 40, "14:00": 30, "15:00": 20, "16:00": 15, "17:00": 10, "18:00": 5}
+    },
+    "P-OESTE": {
+        "nombre": "Estacionamiento Software",
+        "capacidad": 50,
+        "pico_horario": "07:00, 13:00 y 17:00",
+        "sensibilidad": "Moderada (alta capacidad amortigua saturación rápida)",
+        "curva_laborable": {"07:00": 84, "08:00": 58, "09:00": 52, "10:00": 46, "11:00": 42, "12:00": 56, "13:00": 86, "14:00": 64, "15:00": 52, "16:00": 48, "17:00": 68, "18:00": 22},
+        "curva_sabado": {"07:00": 10, "08:00": 35, "09:00": 50, "10:00": 55, "11:00": 50, "12:00": 42, "13:00": 35, "14:00": 25, "15:00": 20, "16:00": 15, "17:00": 10, "18:00": 5}
+    },
+    "P-AULAS": {
+        "nombre": "Estacionamiento Ciencias Básicas I",
+        "capacidad": 20,
+        "pico_horario": "07:00, 13:00 y 17:00",
+        "sensibilidad": "Alta (gran afluencia de estudiantes en horas de entrada y salida)",
+        "curva_laborable": {"07:00": 90, "08:00": 60, "09:00": 50, "10:00": 45, "11:00": 40, "12:00": 55, "13:00": 85, "14:00": 60, "15:00": 50, "16:00": 45, "17:00": 65, "18:00": 15},
+        "curva_sabado": {"07:00": 15, "08:00": 45, "09:00": 55, "10:00": 50, "11:00": 40, "12:00": 35, "13:00": 30, "14:00": 20, "15:00": 15, "16:00": 10, "17:00": 5, "18:00": 5}
+    },
+    "P-DISENO": {
+        "nombre": "Estacionamiento Diseño",
+        "capacidad": 18,
+        "pico_horario": "07:00, 13:00 y 17:00",
+        "sensibilidad": "Media-alta en jornada vespertina (talleres de diseño y laboratorios)",
+        "curva_laborable": {"07:00": 82, "08:00": 55, "09:00": 48, "10:00": 44, "11:00": 40, "12:00": 52, "13:00": 88, "14:00": 65, "15:00": 55, "16:00": 50, "17:00": 70, "18:00": 20},
+        "curva_sabado": {"07:00": 10, "08:00": 25, "09:00": 40, "10:00": 45, "11:00": 40, "12:00": 35, "13:00": 30, "14:00": 25, "15:00": 20, "16:00": 15, "17:00": 10, "18:00": 5}
+    },
+    "P-FIE2": {
+        "nombre": "Estacionamiento FIE2",
+        "capacidad": 12,
+        "pico_horario": "07:00, 13:00 y 17:00",
+        "sensibilidad": "Alta (capacidad reducida, docentes y estudiantes de desarrollo)",
+        "curva_laborable": {"07:00": 88, "08:00": 58, "09:00": 50, "10:00": 45, "11:00": 42, "12:00": 54, "13:00": 92, "14:00": 62, "15:00": 50, "16:00": 45, "17:00": 72, "18:00": 18},
+        "curva_sabado": {"07:00": 10, "08:00": 30, "09:00": 45, "10:00": 50, "11:00": 45, "12:00": 40, "13:00": 30, "14:00": 25, "15:00": 15, "16:00": 10, "17:00": 5, "18:00": 5}
+    }
+}
 
 
 def get_connection():
@@ -107,11 +208,10 @@ def init_db():
 
 def _seed_parqueaderos(cursor):
     cursor.execute("SELECT COUNT(*) AS total FROM parqueaderos")
-    if cursor.fetchone()["total"] == 0 and JSON_OCCUPANCY.exists():
+    if cursor.fetchone()["total"] == 0:
         try:
-            data = json.loads(JSON_OCCUPANCY.read_text(encoding="utf-8"))
             now_iso = datetime.now(timezone.utc).isoformat()
-            for p in data.get("parqueaderos", []):
+            for p in INITIAL_PARQUEADEROS:
                 cursor.execute("""
                     INSERT INTO parqueaderos (
                         id, osm_id, etiqueta, capacidad, fuente_capacidad,
@@ -139,11 +239,9 @@ def _seed_parqueaderos(cursor):
 
 def _seed_predicciones(cursor):
     cursor.execute("SELECT COUNT(*) AS total FROM predicciones_historicas")
-    if cursor.fetchone()["total"] == 0 and JSON_PREDICTIONS.exists():
+    if cursor.fetchone()["total"] == 0:
         try:
-            data = json.loads(JSON_PREDICTIONS.read_text(encoding="utf-8"))
-            perfiles = data.get("perfiles_parqueaderos", {})
-            for pid, info in perfiles.items():
+            for pid, info in INITIAL_PREDICCIONES.items():
                 nombre = info.get("nombre", pid)
                 cap = info.get("capacidad", 0)
                 pico = info.get("pico_horario", "")
@@ -171,31 +269,29 @@ def _seed_predicciones(cursor):
 
 def _seed_reportes(cursor):
     cursor.execute("SELECT COUNT(*) AS total FROM reportes")
-    if cursor.fetchone()["total"] == 0 and JSON_REPORTS.exists():
+    if cursor.fetchone()["total"] == 0:
         try:
-            reports = json.loads(JSON_REPORTS.read_text(encoding="utf-8"))
-            for r in reports:
-                cursor.execute("""
-                    INSERT INTO reportes (
-                        id, categoria, descripcion, origen, lugar, qr, element_id,
-                        zona, latitude, longitude, accuracy, status, created_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    r.get("id"),
-                    r.get("category", "otro"),
-                    r.get("description", ""),
-                    r.get("origen", "qr"),
-                    r.get("lugar", r.get("location", "")),
-                    r.get("qr"),
-                    r.get("elementId"),
-                    r.get("zona"),
-                    r.get("latitude"),
-                    r.get("longitude"),
-                    r.get("accuracy"),
-                    r.get("status", "Pendiente"),
-                    r.get("createdAt", datetime.now().isoformat())
-                ))
-            print("[SQLite] Tabla 'reportes' sembrada exitosamente.", flush=True)
+            cursor.execute("""
+                INSERT INTO reportes (
+                    id, categoria, descripcion, origen, lugar, qr, element_id,
+                    zona, latitude, longitude, accuracy, status, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                "PULSE-0001",
+                "limpieza",
+                "Edificio sucio",
+                "qr",
+                "FIE - Diseño Grafico",
+                "QR-005",
+                "QR-005",
+                "FIE - Diseño Grafico",
+                -1.6566268,
+                -78.6763226,
+                None,
+                "Pendiente",
+                "2026-10-05T21:38:43.876345-05:00"
+            ))
+            print("[SQLite] Tabla 'reportes' sembrada con registro de demostración.", flush=True)
         except Exception as e:
             print(f"[SQLite Error] Error al sembrar reportes: {e}", flush=True)
 

@@ -1,21 +1,16 @@
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from datetime import datetime, timezone, timedelta
-from threading import RLock
+from datetime import datetime, timezone
 import argparse
 import json
 import math
 import os
-import tempfile
 
 PORT = int(os.environ.get("PORT", 8000))
 MODULE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = MODULE_DIR.parent
-REPORTS_FILE = MODULE_DIR / "reports.json"
-GEOJSON_FILE = MODULE_DIR / "reports.geojson"
 QR_FILE = PROJECT_DIR / "data/simulated/puntos_qr.geojson"
 CAMPUS_FILE = PROJECT_DIR / "data/base/campus.geojson"
-REPORT_LOCK = RLock()
 CATEGORIES = {
     "Iluminación": "iluminacion", "Limpieza": "limpieza",
     "Infraestructura": "infraestructura", "Seguridad": "seguridad",
@@ -30,13 +25,6 @@ def read_json(path, default):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def load_reports():
-    reports = read_json(REPORTS_FILE, [])
-    if not isinstance(reports, list) or any(not isinstance(r, dict) for r in reports):
-        raise ValueError("reports.json no contiene una lista válida de reportes")
-    return reports
-
-
 def coordinates(latitude, longitude):
     if isinstance(latitude, bool) or isinstance(longitude, bool):
         raise ValueError("Coordenadas inválidas")
@@ -44,74 +32,6 @@ def coordinates(latitude, longitude):
     if not (math.isfinite(lat) and math.isfinite(lon) and -90 <= lat <= 90 and -180 <= lon <= 180):
         raise ValueError("Coordenadas fuera de rango")
     return lat, lon
-
-
-def create_geojson(reports):
-    features = []
-    for report in reports:
-        try:
-            lat, lon = coordinates(report.get("latitude"), report.get("longitude"))
-            geometry = {"type": "Point", "coordinates": [lon, lat]}
-        except (TypeError, ValueError):
-            # Se conserva el registro histórico, sin inventar una ubicación.
-            geometry = None
-        properties = {k: v for k, v in report.items() if k not in ("latitude", "longitude")}
-        features.append({"type": "Feature", "geometry": geometry, "properties": properties})
-    return {"type": "FeatureCollection", "features": features}
-
-
-def atomic_write(path, content):
-    temporary = None
-    try:
-        with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as f:
-            temporary = Path(f.name)
-            f.write(content)
-        os.replace(temporary, path)
-    finally:
-        if temporary is not None and temporary.exists():
-            temporary.unlink()
-
-
-def save_reports(reports):
-    # Ambos documentos se preparan antes de escribir; las peticiones usan el mismo bloqueo.
-    documents = {REPORTS_FILE: reports, GEOJSON_FILE: create_geojson(reports)}
-    updates = {path: json.dumps(data, ensure_ascii=False, indent=4, allow_nan=False).encode("utf-8")
-               for path, data in documents.items() if read_json(path, None) != data}
-    backups = {path: path.read_bytes() if path.exists() else None for path in updates}
-    written = []
-    try:
-        for path, content in updates.items():
-            atomic_write(path, content)
-            written.append(path)
-    except OSError:
-        for path in reversed(written):
-            if backups[path] is None:
-                path.unlink(missing_ok=True)
-            else:
-                atomic_write(path, backups[path])
-        raise
-
-
-def synchronize_reports():
-    with REPORT_LOCK:
-        reports = load_reports()
-        geojson = read_json(GEOJSON_FILE, {"type": "FeatureCollection", "features": []})
-        if geojson.get("type") != "FeatureCollection":
-            raise ValueError("reports.geojson no es una FeatureCollection")
-        ids = {r.get("id") for r in reports if r.get("id")}
-        # Preserva también registros que existieran únicamente en el GeoJSON recibido.
-        for feature in geojson["features"]:
-            properties = dict(feature.get("properties") or {})
-            geometry = feature.get("geometry")
-            report = properties.copy()
-            if geometry and geometry.get("type") == "Point":
-                lon, lat = geometry["coordinates"][:2]
-                report.update(latitude=lat, longitude=lon)
-            if (properties.get("id") and properties["id"] not in ids) or (not properties.get("id") and report not in reports):
-                reports.append(report)
-                if properties.get("id"):
-                    ids.add(properties["id"])
-        save_reports(reports)
 
 
 def resolve_qr(qr_id):
@@ -235,8 +155,7 @@ class PulseHandler(SimpleHTTPRequestHandler):
                 "connectedAt": datetime.now(timezone.utc).isoformat()
             })
             return
-        with REPORT_LOCK:
-            super().do_GET()
+        super().do_GET()
 
     def respond(self, status, data):
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
@@ -297,26 +216,12 @@ class PulseHandler(SimpleHTTPRequestHandler):
             else:
                 raise ValueError("Abre el formulario mediante un QR válido o el modo GPS")
 
-            with REPORT_LOCK:
-                report_data = {
-                    "category": category,
-                    "description": description.strip(),
-                    **location
-                }
-                report_id = database.insert_reporte(report_data)
-
-                # Mantener sincronizado reports.json y reports.geojson para compatibilidad
-                reports = load_reports()
-                full_report = {
-                    "id": report_id,
-                    **location,
-                    "category": category,
-                    "description": description.strip(),
-                    "status": "Pendiente",
-                    "createdAt": datetime.now(timezone(timedelta(hours=-5))).isoformat()
-                }
-                reports.append(full_report)
-                save_reports(reports)
+            report_data = {
+                "category": category,
+                "description": description.strip(),
+                **location
+            }
+            report_id = database.insert_reporte(report_data)
 
             self.respond(200, {"success": True, "reportId": report_id, "message": "Reporte registrado y guardado en SQLite"})
         except (ValueError, TypeError, KeyError) as error:
@@ -331,12 +236,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
     database.init_db()
     with ThreadingHTTPServer(("0.0.0.0", args.port), PulseHandler) as server:
-        synchronize_reports()
         print(f"ESPOCH Pulse: http://localhost:{args.port}/web/", flush=True)
         print(f"Base de datos SQLite: Conectada exitosamente (data/espoch_pulse.db)", flush=True)
         print(f"Formulario: http://localhost:{args.port}/espoch-pulse-demo/index.html?qr=QR-002", flush=True)
-        print("Prueba de concepto con SQLite. CTRL+C para detener.", flush=True)
+        print("Servidor activo con SQLite como única fuente de datos. CTRL+C para detener.", flush=True)
         try:
             server.serve_forever()
         except KeyboardInterrupt:
             pass
+
