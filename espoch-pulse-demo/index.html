@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ESPOCH Pulse</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #121F26;
+            min-height: 100vh;
+            color: #121F26;
+
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .page {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background: #F5F8FA;
+        }
+
+
+        /* CABECERA */
+
+        .header {
+            background: #121F26;
+            color: white;
+
+            padding: 30px 25px 26px;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .pulse-icon {
+
+            width: 42px;
+            height: 42px;
+
+            border: 2px solid #C5D5E9;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+        }
+
+
+        .brand-text h1 {
+
+            font-size: 21px;
+            letter-spacing: 1.5px;
+
+        }
+
+
+        .brand-text span {
+
+            font-size: 11px;
+            opacity: .65;
+
+        }
+
+
+        .header h2 {
+
+            font-size: 27px;
+            line-height: 1.15;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .header p {
+
+            font-size: 14px;
+            opacity: .7;
+            line-height: 1.5;
+
+        }
+
+
+
+        /* CONTENIDO */
+
+        .content {
+
+            padding: 22px;
+
+        }
+
+
+
+        /* UBICACIÓN */
+
+        .location-card {
+
+            background: #E7EEF4;
+
+            padding: 17px;
+
+            border-radius: 16px;
+
+            margin-bottom: 26px;
+
+            display: flex;
+            gap: 13px;
+
+        }
+
+
+        .location-icon {
+
+            font-size: 24px;
+
+        }
+
+
+        .location-title {
+
+            font-size: 12px;
+
+            color: #587080;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            letter-spacing: .8px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .location-name {
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+        }
+
+
+        .element-id {
+
+            margin-top: 5px;
+
+            font-size: 12px;
+
+            color: #6B7F8A;
+
+        }
+
+
+
+        /* FORMULARIO */
+
+        .question {
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            margin-bottom: 14px;
+
+        }
+
+
+        .categories {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+
+            margin-bottom: 26px;
+
+        }
+
+
+        .category {
+
+            border: 1px solid #D8E1E7;
+
+            background: white;
+
+            padding: 15px 8px;
+
+            border-radius: 13px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            transition: .2s;
+
+            color: #334A57;
+
+        }
+
+
+        .category span {
+
+            display: block;
+
+            font-size: 23px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .category.active {
+
+            background: #121F26;
+
+            color: white;
+
+            border-color: #121F26;
+
+            transform: scale(1.02);
+
+        }
+
+
+        label {
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            display: block;
+
+            margin-bottom: 9px;
+
+        }
+
+
+        textarea {
+
+            width: 100%;
+
+            min-height: 105px;
+
+            resize: none;
+
+            border: 1px solid #D5DFE5;
+
+            border-radius: 14px;
+
+            padding: 14px;
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            outline: none;
+
+            margin-bottom: 22px;
+
+        }
+
+
+        textarea:focus {
+
+            border-color: #7899AC;
+
+        }
+
+
+
+        /* FOTO */
+
+        .photo-button {
+
+            width: 100%;
+
+            background: #E7EEF4;
+
+            border: none;
+
+            border-radius: 13px;
+
+            padding: 15px;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        #photo {
+
+            display: none;
+
+        }
+
+
+        .preview {
+
+            width: 100%;
+
+            display: none;
+
+            margin-bottom: 20px;
+
+            border-radius: 13px;
+
+            max-height: 230px;
+
+            object-fit: cover;
+
+        }
+
+
+
+        /* BOTÓN */
+
+        .submit-button {
+
+            width: 100%;
+
+            padding: 17px;
+
+            border: none;
+
+            border-radius: 14px;
+
+            background: #121F26;
+
+            color: white;
+
+            font-weight: bold;
+
+            font-size: 15px;
+
+            letter-spacing: .6px;
+
+            cursor: pointer;
+
+        }
+
+
+        .submit-button:disabled {
+
+            opacity: .6;
+
+            cursor: default;
+
+        }
+
+
+
+        .footer {
+
+            margin-top: 18px;
+
+            text-align: center;
+
+            font-size: 11px;
+
+            color: #8698A2;
+
+            padding-bottom: 30px;
+
+        }
+
+
+
+        /* ÉXITO */
+
+        .success-screen {
+
+            display: none;
+
+            min-height: 100vh;
+
+            background: #121F26;
+
+            color: white;
+
+            padding: 40px 30px;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            flex-direction: column;
+
+        }
+
+
+        .success-icon {
+
+            width: 85px;
+            height: 85px;
+
+            border-radius: 50%;
+
+            background: #C5D5E9;
+
+            color: #121F26;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 42px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .success-screen h2 {
+
+            font-size: 28px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .success-screen p {
+
+            opacity: .7;
+
+            line-height: 1.5;
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .report-code {
+
+            padding: 13px 22px;
+
+            background: rgba(255, 255, 255, .08);
+
+            border-radius: 12px;
+
+            font-size: 13px;
+
+        }
+
+
+        .report-code strong {
+
+            display: block;
+
+            font-size: 21px;
+
+            margin-top: 4px;
+
+            color: #C5D5E9;
+
+        }
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+    <div class="page" id="formPage">
+
+
+        <div class="header">
+
+
+            <div class="brand">
+
+                <div class="pulse-icon">
+                    ◉
+                </div>
+
+                <div class="brand-text">
+
+                    <h1>ESPOCH PULSE</h1>
+
+                </div>
+
+            </div>
+
+
+            <h2>
+                Reportar incidencia
+            </h2>
+
+            <p>
+                Tu reporte ayuda a convertir lo que ocurre
+                en el campus en información útil.
+            </p>
+
+
+        </div>
+
+
+
+        <div class="content">
+
+
+            <div class="location-card">
+
+                <div class="location-icon">
+                    📍
+                </div>
+
+                <div>
+
+                    <div class="location-title">
+                        Ubicación identificada
+                    </div>
+
+                    <div class="location-name" id="locationName">
+                        Identificando ubicación…
+                    </div>
+
+                    <div class="element-id" id="elementIdText">
+                        Consultando referencia del lugar
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="question">
+
+                ¿Qué deseas reportar?
+
+            </div>
+
+
+
+            <div class="categories">
+
+
+                <button class="category" data-value="iluminacion">
+
+                    <span>💡</span>
+
+                    Iluminación
+
+                </button>
+
+
+
+                <button class="category" data-value="limpieza">
+
+                    <span>🧹</span>
+
+                    Limpieza
+
+                </button>
+
+
+
+                <button class="category" data-value="accesibilidad">
+
+                    <span>♿</span>
+
+                    Accesibilidad
+
+                </button>
+
+
+
+                <button class="category" data-value="infraestructura">
+
+                    <span>🔧</span>
+
+                    Infraestructura
+
+                </button>
+
+
+
+                <button class="category" data-value="areas_verdes">
+
+                    <span>🌳</span>
+
+                    Áreas verdes
+
+                </button>
+
+
+
+                <button class="category" data-value="seguridad">
+
+                    <span>🚨</span>
+
+                    Seguridad
+
+                </button>
+
+                <button class="category" data-value="movilidad">
+                    <span>🚶</span>
+                    Movilidad
+                </button>
+
+                <button class="category" data-value="otro">
+                    <span>📝</span>
+                    Otro
+                </button>
+
+
+            </div>
+
+
+
+            <label for="description">
+                Cuéntanos qué ocurre
+            </label>
+
+
+            <textarea id="description" placeholder="Ej. La luminaria del pasillo no está funcionando..."></textarea>
+
+
+
+            <input type="file" accept="image/*" capture="environment" id="photo">
+
+
+            <button class="photo-button" onclick="document.getElementById('photo').click()">
+
+                📷 &nbsp; Agregar fotografía
+
+            </button>
+
+
+            <p class="element-id" style="margin-bottom: 14px">Fotografía: vista previa local; no se guarda en esta demo.
+            </p>
+            <img class="preview" id="preview" alt="Vista previa de la fotografía seleccionada">
+
+
+
+            <button class="submit-button" id="submitButton">
+
+                REPORTAR A PULSE
+
+            </button>
+
+
+            <div class="footer">
+
+                ESPOCH Pulse
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="success-screen" id="successScreen">
+
+
+        <div class="success-icon">
+
+            ✓
+
+        </div>
+
+
+        <h2>
+
+            Reporte recibido
+
+        </h2>
+
+
+        <p>
+
+            Gracias por ayudar a mejorar
+            el campus.
+
+            <br><br>
+
+            Para ti el reporte termina aquí.
+
+            <br>
+
+            Para ESPOCH Pulse, aquí comienza.
+
+        </p>
+
+
+        <div class="report-code">
+
+            CÓDIGO DEL REPORTE
+
+            <strong id="reportCode">
+
+                PULSE-0001
+
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <script>
+
+
+        const params =
+            new URLSearchParams(window.location.search);
+
+
+        const qrId = params.get("qr");
+        let currentSite = null;
+        const submitButton = document.getElementById("submitButton");
+        submitButton.disabled = true;
+
+        const retryLocation = document.createElement("button");
+        retryLocation.type = "button";
+        retryLocation.textContent = "Volver a intentar ubicación";
+        retryLocation.hidden = true;
+        retryLocation.style.cssText = "margin-top:12px;padding:8px 12px;border-radius:8px;cursor:pointer";
+        document.getElementById("elementIdText").after(retryLocation);
+        retryLocation.addEventListener("click", identificarLugar);
+
+        async function identificarLugar() {
+            currentSite = null;
+            submitButton.disabled = true;
+            retryLocation.hidden = true;
+            document.getElementById("locationName").textContent = "Identificando ubicación…";
+            document.getElementById("elementIdText").textContent = "";
+            try {
+                if (params.has("qr")) {
+                    const response = await fetch("../data/simulated/puntos_qr.geojson");
+                    if (!response.ok) throw new Error("No se pudo cargar la ubicación GIS.");
+                    const gis = await response.json();
+                    const feature = gis.features.find(f => f.properties.id === qrId);
+                    if (!feature || feature.geometry?.type !== "Point") {
+                        throw new Error("QR inexistente o sin ubicación Point válida.");
+                    }
+                    const [longitude, latitude] = feature.geometry.coordinates || [];
+                    if (!feature.properties.nombre || !feature.properties.zona ||
+                        !Number.isFinite(latitude) || !Number.isFinite(longitude) ||
+                        latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+                        throw new Error("El QR no tiene datos de ubicación completos y válidos.");
+                    }
+                    currentSite = {
+                        qr: feature.properties.id,
+                        elementId: feature.properties.id,
+                        location: feature.properties.nombre,
+                        zona: feature.properties.zona,
+                        latitude, longitude
+                    };
+                } else if (params.get("mode") === "gps") {
+                    if (!window.isSecureContext) {
+                        throw new Error("La ubicación del dispositivo requiere una conexión segura HTTPS. Puedes utilizar un QR asociado a un lugar o abrir la demo mediante una URL HTTPS.");
+                    }
+                    if (!navigator.geolocation) throw new Error("Este dispositivo no ofrece geolocalización. Puedes utilizar un QR asociado a un lugar.");
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true, maximumAge: 0, timeout: 15000
+                        });
+                    });
+                    const { latitude, longitude, accuracy } = position.coords;
+                    if (!Number.isFinite(latitude) || !Number.isFinite(longitude) ||
+                        Math.abs(latitude) > 90 || Math.abs(longitude) > 180 ||
+                        !Number.isFinite(accuracy) || accuracy < 0) {
+                        throw new Error("El dispositivo no devolvió una ubicación válida. Vuelve a intentar.");
+                    }
+                    currentSite = { mode: "gps", origen: "gps_web", location: "Ubicación actual detectada", latitude, longitude, accuracy };
+                } else {
+                    throw new Error("Abre el formulario desde un QR o desde Registrar incidencia en ESPOCH Pulse.");
+                }
+                document.getElementById("locationName").textContent = currentSite.location;
+                document.getElementById("elementIdText").textContent = currentSite.qr
+                    ? `QR: ${currentSite.qr} · Zona: ${currentSite.zona || currentSite.location}`
+                    : `Precisión aproximada: ±${Math.round(currentSite.accuracy)} m`;
+                submitButton.disabled = false;
+            } catch (error) {
+                currentSite = null;
+                document.getElementById("locationName").textContent = "Ubicación no disponible";
+                const messages = {
+                    1: "Permiso de ubicación rechazado. Habilítalo en el navegador y vuelve a intentar, o utiliza un QR.",
+                    2: "No fue posible obtener la ubicación. Vuelve a intentar o utiliza un QR.",
+                    3: "Se agotó el tiempo para obtener la ubicación. Vuelve a intentar."
+                };
+                document.getElementById("elementIdText").textContent = messages[error.code] || error.message;
+                retryLocation.hidden = params.has("qr") || params.get("mode") !== "gps";
+            }
+        }
+        identificarLugar();
+
+        /* ===========================================================
+           CATEGORÍAS
+           =========================================================== */
+
+
+        let selectedCategory = "";
+
+
+        document
+            .querySelectorAll(".category")
+            .forEach(button => {
+
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+
+                        document
+                            .querySelectorAll(".category")
+                            .forEach(btn =>
+                                btn.classList.remove("active")
+                            );
+
+
+                        this.classList.add("active");
+
+
+                        selectedCategory =
+                            this.dataset.value;
+
+
+                    }
+                );
+
+
+            });
+
+
+
+        /* ===========================================================
+           PREVISUALIZACIÓN DE FOTO
+        
+           La imagen en esta versión DEMO no se envía al servidor.
+           Solo se muestra para que la experiencia sea real.
+           =========================================================== */
+
+
+        const photoInput =
+            document.getElementById("photo");
+
+
+        const preview =
+            document.getElementById("preview");
+
+
+        photoInput.addEventListener(
+            "change",
+            function () {
+
+
+                const file =
+                    this.files[0];
+
+
+                if (!file) return;
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (event) {
+
+
+                        preview.src =
+                            event.target.result;
+
+
+                        preview.style.display =
+                            "block";
+
+
+                    };
+
+
+                reader.readAsDataURL(file);
+
+
+            }
+        );
+
+
+
+        /* ===========================================================
+           ENVIAR REPORTE
+           =========================================================== */
+
+
+        document
+            .getElementById("submitButton")
+            .addEventListener(
+                "click",
+                async function () {
+
+
+                    if (!currentSite) return;
+
+                    const description =
+                        document
+                            .getElementById("description")
+                            .value
+                            .trim();
+
+
+
+                    if (!selectedCategory) {
+
+                        alert(
+                            "Selecciona el tipo de incidencia."
+                        );
+
+                        return;
+
+                    }
+
+
+
+                    if (!description) {
+
+                        alert(
+                            "Escribe una breve descripción."
+                        );
+
+                        return;
+
+                    }
+
+
+
+                    const button = this;
+
+
+                    button.disabled = true;
+
+                    button.textContent =
+                        "ENVIANDO...";
+
+
+
+                    const report = {
+                        ...(currentSite.qr ? { qr: currentSite.qr } : { mode: "gps", origen: "gps_web", accuracy: currentSite.accuracy }),
+
+                        elementId:
+                            currentSite.elementId,
+
+                        location:
+                            currentSite.location,
+
+                        latitude:
+                            currentSite.latitude,
+
+                        longitude:
+                            currentSite.longitude,
+
+                        category:
+                            selectedCategory,
+
+                        description:
+                            description
+
+                    };
+
+
+
+                    try {
+
+
+                        const response =
+                            await fetch(
+                                "/api/report",
+                                {
+
+                                    method: "POST",
+
+                                    headers: {
+
+                                        "Content-Type":
+                                            "application/json"
+
+                                    },
+
+                                    body:
+                                        JSON.stringify(report)
+
+                                }
+                            );
+
+
+
+                        const result =
+                            await response.json();
+
+
+
+                        if (!response.ok || !result.success) {
+
+                            throw new Error(
+                                result.error
+                            );
+
+                        }
+
+
+
+                        document.getElementById(
+                            "reportCode"
+                        ).textContent =
+                            result.reportId;
+
+
+
+                        document.getElementById(
+                            "formPage"
+                        ).style.display =
+                            "none";
+
+
+
+                        document.getElementById(
+                            "successScreen"
+                        ).style.display =
+                            "flex";
+
+
+                    }
+
+                    catch (error) {
+
+
+                        console.error(error);
+
+
+                        alert(
+                            "No se pudo enviar el reporte: " + error.message
+                        );
+
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "REPORTAR A PULSE";
+
+
+                    }
+
+
+                }
+            );
+
+
+    </script>
+
+
+</body>
+
+</html>

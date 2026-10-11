@@ -1,0 +1,15 @@
+[
+    {
+        "id": "PULSE-0001",
+        "qr": "QR-005",
+        "elementId": "QR-005",
+        "location": "FIE - Diseño Grafico",
+        "zona": "FIE - Diseño Grafico",
+        "latitude": -1.6566268,
+        "longitude": -78.6763226,
+        "category": "limpieza",
+        "description": "Edificio sucio",
+        "status": "Pendiente",
+        "createdAt": "2026-10-05T21:38:43.876345-05:00"
+    }
+]

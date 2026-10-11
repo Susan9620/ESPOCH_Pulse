@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pulse Green — Propuesta conceptual</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/pulse-green.css">
+</head>
+<body>
+  <header class="header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 24C3 12 13 5 26 6c1 13-6 22-16 19M9 25L22 12"/></svg></span><div><p class="eyebrow">ECOSISTEMA ESPOCH PULSE</p><h1>Pulse Green</h1></div></div>
+    <div class="header-context"><span class="badge">Proyecto estudiantil propuesto</span><span>Gestión ambiental del campus basada en GIS</span></div>
+  </header>
+  <main class="workspace">
+    <aside class="sidebar">
+      <section>
+        <p class="eyebrow">01 / ENTENDER EL ENTORNO</p>
+        <h2>Un campus que crece de forma sostenible.</h2>
+        <p class="intro">Interfaz conceptual basada en la infraestructura GIS de ESPOCH Pulse.</p>
+        <div class="sector"><span class="label">Sector analizado · ejemplo visual</span><strong>Sector FIE <span aria-hidden="true">⌄</span></strong><p>Referencia: Parque del Estudiante</p></div>
+        <p class="label">Tema de consulta · opciones ilustrativas</p>
+        <div class="topics" aria-label="Temas conceptuales, sin interacción"><span class="selected">Áreas verdes</span><span>Residuos</span><span>Ambiente</span><span>Sensores futuros</span></div>
+        <section class="summary"><div class="section-row"><h3>Resumen del sector</h3><span class="tiny-badge">CONCEPTUAL</span></div><dl><div><dt>Área verde cercana</dt><dd>Área verde de referencia</dd></div><div><dt>Estado general del entorno</dt><dd>Pendiente de levantamiento</dd></div><div><dt>Cobertura GIS disponible</dt><dd>Base espacial de ESPOCH Pulse</dd></div></dl><p>Sin mediciones ni diagnóstico ambiental actual.</p></section>
+      </section>
+      <section class="gis-block">
+        <p class="eyebrow">02 / EL TERRITORIO COMO BASE</p><h2>¿Cómo usa el GIS?</h2>
+        <p>Pulse Green reutilizaría la infraestructura GIS de <strong>ESPOCH Pulse</strong> para:</p>
+        <ul><li>Ubicar áreas verdes y espacios del campus.</li><li>Relacionar edificios, senderos y entorno ambiental.</li><li>Apoyar levantamientos ambientales georreferenciados.</li><li>Integrar futuros sensores o mediciones sin comenzar desde cero.</li><li>Facilitar decisiones de sostenibilidad dentro del Smart Campus.</li></ul>
+        <div class="flow"><span>Territorio</span><b aria-hidden="true">→</b><span>Información</span><b aria-hidden="true">→</b><span>Cuidado</span></div>
+      </section>
+    </aside>
+    <div class="main-panel">
+      <section class="map-card" aria-labelledby="map-title">
+        <div class="map-heading"><div><p class="eyebrow">CAMPUS RIOBAMBA · ESCENARIO ILUSTRATIVO</p><h2 id="map-title">Conocer el territorio para cuidar el campus.</h2></div><span class="map-badge">Vista ambiental conceptual</span></div>
+        <div class="map-surface">
+          <svg class="campus-map" viewBox="0 0 1000 520" role="img" aria-labelledby="svg-title svg-description">
+            <title id="svg-title">Mapa esquemático ambiental de Pulse Green</title><desc id="svg-description">Campus conceptual con áreas verdes, edificios y senderos. Un sector FIE ilustrativo está destacado. La distribución no representa geometrías verificadas ni ubicaciones de sensores.</desc>
+            <defs><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#d9e4df" stroke-width=".6"/></pattern><pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0V9" stroke="#45936c" stroke-width="2" opacity=".18"/></pattern></defs>
+            <rect width="1000" height="520" fill="#eef3ee"/><rect width="1000" height="520" fill="url(#grid)"/>
+            <g fill="none" stroke="#d6dfd9" stroke-width="18"><path d="M-20 412L353 550M686-20L1025 277M-20 100L328-30"/></g>
+            <path d="M117 124L301 53L670 69L895 197L853 408L655 476L209 430L78 291Z" fill="#f9faf4" stroke="#729485" stroke-width="2" stroke-dasharray="7 6"/>
+            <g fill="#c8dfb9" stroke="#8db282" stroke-width="1.5"><path d="M148 154L249 116L271 179L161 210Z"/><path d="M415 95L553 104L541 165L420 158Z"/><path d="M735 313L835 312L807 385L737 405Z"/><path d="M293 318L430 330L462 414L335 406L279 364Z"/><path d="M543 345L666 349L684 416L558 431L520 383Z"/></g>
+            <g fill="none" stroke="#e0e5de" stroke-width="19" stroke-linejoin="round"><path d="M135 261L285 261L388 191L619 191L789 269L810 395"/><path d="M276 115L285 261L270 370L502 305L710 305L789 269"/><path d="M388 191L502 305L508 431"/></g>
+            <g fill="none" stroke="#fff" stroke-width="11" stroke-linejoin="round"><path d="M135 261L285 261L388 191L619 191L789 269L810 395"/><path d="M276 115L285 261L270 370L502 305L710 305L789 269"/><path d="M388 191L502 305L508 431"/></g>
+            <g fill="#d2dbd9" stroke="#adbfba" stroke-width="1.5"><rect x="175" y="218" width="76" height="29" rx="3"/><rect x="312" y="128" width="58" height="43" rx="3"/><rect x="405" y="220" width="53" height="47" rx="3"/><rect x="495" y="119" width="42" height="29" rx="3"/><path d="M652 123L716 155L696 188L634 160Z"/><rect x="611" y="233" width="70" height="48" rx="3"/><rect x="332" y="282" width="51" height="28" rx="3"/><path d="M757 208L812 234L794 260L740 236Z"/><rect x="201" y="306" width="44" height="47" rx="3"/></g>
+            <path d="M292 317L431 329L463 415L335 407L278 364Z" fill="url(#hatch)" stroke="#35825a" stroke-width="2.5"/>
+            <path d="M284 121L576 102L683 207L689 314L489 346L298 314L255 231Z" fill="#259c7a" fill-opacity=".035" stroke="#208e79" stroke-width="2" stroke-dasharray="5 6"/>
+            <g fill="#95be83" stroke="#f1f7eb" stroke-width="3"><circle cx="168" cy="168" r="10"/><circle cx="189" cy="162" r="12"/><circle cx="211" cy="157" r="9"/><circle cx="588" cy="384" r="13"/><circle cx="616" cy="399" r="10"/><circle cx="634" cy="376" r="12"/><circle cx="768" cy="349" r="11"/><circle cx="790" cy="343" r="9"/></g>
+            <g font-family="system-ui,sans-serif"><rect x="356" y="176" width="117" height="31" rx="15" fill="#167b66"/><text x="414" y="197" fill="#fff" text-anchor="middle" font-size="12" font-weight="600">Sector FIE</text>
+            <text x="572" y="452" font-size="10" fill="#819586" letter-spacing="1.5">ESPACIOS DEL CAMPUS</text>
+            <rect x="99" y="351" width="188" height="65" rx="10" fill="#fff" stroke="#dbe7dc"/><text x="115" y="375" font-size="12" font-weight="650" fill="#316247">Área verde destacada</text><text x="115" y="395" font-size="10" fill="#839386">Parque del Estudiante · referencia</text><path d="M288 377L325 368" stroke="#679d73" stroke-width="1.5"/><circle cx="325" cy="368" r="4" fill="#348355"/>
+            <rect x="705" y="130" width="182" height="62" rx="10" fill="#fff" stroke="#dbe7dc"/><text x="721" y="154" font-size="12" font-weight="650" fill="#316247">Cobertura GIS disponible</text><text x="721" y="174" font-size="10" fill="#839386">Base compartida de ESPOCH Pulse</text>
+            </g>
+          </svg>
+          <span class="map-note">Esquema ilustrativo · Sin escala · Sin monitoreo real</span>
+          <div class="map-key"><span><i class="green-key"></i>Área verde conceptual</span><span><i class="sector-key"></i>Sector de referencia</span><span><i class="building-key"></i>Edificios</span></div>
+        </div>
+        <div class="map-caption"><span class="caption-icon" aria-hidden="true">↗</span><p>La información ambiental tendría un lugar en el mapa.<br><small>Esquema independiente: no carga capas reales ni representa mediciones o sensores instalados.</small></p></div>
+      </section>
+      <div class="bottom-grid">
+        <section class="layers-card"><p class="eyebrow">03 / UNA BASE QUE SE REUTILIZA</p><h2>Capas GIS utilizadas</h2><p>Capas de ESPOCH Pulse que servirían como base:</p><div class="chips"><span>Áreas verdes</span><span>Edificios</span><span>Vías y senderos</span><span>Servicios</span><span>Límite del campus</span></div><div class="future-chip">+ Datos ambientales futuros <small>Integración posterior</small></div><p class="fine-print">La cobertura actual de áreas verdes en OSM es limitada; no constituye un inventario ambiental completo.</p></section>
+        <section class="future-card"><div class="section-row"><p class="eyebrow">04 / SIGUIENTE HORIZONTE</p><span class="tiny-badge">PROPUESTA FUTURA</span></div><h2>Integración futura</h2><p>Información ambiental futura integrable mediante ubicaciones GIS.</p><ul><li>Sensores ambientales de bajo costo</li><li>Temperatura y humedad</li><li>Calidad del aire</li><li>Gestión de residuos</li></ul><div class="not-live">No implementado actualmente</div></section>
+      </div>
+      <section class="value-card"><div><p class="eyebrow">05 / CONSTRUIR SMART CAMPUS</p><h2>Aporte al Smart Campus</h2></div><ul><li>Fortalecer la sostenibilidad del campus.</li><li>Reutilizar la base GIS de ESPOCH Pulse y futuros datos institucionales autorizados.</li><li>Facilitar proyectos ambientales estudiantiles.</li><li>Integrar información ecológica y espacial en una misma plataforma.</li></ul></section>
+    </div>
+  </main>
+  <footer class="page-footer"><span>ESPOCH Pulse / Open Lab · Visión de crecimiento</span><span>Mockup conceptual · Sin datos ambientales reales ni sensores operativos</span></footer>
+</body>
+</html>

@@ -1,0 +1,165 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6776601,
+          -1.655407
+        ]
+      },
+      "properties": {
+        "id": "QR-001",
+        "nombre": "FIE - Escuela ELECTRONICA",
+        "tipo_lugar": "edificio",
+        "accion_principal": "informacion",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Ofrecería una ficha informativa del edificio de referencia y orientación general para visitantes. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "FIE - Escuela ELECTRONICA",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-001",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6760894,
+          -1.6553013
+        ]
+      },
+      "properties": {
+        "id": "QR-002",
+        "nombre": "Aulas Nuevas FIE",
+        "tipo_lugar": "edificio",
+        "accion_principal": "reportar",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Permitiría iniciar un reporte simulado de mantenimiento asociado al edificio, sin registrar hechos reales. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "Aulas Nuevas FIE",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-002",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6768774,
+          -1.6559914
+        ]
+      },
+      "properties": {
+        "id": "QR-003",
+        "nombre": "Modular Robótica FIE",
+        "tipo_lugar": "edificio",
+        "accion_principal": "informacion",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Mostraría información de referencia del edificio y una sección propuesta de accesibilidad; no certifica condiciones accesibles actuales. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "Modular Robótica FIE",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-003",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.679249,
+          -1.655877
+        ]
+      },
+      "properties": {
+        "id": "QR-004",
+        "nombre": "FIE- SISTEMAS",
+        "tipo_lugar": "edificio",
+        "accion_principal": "navegacion",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Permitiría consultar rutas de demostración hacia el edificio de referencia, sin afirmar que exista navegación operativa. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "FIE- SISTEMAS",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-004",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6763226,
+          -1.6566268
+        ]
+      },
+      "properties": {
+        "id": "QR-005",
+        "nombre": "FIE - Diseño Grafico",
+        "tipo_lugar": "acceso",
+        "accion_principal": "reportar",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Se propone junto a la aproximación peatonal al edificio de referencia para reportar obstáculos ficticios. El nombre identifica el edificio asociado, no una entrada verificada. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "FIE - Diseño Grafico",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-005",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6749249,
+          -1.655781
+        ]
+      },
+      "properties": {
+        "id": "QR-006",
+        "nombre": "FIE Ciencias Básicas",
+        "tipo_lugar": "espacio",
+        "accion_principal": "servicios",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Se propone en el espacio de circulación próximo al edificio de referencia para localizar servicios cercanos en la demostración. El nombre corresponde al edificio de referencia, no a un nuevo espacio inventado. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "FIE Ciencias Básicas",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-006",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6761001,
+          -1.6599503
+        ]
+      },
+      "properties": {
+        "id": "QR-007",
+        "nombre": "Biblioteca FADE",
+        "tipo_lugar": "servicio",
+        "accion_principal": "informacion",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Ofrecería información de la biblioteca identificada en la capa base de servicios; no inventa horarios, disponibilidad ni prestaciones actuales. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "Biblioteca FADE",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-007",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6791609,
+          -1.6573738
+        ]
+      },
+      "properties": {
+        "id": "QR-008",
+        "nombre": "Admin Central ESPOCH",
+        "tipo_lugar": "edificio",
+        "accion_principal": "navegacion",
+        "descripcion": "QR simulado de demostración, no instalado actualmente. Permitiría consultar rutas de demostración hacia el edificio administrativo como ejemplo de uso fuera del sector piloto FIE. La URL y su dominio son ficticios para la prueba de concepto.",
+        "zona": "Admin Central ESPOCH",
+        "url_demo": "https://pulse.espoch.edu.ec/demo/qr/QR-008",
+        "es_simulado": true
+      }
+    }
+  ]
+}

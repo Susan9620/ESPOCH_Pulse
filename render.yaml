@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: espoch-smart-parking
+    env: python
+    buildCommand: ""
+    startCommand: python espoch-pulse-demo/server.py
+    autoDeploy: true

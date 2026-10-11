@@ -1,0 +1,281 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6777568,
+          -1.6555015
+        ]
+      },
+      "properties": {
+        "id": "INC-001",
+        "titulo": "SIMULADO: Luminaria de ruta principal requiere revisión",
+        "categoria": "iluminacion",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Una luminaria junto a la ruta peatonal de referencia no enciende. La prioridad crítica de demostración responde a la afluencia prevista al cierre de clases; no se simulan accidentes.",
+        "estado": "nuevo",
+        "prioridad": "critica",
+        "fecha_reporte": "2026-10-03T18:20:00-05:00",
+        "reportes": 8,
+        "origen": "qr",
+        "zona": "FIE - Escuela ELECTRONICA",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6776601,
+          -1.655407
+        ]
+      },
+      "properties": {
+        "id": "INC-002",
+        "titulo": "SIMULADO: Luminaria con encendido intermitente",
+        "categoria": "iluminacion",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Una luminaria del mismo corredor peatonal presenta encendido intermitente y requiere revisión para facilitar la circulación.",
+        "estado": "nuevo",
+        "prioridad": "alta",
+        "fecha_reporte": "2026-10-03T18:25:00-05:00",
+        "reportes": 7,
+        "origen": "movil",
+        "zona": "FIE - Escuela ELECTRONICA",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6775511,
+          -1.6553301
+        ]
+      },
+      "properties": {
+        "id": "INC-003",
+        "titulo": "SIMULADO: Iluminación insuficiente en tramo peatonal",
+        "categoria": "iluminacion",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Un punto de luz cercano ofrece iluminación reducida. En el escenario de demostración se ha asignado su revisión al equipo de mantenimiento.",
+        "estado": "en_atencion",
+        "prioridad": "alta",
+        "fecha_reporte": "2026-10-02T18:10:00-05:00",
+        "reportes": 6,
+        "origen": "web",
+        "zona": "FIE - Escuela ELECTRONICA",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.679249,
+          -1.655877
+        ]
+      },
+      "properties": {
+        "id": "INC-004",
+        "titulo": "SIMULADO: Residuos acumulados junto al paso peatonal",
+        "categoria": "limpieza",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Se plantea una acumulación de envolturas junto al paso peatonal. La limpieza está programada y la circulación permanece disponible.",
+        "estado": "en_atencion",
+        "prioridad": "media",
+        "fecha_reporte": "2026-10-02T11:15:00-05:00",
+        "reportes": 4,
+        "origen": "qr",
+        "zona": "FIE- SISTEMAS",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6763226,
+          -1.6566268
+        ]
+      },
+      "properties": {
+        "id": "INC-005",
+        "titulo": "SIMULADO: Señalización peatonal desgastada",
+        "categoria": "infraestructura",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. La pintura desgastada de una señal de orientación requiere mantenimiento menor. En la demostración, el repintado ya se completó.",
+        "estado": "resuelto",
+        "prioridad": "baja",
+        "fecha_reporte": "2026-09-28T09:30:00-05:00",
+        "reportes": 2,
+        "origen": "web",
+        "zona": "FIE - Diseño Grafico",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6760894,
+          -1.6553013
+        ]
+      },
+      "properties": {
+        "id": "INC-006",
+        "titulo": "SIMULADO: Obstáculo temporal en paso accesible",
+        "categoria": "accesibilidad",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Un objeto liviano bloquea parcialmente un paso accesible junto al edificio de referencia. Se asigna prioridad crítica de demostración para retirarlo antes del cambio de clases; no se simulan lesiones.",
+        "estado": "nuevo",
+        "prioridad": "critica",
+        "fecha_reporte": "2026-10-03T08:40:00-05:00",
+        "reportes": 9,
+        "origen": "movil",
+        "zona": "Aulas Nuevas FIE",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6768774,
+          -1.6559914
+        ]
+      },
+      "properties": {
+        "id": "INC-007",
+        "titulo": "SIMULADO: Señal de orientación preventiva poco legible",
+        "categoria": "seguridad",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Una señal preventiva junto a la circulación peatonal tiene texto desvanecido. Se solicita revisar su legibilidad, sin representar delitos ni emergencias reales.",
+        "estado": "nuevo",
+        "prioridad": "media",
+        "fecha_reporte": "2026-10-01T14:20:00-05:00",
+        "reportes": 3,
+        "origen": "web",
+        "zona": "Modular Robótica FIE",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6766186,
+          -1.6549783
+        ]
+      },
+      "properties": {
+        "id": "INC-008",
+        "titulo": "SIMULADO: Paso peatonal temporalmente estrechado",
+        "categoria": "movilidad",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Un elemento móvil reduce el ancho útil de la ruta durante una actividad de demostración. Se coordina su retiro para mejorar el flujo al cambio de clases.",
+        "estado": "en_atencion",
+        "prioridad": "alta",
+        "fecha_reporte": "2026-09-30T12:10:00-05:00",
+        "reportes": 5,
+        "origen": "movil",
+        "zona": "Modular Diseño Grafico FIE",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6749249,
+          -1.655781
+        ]
+      },
+      "properties": {
+        "id": "INC-009",
+        "titulo": "SIMULADO: Residuos dispersos en zona de circulación",
+        "categoria": "limpieza",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Se representan residuos ligeros dispersos junto al acceso de referencia. La intervención de limpieza ya finalizó en el escenario ficticio.",
+        "estado": "resuelto",
+        "prioridad": "media",
+        "fecha_reporte": "2026-09-29T10:45:00-05:00",
+        "reportes": 4,
+        "origen": "qr",
+        "zona": "FIE Ciencias Básicas",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6761001,
+          -1.6599503
+        ]
+      },
+      "properties": {
+        "id": "INC-010",
+        "titulo": "SIMULADO: Luminaria de acceso revisada",
+        "categoria": "iluminacion",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Una luminaria próxima a la biblioteca requería revisión. En la demostración se completó el ajuste y se confirmó su funcionamiento.",
+        "estado": "resuelto",
+        "prioridad": "media",
+        "fecha_reporte": "2026-09-28T17:50:00-05:00",
+        "reportes": 3,
+        "origen": "qr",
+        "zona": "Biblioteca FADE",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6791609,
+          -1.6573738
+        ]
+      },
+      "properties": {
+        "id": "INC-011",
+        "titulo": "SIMULADO: Desgaste menor en señal de acceso",
+        "categoria": "infraestructura",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Una señal de orientación próxima al edificio presenta desgaste superficial. Se programa mantenimiento sin afectar el uso del acceso.",
+        "estado": "en_atencion",
+        "prioridad": "baja",
+        "fecha_reporte": "2026-09-29T09:10:00-05:00",
+        "reportes": 1,
+        "origen": "web",
+        "zona": "Admin Central ESPOCH",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6767935,
+          -1.657629
+        ]
+      },
+      "properties": {
+        "id": "INC-012",
+        "titulo": "SIMULADO: Paso de aproximación parcialmente obstruido",
+        "categoria": "accesibilidad",
+        "descripcion": "Escenario ficticio de ESPOCH Pulse, no es un reporte real. Un objeto temporal limita parcialmente la aproximación peatonal a la biblioteca. Se solicita despejarlo para facilitar el tránsito accesible, sin simular daños personales.",
+        "estado": "nuevo",
+        "prioridad": "alta",
+        "fecha_reporte": "2026-10-01T08:15:00-05:00",
+        "reportes": 5,
+        "origen": "movil",
+        "zona": "FM - BIBLIOTECA",
+        "es_simulado": true
+      }
+    }
+  ]
+}

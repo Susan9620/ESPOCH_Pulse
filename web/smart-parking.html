@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pulse Smart Parking — Demo GIS ESPOCH</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link rel="stylesheet" href="css/smart-parking.css">
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script defer src="js/vendor/html2pdf.bundle.min.js"></script>
+    <script defer src="js/smart-parking.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="brand"><span class="mark">P</span>
+            <div><small>ESPOCH PULSE · MOVILIDAD INTELIGENTE</small>
+                <h1>Smart Parking</h1>
+            </div>
+        </div>
+        <nav>
+            <a href="index.html">ESPOCH Pulse</a>
+            <button type="button" id="btn-open-admin" class="btn-nav-admin"
+                title="Abrir Panel Administrativo: Estadísticas, Horarios Críticos y Parqueaderos Más Utilizados">📊
+                Panel Administrativo</button>
+        </nav>
+    </header>
+
+
+
+
+
+    <div class="layout">
+        <aside class="sidebar">
+            <!-- Selector Superior de Vistas de la Barra Lateral -->
+            <div class="sidebar-nav-tabs" role="tablist">
+                <button type="button" id="sidebar-tab-route" class="sidebar-nav-tab active" role="tab"
+                    aria-selected="true">
+                    <span>🚗 Planificar Ruta</span>
+                </button>
+                <button type="button" id="sidebar-tab-iot" class="sidebar-nav-tab" role="tab" aria-selected="false">
+                    <span>📡 Simulación IoT</span>
+                </button>
+            </div>
+
+            <!-- VISTA 1: PLANIFICAR RUTA / CONSULTA -->
+            <div id="sidebar-view-route" class="sidebar-view">
+                <div class="sidebar-top-bar">
+                    <p class="overline">CONSULTA Y NAVEGACIÓN</p>
+                    <button type="button" id="btn-sidebar-admin" class="btn-sidebar-admin-link"
+                        title="Ver estadísticas y horarios críticos">📊 Panel Admin</button>
+                </div>
+                <h2>¿Dónde necesitas estacionarte?</h2>
+
+                <div class="route-form-card">
+                    <div class="form-group">
+                        <label for="origen">Ubicación del conductor (punto de partida)</label>
+                        <select id="origen">
+                            <option value="puerta_posterior" selected>🚗 Puerta Av. Canónigo Ramos (Acceso Este FIE)
+                            </option>
+                            <option value="acceso_norte">🚗 Vía Principal / Entrada Norte (Panamericana)</option>
+                            <option value="acceso_central">🚗 Longitudinal 2 (Acceso Central Politécnica)</option>
+                            <option value="acceso_sur">🚗 Transversal 1 (Acceso Sur / Shyris)</option>
+                            <option value="acceso_vinculacion">🚗 Entrada a Vinculación (Suroeste)</option>
+                            <option value="custom">📍 Ubicación personalizada (arrastra el auto en el mapa)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destino">Destino final dentro del campus / FIE</label>
+                        <select id="destino">
+                            <option value="telecomunicaciones">Edificio Carrera de Telecomunicaciones</option>
+                            <option value="software">Edificio Software</option>
+                            <option value="electronica">Edificio Carrera de Electrónica y Automatización</option>
+                            <option value="diseno_grafico">Edificio Diseño Gráfico</option>
+                            <option value="talleres_diseno">Edificio de Laboratorios y Talleres | Diseño Gráfico
+                            </option>
+                            <option value="ciencias_basicas_1">Edificio Ciencias Básicas I</option>
+                            <option value="principal_fie">Edificio Principal FIE</option>
+                            <option value="ciencias_basicas_2">Edificio Ciencias Básicas II</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="perfil-usuario">Perfil del conductor / Restricción de acceso</label>
+                        <select id="perfil-usuario">
+                            <option value="todos" selected>👥 Todos</option>
+                            <option value="estudiante">🎓 Estudiante</option>
+                            <option value="docente">👨‍🏫 Docente</option>
+                            <option value="administrativo">💼 Personal Administrativo</option>
+                            <option value="discapacidad">♿ Persona con Discapacidad</option>
+                        </select>
+                    </div>
+
+                    <div id="perfil-info-banner" class="perfil-info-banner hidden">
+                        <span id="perfil-info-icon" class="perfil-info-icon">💡</span>
+                        <span id="perfil-info-text" class="perfil-info-text"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prioridad">Criterio de recomendación</label>
+                        <select id="prioridad">
+                            <option value="equilibrado">Cercanía y Disponibilidad</option>
+                            <option value="cercania">Priorizar caminar menos</option>
+                            <option value="disponibilidad">Priorizar mayor disponibilidad</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group range-group">
+                        <div class="range-header">
+                            <label for="plazas">Espacios requeridos</label>
+                            <output id="plazas-valor" class="badge-range-val">1</output>
+                        </div>
+                        <input type="range" id="plazas" min="1" max="5" value="1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 2: SIMULACIÓN SENSORES IoT -->
+            <div id="sidebar-view-iot" class="sidebar-view hidden">
+                <div class="sidebar-top-bar">
+                    <p class="overline">SIMULACIÓN SENSORES IoT</p>
+                    <span id="iot-status-badge" class="iot-badge paused">● Pausado</span>
+                </div>
+                <h2>Control de Telemetría</h2>
+
+                <!-- Selector de Fase / Modo de Simulación -->
+                <div class="iot-mode-selector" role="tablist">
+                    <button type="button" id="tab-manual" class="iot-tab-btn active" role="tab" aria-selected="true">
+                        🕹️ Manual
+                    </button>
+                    <button type="button" id="tab-auto" class="iot-tab-btn" role="tab" aria-selected="false">
+                        ⚡ Auto
+                    </button>
+                    <button type="button" id="tab-pred" class="iot-tab-btn" role="tab" aria-selected="false">
+                        🔮 Predicción
+                    </button>
+                </div>
+
+                <!-- Panel: Control Manual granular -->
+                <div id="panel-manual" class="iot-panel">
+                    <div id="controles-parking"></div>
+                </div>
+
+                <!-- Panel: Flujo vehicular continuo y automático -->
+                <div id="panel-auto" class="iot-panel hidden">
+                    <p class="iot-panel-desc">Flujo dinámico continuo de vehículos entrando y saliendo sin presionar
+                        botones:</p>
+                    <div class="auto-control-box">
+                        <button id="btn-toggle-auto" type="button" class="btn-auto-toggle start">
+                            <span id="btn-auto-icon">▶</span> <span id="btn-auto-text">Iniciar flujo automático</span>
+                        </button>
+                        <div class="auto-config-grid">
+                            <div>
+                                <label for="auto-speed">Frecuencia</label>
+                                <select id="auto-speed">
+                                    <option value="1500">Rápido (1.5s)</option>
+                                    <option value="3000" selected>Normal (3.0s)</option>
+                                    <option value="5000">Suave (5.0s)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="auto-traffic-pattern">Tráfico</label>
+                                <select id="auto-traffic-pattern">
+                                    <option value="balanced" selected>Entradas / Salidas</option>
+                                    <option value="rush_in">Hora pico (Más entradas)</option>
+                                    <option value="rush_out">Salida (Más desocupación)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel: Predicción por horarios e histórico -->
+                <div id="panel-pred" class="iot-panel hidden">
+                    <p class="iot-panel-desc">Estima saturación de parqueaderos según franjas horarias y series
+                        históricas simuladas:</p>
+                    <div class="pred-control-box">
+                        <label for="pred-hora-select" class="pred-label">Hora prevista de llegada</label>
+                        <select id="pred-hora-select">
+                            <option value="07:00" selected>07:00 — Pico Matutino (Ingreso y 1ra hora de clases)</option>
+                            <option value="08:00">08:00 — Clases matutinas en curso</option>
+                            <option value="09:00">09:00 — Actividad académica FIE</option>
+                            <option value="10:00">10:00 — Media mañana continua</option>
+                            <option value="11:00">11:00 — Rotación intermedia</option>
+                            <option value="12:00">12:00 — Pre-almuerzo</option>
+                            <option value="13:00">13:00 — Pico Mediodía (Almuerzo y cambio de jornada)</option>
+                            <option value="14:00">14:00 — Inicio turno tarde</option>
+                            <option value="15:00">15:00 — Talleres y laboratorios vespertinos</option>
+                            <option value="16:00">16:00 — Media tarde</option>
+                            <option value="17:00">17:00 — Pico Vespertino (Salida de jornada - moderado)</option>
+                            <option value="18:00">18:00 — Cierre de jornada</option>
+                        </select>
+
+                        <label for="pred-dia-select" class="pred-label" style="margin-top: 10px;">Tipo de
+                            jornada</label>
+                        <select id="pred-dia-select">
+                            <option value="laborable" selected>Lunes a Viernes (Día lectivo)</option>
+                            <option value="sabado">Sábado (Posgrados / Talleres)</option>
+                        </select>
+
+                        <div class="pred-toggle-row">
+                            <label class="switch-container">
+                                <input type="checkbox" id="pred-apply-map">
+                                <span class="switch-slider"></span>
+                                <span class="switch-label">Proyectar mapa con ocupación estimada</span>
+                            </label>
+                        </div>
+
+                        <button type="button" id="btn-run-prediction" class="btn-pred-calc">
+                            📊 Actualizar pronóstico
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Consola de Telemetría IoT en vivo -->
+                <div class="iot-feed-wrapper">
+                    <div class="iot-feed-header">
+                        <span>TELEMETRÍA EN VIVO (MQTT/WS)</span>
+                        <button type="button" id="btn-clear-feed" class="btn-clear-feed"
+                            title="Limpiar eventos">Limpiar</button>
+                    </div>
+                    <div id="iot-telemetry-feed" class="iot-feed" aria-live="polite">
+                        <div class="iot-log-line system"><span class="ts">[00:00:00]</span> [Sistema] Red de sensores
+                            IoT sincronizada.</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-iot-footer-actions">
+                    <button id="reset" type="button">↻ Restaurar escenario inicial</button>
+                    <button type="button" id="btn-go-route" class="btn-sidebar-back">← Volver a Planificar Ruta</button>
+                </div>
+            </div>
+        </aside>
+        <main>
+            <!-- Selector Superior de Pestañas de la Vista Principal -->
+            <div class="main-tabs-bar" role="tablist">
+                <button type="button" id="tab-main-map" class="main-tab-btn active" role="tab" aria-selected="true"
+                    onclick="switchMainView('map')">
+                    <span class="tab-icon">🗺️</span>
+                    <span class="tab-label">Mapa en Vivo y Ruta</span>
+                </button>
+                <button type="button" id="tab-main-ranking" class="main-tab-btn" role="tab" aria-selected="false"
+                    onclick="switchMainView('ranking')">
+                    <span class="tab-icon">🏆</span>
+                    <span class="tab-label">Comparación de Alternativas</span>
+                    <span class="main-tab-counter" id="tab-ranking-counter">5</span>
+                </button>
+                <button type="button" id="tab-main-pred" class="main-tab-btn" role="tab" aria-selected="false"
+                    onclick="switchMainView('pred')">
+                    <span class="tab-icon">🔮</span>
+                    <span class="tab-label">Modelo Predictivo y Demanda</span>
+                </button>
+            </div>
+
+            <!-- VISTA 1: MAPA EN VIVO Y RUTA (PANTALLA LIMPIA TIPO DASHBOARD) -->
+            <div id="panel-main-map" class="main-tab-view active">
+                <section class="metrics">
+                    <div>
+                        <span>PARQUEADEROS</span>
+                        <strong id="total-parking">5</strong>
+                    </div>
+                    <div>
+                        <span>LIBRES</span>
+                        <strong id="total-libres">—</strong>
+                    </div>
+                    <div>
+                        <span>ELEGIBLES</span>
+                        <strong id="total-elegibles">—</strong>
+                    </div>
+                </section>
+                <section class="mapwrap">
+                    <div class="maptitle">
+                        <div>
+                            <h2>Campus ESPOCH · Riobamba</h2>
+                        </div>
+                        <div class="maptitle-center-controls">
+                            <div class="alert-center-trigger-wrapper">
+                                <button type="button" id="btn-alert-center" class="btn-alert-center"
+                                    title="Centro de alertas automáticas de ocupación">
+                                    <span class="alert-bell-icon">🔔</span>
+                                    <span class="alert-center-title">Alertas</span>
+                                    <span id="alert-counter-badge" class="alert-counter-badge">0</span>
+                                </button>
+                                <div id="alert-history-dropdown" class="alert-history-dropdown hidden">
+                                    <div class="alert-history-header">
+                                        <div class="alert-history-title-group">
+                                            <strong>🔔 Alertas en Vivo</strong>
+                                            <span id="alert-history-count-text">0 eventos</span>
+                                        </div>
+                                        <div class="alert-history-actions">
+                                            <button type="button" id="btn-toggle-sound" class="btn-sound-toggle"
+                                                title="Activar o silenciar sonido">
+                                                🔊 Sonido: ON
+                                            </button>
+                                            <button type="button" id="btn-clear-alerts" class="btn-clear-alerts-list"
+                                                title="Limpiar historial">
+                                                Limpiar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="alert-history-list" class="alert-history-list">
+                                        <div class="alert-empty-state">No hay alertas registradas aún. Las alertas se
+                                            emitirán automáticamente cuando un parqueadero se llene o libere plazas.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="semaforo-legend" title="Semáforo de disponibilidad en tiempo real">
+                            <span class="semaforo-legend-item verde"><span class="semaforo-legend-dot verde"></span>
+                                Disponible</span>
+                            <span class="semaforo-legend-item amarillo"><span
+                                    class="semaforo-legend-dot amarillo"></span>
+                                Casi lleno</span>
+                            <span class="semaforo-legend-item rojo"><span class="semaforo-legend-dot rojo"></span>
+                                Lleno</span>
+                        </div>
+                    </div>
+                    <div class="route-legend-strip">
+                        <div class="route-legend-item vehicular">
+                            <span class="route-line-sample vehicular"></span>
+                            <span>🚗 Conducir al parqueadero:</span>
+                            <strong id="nav-dist-car">—</strong>
+                        </div>
+                        <div class="route-legend-item pedestrian">
+                            <span class="route-line-sample pedestrian"></span>
+                            <span>🚶 Caminar al edificio:</span>
+                            <strong id="nav-dist-walk">—</strong>
+                        </div>
+                        <div class="route-legend-item eta">
+                            <span>⏱️ Tiempo total (ETA):</span>
+                            <strong id="nav-total-time">—</strong>
+                        </div>
+                        <button type="button" id="btn-recenter-driver" class="btn-nav-recenter"
+                            title="Centrar mapa en el vehículo">
+                            🎯 Mi vehículo
+                        </button>
+                    </div>
+                    <div id="map">
+                        <div class="mapfallback">Preparando mapa…</div>
+                    </div>
+                    <div class="nav-instruction-bar" id="nav-instruction-bar">
+                        <div class="nav-instruction-header">
+                            <span class="nav-badge-pill">NAVEGACIÓN INTELIGENTE</span>
+                            <span class="nav-instruction-subtitle">Secuencia de Ruta Sugerida</span>
+                        </div>
+                        <div id="nav-instruction-text" class="nav-instruction-steps">
+                            <div class="nav-step-item">
+                                <span class="nav-step-badge">⏳</span>
+                                <span class="nav-step-content">Calculando trayecto óptimo desde tu ubicación
+                                    vehicular…</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="recommendation" class="recommendation" aria-live="polite">
+                    <p>Cargando recomendación…</p>
+                    <div class="source">Datos solo para demostración. Sin reserva ni control de acceso real.</div>
+                </section>
+            </div>
+
+            <!-- VISTA 2: COMPARACIÓN DE ALTERNATIVAS -->
+            <div id="panel-main-ranking" class="main-tab-view hidden">
+                <section class="ranking-header-card">
+                    <div class="ranking-header-text">
+                        <p class="overline">EVALUACIÓN GIS MULTICRITERIO</p>
+                        <h2>🏆 Comparación de Alternativas de Estacionamiento</h2>
+                    </div>
+                    <button type="button" id="btn-view-map-from-ranking" class="btn-goto-map">
+                        🗺️ Ver Ruta en el Mapa
+                    </button>
+                </section>
+                <section class="ranking">
+                    <div id="ranking"></div>
+                </section>
+            </div>
+
+            <!-- VISTA 3: MODELO PREDICTIVO Y DEMANDA -->
+            <div id="panel-main-pred" class="main-tab-view hidden">
+                <section class="prediction-card">
+                    <div class="pred-card-header">
+                        <div>
+                            <div class="pred-tag-group">
+                                <span class="pred-badge-ai">MODELO PREDICTIVO</span>
+                            </div>
+                            <h2>🔮 Pronóstico de Ocupación por Horarios</h2>
+                        </div>
+                        <div class="pred-active-pill" id="pred-active-slot-pill">
+                            <span>Horario consultado:</span>
+                            <strong id="pred-slot-display">08:00</strong>
+                        </div>
+                    </div>
+
+                    <!-- Selector de franjas horarias interactivas -->
+                    <div class="pred-timeline-wrapper">
+                        <span class="pred-timeline-label">Selecciona una hora para simular la demanda:</span>
+                        <div class="pred-timeline-bar" id="pred-timeline-bar">
+                            <!-- Chips de horas se generan dinámicamente: 07:00, 08:00... -->
+                        </div>
+                    </div>
+
+                    <!-- Tarjetas de predicción individual por parqueadero -->
+                    <div class="pred-grid" id="pred-cards-grid">
+                        <!-- Se renderizan las 5 tarjetas de parqueaderos con barras y probabilidades -->
+                    </div>
+
+                    <!-- Gráfico de tendencia histórica del campus -->
+                    <div class="pred-chart-container">
+                        <div class="pred-chart-header">
+                            <div>
+                                <h3>Demanda global esperada del campus por horas</h3>
+                                <small id="pred-chart-subtitle">Ocupación promedio acumulada (% plazas ocupadas) · Lunes
+                                    a
+                                    Viernes</small>
+                            </div>
+                            <div class="pred-chart-legend">
+                                <span class="pred-leg-item low"><span class="pred-leg-dot low"></span>
+                                    &lt; 50% Baja</span>
+                                <span class="pred-leg-item mid"><span class="pred-leg-dot mid"></span> 50-80%
+                                    Media</span>
+                                <span class="pred-leg-item high"><span class="pred-leg-dot high"></span> &gt; 80%
+                                    Saturación</span>
+                            </div>
+                        </div>
+                        <div class="pred-chart-bars" id="pred-chart-bars">
+                            <!-- Barras generadas con porcentaje -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <!-- MODAL / DASHBOARD DEL PANEL ADMINISTRATIVO -->
+    <div id="admin-modal" class="admin-modal-backdrop hidden" aria-modal="true" role="dialog"
+        aria-labelledby="admin-modal-title">
+        <div class="admin-modal-card">
+            <!-- Header del Modal -->
+            <div class="admin-modal-header">
+                <div class="admin-modal-title-group">
+                    <div class="admin-badge-row">
+                        <span class="admin-badge-role">PANEL ADMINISTRATIVO</span>
+                        <span class="admin-badge-context">GESTIÓN DE MOVILIDAD Y ESTACIONAMIENTO · ESPOCH</span>
+                    </div>
+                    <h2 id="admin-modal-title">Indicadores Operativos y Horarios Críticos</h2>
+                    <p>Monitoreo ejecutivo de ocupación global, patrones de demanda horaria y utilización por
+                        parqueadero.</p>
+                </div>
+                <div class="admin-modal-header-actions">
+                    <button type="button" id="btn-admin-export" class="btn-admin-action"
+                        title="Generar y descargar informe ejecutivo oficial en formato PDF">
+                        📄 Exportar PDF
+                    </button>
+                    <button type="button" id="btn-close-admin" class="btn-admin-close"
+                        title="Cerrar panel (Esc)">✕</button>
+                </div>
+            </div>
+
+            <!-- Navegación por pestañas del panel administrativo -->
+            <div class="admin-tabs-nav" role="tablist">
+                <button type="button" class="admin-tab-btn active" id="tab-admin-overview"
+                    data-target="admin-panel-overview" role="tab" aria-selected="true">
+                    📊 Estadísticas de Ocupación
+                </button>
+                <button type="button" class="admin-tab-btn" id="tab-admin-hours" data-target="admin-panel-hours"
+                    role="tab" aria-selected="false">
+                    ⏰ Horarios Críticos y Demanda
+                </button>
+                <button type="button" class="admin-tab-btn" id="tab-admin-ranking" data-target="admin-panel-ranking"
+                    role="tab" aria-selected="false">
+                    🏆 Parqueaderos Más Utilizados
+                </button>
+            </div>
+
+            <!-- Contenido de las pestañas -->
+            <div class="admin-modal-body">
+                <!-- PESTAÑA 1: Estadísticas de Ocupación -->
+                <div id="admin-panel-overview" class="admin-subpanel active">
+                    <!-- Tarjetas de KPIs Principales -->
+                    <div class="admin-kpis-grid">
+                        <div class="admin-kpi-card">
+                            <span class="kpi-label">CAPACIDAD TOTAL MONITOREADA</span>
+                            <div class="kpi-main-val" id="admin-kpi-capacidad">110</div>
+                            <span class="kpi-subtext">5 sectores vehiculares en campus</span>
+                        </div>
+                        <div class="admin-kpi-card">
+                            <span class="kpi-label">OCUPACIÓN GLOBAL EN VIVO</span>
+                            <div class="kpi-main-val" id="admin-kpi-pct-ocupado">—%</div>
+                            <div class="kpi-progress-bar">
+                                <div class="kpi-progress-fill" id="admin-kpi-fill" style="width: 0%;"></div>
+                            </div>
+                            <span class="kpi-subtext" id="admin-kpi-plazas-sub">Calculando plazas…</span>
+                        </div>
+                        <div class="admin-kpi-card">
+                            <span class="kpi-label">FLUJO VEHICULAR DE SESIÓN</span>
+                            <div class="kpi-main-val" id="admin-kpi-turnover">0</div>
+                            <span class="kpi-subtext" id="admin-kpi-turnover-sub">0 entradas · 0 salidas
+                                registradas</span>
+                        </div>
+                        <div class="admin-kpi-card">
+                            <span class="kpi-label">ESTADO GENERAL DEL CAMPUS</span>
+                            <div class="kpi-main-val status-val" id="admin-kpi-status-campus">🟢 Normal</div>
+                            <span class="kpi-subtext" id="admin-kpi-status-sub">Nivel de congestión vehicular
+                                controlado</span>
+                        </div>
+                    </div>
+
+                    <!-- Distribución de Disponibilidad y Estado de Semáforos -->
+                    <div class="admin-section-grid">
+                        <div class="admin-section-box">
+                            <div class="admin-box-header">
+                                <h3>Distribución Actual por Semáforo</h3>
+                                <small>Estado de los 5 sectores monitoreados</small>
+                            </div>
+                            <div class="admin-semaforo-bars" id="admin-semaforo-bars">
+                                <!-- Generado dinámicamente -->
+                            </div>
+                        </div>
+
+                        <div class="admin-section-box">
+                            <div class="admin-box-header">
+                                <h3>Ocupación en Vivo por Sector</h3>
+                                <small>Capacidad y porcentaje en tiempo real</small>
+                            </div>
+                            <div class="admin-sectors-list" id="admin-sectors-list">
+                                <!-- Generado dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA 2: Horarios Críticos -->
+                <div id="admin-panel-hours" class="admin-subpanel hidden">
+                    <div class="admin-hours-header-row">
+                        <div>
+                            <h3>Análisis de Franjas Horarias y Picos de Saturación</h3>
+                            <p class="admin-subtext">Detección de patrones con mayor probabilidad de sobrecarga según
+                                series históricas simuladas.</p>
+                        </div>
+                        <div class="admin-jornada-toggle">
+                            <label for="admin-select-jornada">Jornada analizada:</label>
+                            <select id="admin-select-jornada">
+                                <option value="laborable" selected>Lunes a Viernes (Día regular)</option>
+                                <option value="sabado">Sábado (Posgrados / Talleres)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tarjetas de Franjas Críticas -->
+                    <div class="critical-hours-cards-grid" id="admin-critical-cards">
+                        <!-- Generado dinámicamente -->
+                    </div>
+
+                    <!-- Gráfico Comparativo de Todas las Horas -->
+                    <div class="admin-chart-box">
+                        <div class="admin-box-header">
+                            <div>
+                                <h3>Curva de Demanda Vehicular por Horas (07:00 a 18:00)</h3>
+                                <small id="admin-chart-desc">Porcentaje de ocupación promedio ponderado de todo el
+                                    campus</small>
+                            </div>
+                            <div class="admin-chart-legend">
+                                <span><span class="chart-dot low"></span> &lt; 50% Baja</span>
+                                <span><span class="chart-dot mid"></span> 50-80% Media</span>
+                                <span><span class="chart-dot high"></span> &gt; 80% Crítica</span>
+                            </div>
+                        </div>
+                        <div class="admin-hourly-bars-container" id="admin-hourly-bars">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Recomendación Operativa para la Gestión de Tráfico -->
+                    <div class="admin-recommendation-banner" id="admin-hours-rec-banner">
+                        <div class="rec-banner-icon">💡</div>
+                        <div class="rec-banner-text">
+                            <strong>Estrategia de Gestión Recomendada para Horarios Críticos:</strong>
+                            <p id="admin-hours-rec-text">Cargando análisis de gestión vehicular…</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA 3: Parqueaderos Más Utilizados -->
+                <div id="admin-panel-ranking" class="admin-subpanel hidden">
+                    <div class="admin-ranking-header-row">
+                        <div>
+                            <h3>Ranking de Demanda y Frecuencia de Utilización</h3>
+                            <p class="admin-subtext">Evaluación de los sectores con mayor tasa de rotación y nivel de
+                                presión vehicular.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjetas Destacadas: Parqueadero #1 y Pulmón de Capacidad -->
+                    <div class="admin-spotlight-grid" id="admin-spotlight-grid">
+                        <!-- Generado dinámicamente -->
+                    </div>
+
+                    <!-- Tabla Comparativa Completa -->
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="admin-table-ranking">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Parqueadero</th>
+                                    <th>Capacidad</th>
+                                    <th>Ocupación Prom. Diaria</th>
+                                    <th>Horario Pico</th>
+                                    <th>Sensibilidad</th>
+                                    <th>Rotación Sesión</th>
+                                    <th>Perfil / Acceso</th>
+                                    <th>Estado Actual</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-body">
+                                <!-- Filas generadas dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer del Modal -->
+            <div class="admin-modal-footer">
+                <div class="admin-footer-status">
+                    <span class="live-pulse-dot"></span>
+                    <span id="admin-footer-status-text">Datos sincronizados con nodos IoT en tiempo real</span>
+                </div>
+                <div class="admin-footer-buttons">
+                    <button type="button" id="btn-admin-peak-sim" class="btn-admin-peak-sim"
+                        title="Simular condición de hora pico en los sensores">
+                        ⚡ Simular Hora Pico (07:00 AM)
+                    </button>
+                    <button type="button" id="btn-close-admin-footer" class="btn-admin-secondary">
+                        Cerrar Panel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toasts flotantes para alertas automáticas -->
+    <div id="alert-toast-container" class="alert-toast-container" aria-live="assertive"></div>
+
+    <footer><strong>ESPOCH Pulse Smart Parking</strong> · Demostración local, no sistema institucional · Datos ©
+        colaboradores de OpenStreetMap (ODbL) · Algoritmo basado en reglas.</footer>
+</body>
+
+</html>

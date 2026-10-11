@@ -1,0 +1,120 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6761788,
+            -1.6551578
+          ],
+          [
+            -78.6761374,
+            -1.6551594
+          ],
+          [
+            -78.6760719,
+            -1.6551919
+          ],
+          [
+            -78.6759375,
+            -1.6553275
+          ]
+        ]
+      },
+      "properties": {
+        "id": "RUTA-001",
+        "nombre": "SIMULADA: ruta convencional — FIE",
+        "tipo": "convencional",
+        "origen": "Acceso simulado ACC-001 — Aulas Nuevas FIE",
+        "destino": "Acceso simulado ACC-007 — Aulas Nuevas FIE",
+        "distancia_m": 33.9,
+        "apta_movilidad_reducida": false,
+        "elementos_accesibilidad": [
+          "ACC-001",
+          "ACC-002",
+          "ACC-003",
+          "ACC-007"
+        ],
+        "descripcion": "Recorrido ficticio de demostración de ESPOCH Pulse. Sigue el tramo más directo de la red de referencia, próximo a la escalera ACC-002 y al obstáculo ACC-003 del escenario ficticio; por ello no se considera apta para movilidad reducida en la demostración. No certifica condiciones reales de accesibilidad ni navegación y no está oficialmente validado por la ESPOCH.",
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6761788,
+            -1.6551578
+          ],
+          [
+            -78.6762205,
+            -1.6551246
+          ],
+          [
+            -78.6762165,
+            -1.6550642
+          ],
+          [
+            -78.6761776,
+            -1.6550267
+          ],
+          [
+            -78.6761025,
+            -1.6549422
+          ],
+          [
+            -78.6759067,
+            -1.6547331
+          ],
+          [
+            -78.6758611,
+            -1.6547425
+          ],
+          [
+            -78.675625,
+            -1.654953
+          ],
+          [
+            -78.675684,
+            -1.6550361
+          ],
+          [
+            -78.6758155,
+            -1.6551916
+          ],
+          [
+            -78.6758785,
+            -1.6552618
+          ],
+          [
+            -78.6759375,
+            -1.6553275
+          ]
+        ]
+      },
+      "properties": {
+        "id": "RUTA-002",
+        "nombre": "SIMULADA: ruta accesible — FIE",
+        "tipo": "accesible",
+        "origen": "Acceso simulado ACC-001 — Aulas Nuevas FIE",
+        "destino": "Acceso simulado ACC-007 — Aulas Nuevas FIE",
+        "distancia_m": 157.3,
+        "apta_movilidad_reducida": true,
+        "elementos_accesibilidad": [
+          "ACC-001",
+          "ACC-004",
+          "ACC-005",
+          "ACC-006",
+          "ACC-007"
+        ],
+        "descripcion": "Recorrido ficticio de demostración de ESPOCH Pulse. Sigue una vía de servicio de referencia como alternativa de rodeo, evita la escalera ACC-002 y el obstáculo ACC-003 y pasa junto a las rampas ACC-004 y ACC-005 y al cruce ACC-006, aptos en el escenario simulado. No certifica condiciones reales de accesibilidad ni navegación y no está oficialmente validado por la ESPOCH.",
+        "es_simulado": true
+      }
+    }
+  ]
+}

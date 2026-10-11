@@ -1,0 +1,105 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #172033;
+  background: #f4f7fb;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { display: flex; flex-direction: column; }
+.app-header {
+  flex-shrink: 0;
+  min-height: 84px;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #0f2744;
+  color: #fff;
+}
+.identidad { display: flex; align-items: center; gap: 14px; }
+h1 { margin: 0; font-size: 25px; font-weight: 650; letter-spacing: -0.8px; line-height: 1.2; }
+.identidad p { margin: 5px 0 0; color: #b3c8dc; font-size: 12px; letter-spacing: 1.6px; }
+.marca-pulso { width: 40px; height: 40px; border: 1px solid #4b7895; border-radius: 50%; display: grid; place-items: center; position: relative; }
+.marca-pulso::before { content: ""; width: 24px; height: 24px; border: 1px solid #68afa9; border-radius: 50%; }
+.marca-pulso span { position: absolute; width: 8px; height: 8px; background: #6ad0c5; border-radius: 50%; }
+.contexto-header { display: flex; align-items: center; gap: 20px; font-size: 12px; color: #bdcddd; }
+.badge-prototipo { border: 1px solid #496077; border-radius: 20px; padding: 6px 11px; color: #e3edf6; font-size: 11px; }
+.app-layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 320px minmax(0, 1fr); }
+.sidebar { background: #fff; display: flex; flex-direction: column; min-height: 0; overflow-y: auto; padding: 20px 22px 18px; gap: 20px; }
+.sidebar h2 { font-size: 16px; font-weight: 650; letter-spacing: -0.3px; margin: 0; }
+.pulso-encabezado { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
+.pulso-etiqueta { background: #edf2f7; color: #64748b; font-size: 9px; font-weight: 650; letter-spacing: 0.6px; border-radius: 5px; padding: 4px 6px; }
+.pulso-indicadores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; }
+.pulso-tarjeta { --acento: #4e718e; border-radius: 12px; background: #f4f7fb; padding: 12px; position: relative; }
+.pulso-tarjeta::after { content: ""; position: absolute; top: 17px; right: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--acento); }
+.pulso-tarjeta dt { font-size: 11px; color: #64748b; padding-right: 6px; }
+.pulso-tarjeta dd { font-size: 28px; line-height: 1.15; font-weight: 650; margin: 6px 0 0; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.pulso-nuevas { --acento: #dc2626; }
+.pulso-atencion { --acento: #d97706; }
+.pulso-resueltas { --acento: #15803d; }
+.filtros-incidencias { border-top: 1px solid #e2e8f0; padding-top: 18px; }
+.filtros-controles { display: grid; gap: 10px; margin-top: 12px; }
+.filtros-controles label { display: grid; gap: 6px; font-size: 12px; color: #526176; font-weight: 550; }
+.filtros-controles select, .filtros-controles button { width: 100%; min-width: 0; min-height: 40px; padding: 9px 11px; border: 1px solid #dce4ed; border-radius: 10px; font: inherit; font-size: 12px; background: #fff; color: #172033; transition: border-color 120ms, background-color 120ms; }
+.filtros-controles select:hover { border-color: #94aabe; }
+.filtros-controles select:focus-visible, .filtros-controles button:focus-visible { outline: 2px solid #1677b8; outline-offset: 2px; }
+.filtros-controles button { cursor: pointer; background: #f4f7fb; color: #496078; font-weight: 550; }
+.filtros-controles button:hover { background: #eaf0f6; border-color: #a7bacd; }
+.info-prototipo { margin-top: auto; padding-top: 18px; border-top: 1px solid #e2e8f0; font-size: 11px; line-height: 1.6; color: #64748b; }
+.info-prototipo strong { color: #496078; font-weight: 650; }
+.info-prototipo p { margin: 6px 0 0; }
+#map { min-width: 0; min-height: 0; height: 100%; border-left: 1px solid #e2e8f0; background: #e8eef1; }
+.leaflet-container { font-family: inherit; }
+.leaflet-top .leaflet-control { margin-top: 18px; }
+.leaflet-left .leaflet-control { margin-left: 18px; }
+.leaflet-right .leaflet-control { margin-right: 18px; }
+.leaflet-bar, .leaflet-control-layers, .leaflet-touch .leaflet-bar, .leaflet-touch .leaflet-control-layers { border: 1px solid #dce4ed; border-radius: 12px; box-shadow: 0 3px 12px #0f274414; }
+.leaflet-bar a { color: #294761; background: #fff; }
+.leaflet-bar a, .leaflet-touch .leaflet-bar a { width: 36px; height: 36px; line-height: 36px; }
+.leaflet-bar a:first-child { border-radius: 11px 11px 0 0; }
+.leaflet-bar a:last-child { border-radius: 0 0 11px 11px; }
+.leaflet-bar a:hover { background: #f0f5fa; }
+.leaflet-control-layers { color: #243b53; }
+.leaflet-control-layers-expanded { padding: 12px 14px; font-size: 12px; line-height: 1.9; }
+.leaflet-control-layers label { cursor: pointer; }
+.leaflet-control-layers input { accent-color: #1677b8; }
+.leaflet-popup-content-wrapper { border-radius: 14px; box-shadow: 0 5px 22px #0f274422; color: #243b53; }
+.leaflet-popup-content { margin: 20px 23px; font-size: 12px; line-height: 1.65; overflow-wrap: anywhere; }
+.leaflet-popup-content > strong { font-size: 15px; line-height: 1.4; display: block; color: #0f2744; }
+.leaflet-popup-content p { margin: 12px 0; }
+.leaflet-popup-content p > strong { font-size: 10px; letter-spacing: 0.5px; background: #edf2f7; padding: 4px 6px; border-radius: 5px; color: #526176; }
+.leaflet-popup-content small { font-size: 10px; color: #64748b; }
+.leaflet-container a.leaflet-popup-close-button { top: 5px; right: 5px; color: #64748b; }
+.leaflet-popup-tip { box-shadow: 0 3px 8px #0f274414; }
+.leaflet-control-attribution { font-size: 10px; }
+@media (max-width: 899px) {
+  body { height: auto; min-height: 100%; }
+  .app-header { padding: 18px 20px; flex-wrap: wrap; gap: 14px; }
+  .contexto-header { flex-wrap: wrap; gap: 8px 16px; }
+  .app-layout { display: flex; flex-direction: column; min-height: auto; }
+  .sidebar { overflow: visible; padding: 22px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
+  .filtros-incidencias { border-top: 0; padding-top: 0; }
+  .info-prototipo { grid-column: 1 / -1; margin: 0; }
+  #map { flex: none; height: 65vh; min-height: 440px; border-left: 0; border-top: 1px solid #e2e8f0; }
+}
+@media (max-width: 540px) {
+  h1 { font-size: 23px; }
+  .app-header { padding: 18px; }
+  .contexto-header { font-size: 11px; }
+  .sidebar { grid-template-columns: minmax(0, 1fr); padding: 22px 18px; }
+  .filtros-incidencias { border-top: 1px solid #e2e8f0; padding-top: 20px; }
+  .leaflet-top .leaflet-control { margin-top: 12px; }
+  .leaflet-left .leaflet-control { margin-left: 12px; }
+  .leaflet-right .leaflet-control { margin-right: 12px; }
+}
+
+.registrar-incidencia { display: grid; gap: 5px; width: 100%; padding: 13px 15px; border-radius: 10px; background: #0f6172; color: #fff; text-decoration: none; font-size: 13px; }
+.registrar-incidencia span { font-size: 11px; color: #d2e9ed; }
+.registrar-incidencia:hover { background: #104d5c; }
+.registrar-incidencia:focus-visible { outline: 2px solid #1677b8; outline-offset: 3px; }
+@media (min-width: 541px) and (max-width: 899px) {
+  .registrar-incidencia { grid-column: 1; }
+  .filtros-incidencias { grid-column: 2; grid-row: 1 / 3; }
+}

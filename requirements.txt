@@ -1,0 +1,3 @@
+# ESPOCH Pulse & Smart Parking
+# Este proyecto utiliza la biblioteca estándar de Python (http.server, sqlite3, json, threading)
+# Sin dependencias pesadas para despliegue inmediato y 100% gratuito.

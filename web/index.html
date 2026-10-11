@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESPOCH Pulse — Smart Campus GIS</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/main.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script defer src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+
+<body>
+  <header class="app-header">
+    <div class="identidad">
+      <span class="marca-pulso" aria-hidden="true"><span></span></span>
+      <div>
+        <h1>ESPOCH Pulse</h1>
+        <p>Smart Campus GIS</p>
+      </div>
+    </div>
+    <div class="contexto-header">
+      <span class="badge-prototipo">Prueba de concepto</span>
+      <a href="smart-parking.html" style="color:#d7ffbc;font-weight:800;text-decoration:underline;">Abrir Smart
+        Parking</a>
+      <span>Piloto FIE · Campus Riobamba</span>
+    </div>
+  </header>
+  <div class="app-layout">
+    <aside class="sidebar" aria-label="Resumen y filtros del campus">
+      <section class="pulso" aria-labelledby="pulso-titulo">
+        <div class="pulso-encabezado">
+          <h2 id="pulso-titulo">Pulso del Campus</h2>
+          <span class="pulso-etiqueta">PRUEBA DE CONCEPTO</span>
+        </div>
+        <dl class="pulso-indicadores" aria-live="polite">
+          <div class="pulso-tarjeta">
+            <dt>Total</dt>
+            <dd id="pulso-total">—</dd>
+          </div>
+          <div class="pulso-tarjeta pulso-nuevas">
+            <dt>Nuevas</dt>
+            <dd id="pulso-nuevas">—</dd>
+          </div>
+          <div class="pulso-tarjeta pulso-atencion">
+            <dt>En atención</dt>
+            <dd id="pulso-atencion">—</dd>
+          </div>
+          <div class="pulso-tarjeta pulso-resueltas">
+            <dt>Resueltas</dt>
+            <dd id="pulso-resueltas">—</dd>
+          </div>
+        </dl>
+      </section>
+      <a class="registrar-incidencia" href="../espoch-pulse-demo/index.html?mode=gps" target="_blank" rel="noopener">
+        <strong>Registrar incidencia</strong><span>Utilizar mi ubicación actual</span>
+      </a>
+      <section class="filtros-incidencias" aria-labelledby="filtros-titulo">
+        <h2 id="filtros-titulo">Filtrar incidencias</h2>
+        <div class="filtros-controles">
+          <label>Categoría
+            <select id="filtro-categoria">
+              <option value="">Todas las categorías</option>
+              <option value="iluminacion">Iluminación</option>
+              <option value="limpieza">Limpieza</option>
+              <option value="infraestructura">Infraestructura</option>
+              <option value="seguridad">Seguridad</option>
+              <option value="accesibilidad">Accesibilidad</option>
+              <option value="movilidad">Movilidad</option>
+              <option value="areas_verdes">Áreas verdes</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+          <label>Estado
+            <select id="filtro-estado">
+              <option value="">Todos los estados</option>
+              <option value="nuevo">Nuevo</option>
+              <option value="en_atencion">En atención</option>
+              <option value="resuelto">Resuelto</option>
+            </select>
+          </label>
+          <label>Prioridad
+            <select id="filtro-prioridad">
+              <option value="">Todas las prioridades</option>
+              <option value="baja">Baja</option>
+              <option value="media">Media</option>
+              <option value="alta">Alta</option>
+              <option value="critica">Crítica</option>
+              <option value="sin_clasificar">Sin clasificar</option>
+            </select>
+          </label>
+          <button id="limpiar-filtros" type="button">Limpiar filtros</button>
+        </div>
+      </section>
+      <footer class="info-prototipo">
+        <strong>ESPOCH Pulse</strong>
+        <p>Prototipo académico de Smart Campus basado en GIS.</p>
+      </footer>
+    </aside>
+    <main id="map" aria-label="Mapa GIS del campus matriz de la ESPOCH"></main>
+  </div>
+</body>
+
+</html>

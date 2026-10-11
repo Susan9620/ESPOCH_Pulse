@@ -1,0 +1,195 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6761788,
+          -1.6551578
+        ]
+      },
+      "properties": {
+        "id": "ACC-001",
+        "tipo": "acceso",
+        "estado": "adecuado",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Punto de partida común propuesto para comparar alternativas cerca de Aulas Nuevas FIE. En el escenario ficticio, la aproximación permite movilidad reducida.",
+        "zona": "Aulas Nuevas FIE",
+        "apto_movilidad_reducida": true,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6760926,
+          -1.6551817
+        ]
+      },
+      "properties": {
+        "id": "ACC-002",
+        "tipo": "escalera",
+        "estado": "no_accesible",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Escalera ficticia situada en la trayectoria más directa entre los dos puntos de acceso propuestos. La futura alternativa accesible deberá evitar este punto.",
+        "zona": "Aulas Nuevas FIE",
+        "apto_movilidad_reducida": false,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6760021,
+          -1.6552624
+        ]
+      },
+      "properties": {
+        "id": "ACC-003",
+        "tipo": "obstaculo",
+        "estado": "no_accesible",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Obstáculo ficticio en otro punto de la trayectoria directa, representando una restricción localizada para comparar alternativas. La futura ruta accesible deberá evitarlo.",
+        "zona": "Aulas Nuevas FIE",
+        "apto_movilidad_reducida": false,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6761194,
+          -1.6549612
+        ]
+      },
+      "properties": {
+        "id": "ACC-004",
+        "tipo": "rampa",
+        "estado": "adecuado",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Primera rampa ficticia en la alternativa de rodeo basada en una vía de servicio existente. En la demostración permite continuar hacia el siguiente punto apto.",
+        "zona": "Modular Diseño Grafico FIE",
+        "apto_movilidad_reducida": true,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6758789,
+          -1.6547388
+        ]
+      },
+      "properties": {
+        "id": "ACC-005",
+        "tipo": "rampa",
+        "estado": "adecuado",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Segunda rampa ficticia en el rodeo propuesto, separada de la primera. Se considera apta únicamente para el escenario de comparación de alternativas.",
+        "zona": "Aulas Nuevas FIE",
+        "apto_movilidad_reducida": true,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6756776,
+          -1.6550271
+        ]
+      },
+      "properties": {
+        "id": "ACC-006",
+        "tipo": "cruce",
+        "estado": "adecuado",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Cruce ficticio en el tramo de retorno de la alternativa de rodeo. Se considera apto para enlazar con el acceso de destino dentro de la demostración.",
+        "zona": "Aulas Nuevas FIE",
+        "apto_movilidad_reducida": true,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6759375,
+          -1.6553275
+        ]
+      },
+      "properties": {
+        "id": "ACC-007",
+        "tipo": "acceso",
+        "estado": "requiere_atencion",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Acceso de destino ficticio, común a ambas alternativas. Su señal de orientación requiere repintado en la simulación, pero el paso se mantiene despejado y apto; la atención pendiente no representa una barrera física.",
+        "zona": "Aulas Nuevas FIE",
+        "apto_movilidad_reducida": true,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6776601,
+          -1.655407
+        ]
+      },
+      "properties": {
+        "id": "ACC-008",
+        "tipo": "rampa",
+        "estado": "requiere_atencion",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Rampa ficticia en otro punto del sector FIE, junto al edificio de Electrónica. Su transición de superficie requiere revisión en el escenario simulado y no se considera apta mientras esté pendiente.",
+        "zona": "FIE - Escuela ELECTRONICA",
+        "apto_movilidad_reducida": false,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6761001,
+          -1.6599503
+        ]
+      },
+      "properties": {
+        "id": "ACC-009",
+        "tipo": "escalera",
+        "estado": "requiere_atencion",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Escalera ficticia junto a la biblioteca de referencia, fuera del sector piloto FIE. Se plantea revisión de señalización; se mantiene no apta para movilidad reducida por ser una escalera.",
+        "zona": "Biblioteca FADE",
+        "apto_movilidad_reducida": false,
+        "es_simulado": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.6791609,
+          -1.6573738
+        ]
+      },
+      "properties": {
+        "id": "ACC-010",
+        "tipo": "cruce",
+        "estado": "adecuado",
+        "descripcion": "Elemento simulado de ESPOCH Pulse; su existencia física y las condiciones de accesibilidad no han sido verificadas. Cruce ficticio junto al edificio administrativo de referencia, fuera del sector piloto FIE. Se considera adecuado y apto únicamente para demostrar la ampliación del modelo a otras zonas.",
+        "zona": "Admin Central ESPOCH",
+        "apto_movilidad_reducida": true,
+        "es_simulado": true
+      }
+    }
+  ]
+}
