@@ -175,11 +175,14 @@ class PulseHandler(SimpleHTTPRequestHandler):
                 data = json.loads(self.rfile.read(length))
                 slot_id = data.get("id")
                 libres = data.get("libres")
+                pcd_libres = data.get("pcd_libres")
+                if pcd_libres is None:
+                    pcd_libres = data.get("plazas_accesibles_libres")
                 evento = data.get("evento", "simulacion")
                 if not slot_id or libres is None:
                     raise ValueError("Faltan parámetros 'id' o 'libres'")
-                database.update_parqueadero_libres(slot_id, libres, evento)
-                self.respond(200, {"success": True, "id": slot_id, "libres": libres, "evento": evento})
+                database.update_parqueadero_libres(slot_id, libres, pcd_libres, evento)
+                self.respond(200, {"success": True, "id": slot_id, "libres": libres, "pcd_libres": pcd_libres, "evento": evento})
             except Exception as e:
                 self.respond(400, {"success": False, "error": str(e)})
             return

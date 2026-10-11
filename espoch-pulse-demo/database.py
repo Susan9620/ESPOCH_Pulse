@@ -17,13 +17,15 @@ INITIAL_PARQUEADEROS = [
         "id": "P-FIE1",
         "osm_id": 747151945,
         "etiqueta": "Estacionamiento FIE1",
-        "capacidad": 45,
+        "capacidad": 10,
         "fuente_capacidad": "OSM (no verificado)",
-        "libres_iniciales": 30,
+        "libres_iniciales": 5,
+        "plazas_accesibles_totales": 2,
+        "plazas_accesibles_libres": 1,
         "plazas_discapacidad": 2,
         "tipo_acceso": "restringido",
-        "descripcion_acceso": "Sector FIE1 reservado para docentes, personal administrativo y personas con discapacidad.",
-        "perfiles_permitidos": ["docente", "administrativo", "discapacidad"]
+        "descripcion_acceso": "Sector FIE1 reservado para docentes y personal administrativo (restringido para estudiantes).",
+        "perfiles_permitidos": ["docente", "administrativo"]
     },
     {
         "id": "P-OESTE",
@@ -32,10 +34,12 @@ INITIAL_PARQUEADEROS = [
         "capacidad": 50,
         "fuente_capacidad": "OSM (no verificado)",
         "libres_iniciales": 30,
+        "plazas_accesibles_totales": 4,
+        "plazas_accesibles_libres": 3,
         "plazas_discapacidad": 4,
         "tipo_acceso": "universal",
-        "descripcion_acceso": "Acceso universal para la comunidad politécnica con alta rotación.",
-        "perfiles_permitidos": ["estudiante", "docente", "administrativo", "discapacidad"]
+        "descripcion_acceso": "Acceso universal para la comunidad politécnica: Estudiantes, Docentes y Administrativos.",
+        "perfiles_permitidos": ["estudiante", "docente", "administrativo"]
     },
     {
         "id": "P-AULAS",
@@ -44,10 +48,12 @@ INITIAL_PARQUEADEROS = [
         "capacidad": 20,
         "fuente_capacidad": "SIMULADA",
         "libres_iniciales": 11,
+        "plazas_accesibles_totales": 2,
+        "plazas_accesibles_libres": 2,
         "plazas_discapacidad": 2,
         "tipo_acceso": "mixto",
-        "descripcion_acceso": "Sector Ciencias Básicas I para estudiantes, docentes y personas con discapacidad.",
-        "perfiles_permitidos": ["estudiante", "docente", "discapacidad"]
+        "descripcion_acceso": "Sector Ciencias Básicas I asignado a Estudiantes y Docentes (restringido para administrativos).",
+        "perfiles_permitidos": ["estudiante", "docente"]
     },
     {
         "id": "P-DISENO",
@@ -56,10 +62,12 @@ INITIAL_PARQUEADEROS = [
         "capacidad": 18,
         "fuente_capacidad": "SIMULADA",
         "libres_iniciales": 8,
+        "plazas_accesibles_totales": 2,
+        "plazas_accesibles_libres": 1,
         "plazas_discapacidad": 2,
         "tipo_acceso": "universal",
-        "descripcion_acceso": "Acceso general politécnico junto al taller de diseño.",
-        "perfiles_permitidos": ["estudiante", "docente", "administrativo", "discapacidad"]
+        "descripcion_acceso": "Acceso politécnico general junto al taller de diseño (Estudiantes, Docentes y Administrativos).",
+        "perfiles_permitidos": ["estudiante", "docente", "administrativo"]
     },
     {
         "id": "P-FIE2",
@@ -68,10 +76,12 @@ INITIAL_PARQUEADEROS = [
         "capacidad": 12,
         "fuente_capacidad": "SIMULADA",
         "libres_iniciales": 6,
+        "plazas_accesibles_totales": 2,
+        "plazas_accesibles_libres": 1,
         "plazas_discapacidad": 2,
         "tipo_acceso": "restringido",
-        "descripcion_acceso": "Área exclusiva para docentes, administrativos y PCD.",
-        "perfiles_permitidos": ["docente", "administrativo", "discapacidad"]
+        "descripcion_acceso": "Área reservada para docentes, investigadores y administrativos (restringido para estudiantes).",
+        "perfiles_permitidos": ["docente", "administrativo"]
     }
 ]
 
@@ -144,12 +154,22 @@ def init_db():
                 libres_iniciales INTEGER NOT NULL,
                 libres_actuales INTEGER NOT NULL,
                 plazas_discapacidad INTEGER DEFAULT 0,
+                plazas_accesibles_totales INTEGER DEFAULT 0,
+                plazas_accesibles_libres INTEGER DEFAULT 0,
                 tipo_acceso TEXT,
                 descripcion_acceso TEXT,
                 perfiles_permitidos TEXT,
                 updated_at TEXT
             )
         """)
+
+        # Migración de columnas si la tabla ya existía
+        cursor.execute("PRAGMA table_info(parqueaderos)")
+        existing_cols = [c[1] for c in cursor.fetchall()]
+        if "plazas_accesibles_totales" not in existing_cols:
+            cursor.execute("ALTER TABLE parqueaderos ADD COLUMN plazas_accesibles_totales INTEGER DEFAULT 0")
+        if "plazas_accesibles_libres" not in existing_cols:
+            cursor.execute("ALTER TABLE parqueaderos ADD COLUMN plazas_accesibles_libres INTEGER DEFAULT 0")
 
         # 2. Tabla de predicciones históricas
         cursor.execute("""
@@ -208,16 +228,17 @@ def init_db():
 
 def _seed_parqueaderos(cursor):
     cursor.execute("SELECT COUNT(*) AS total FROM parqueaderos")
+    now_iso = datetime.now(timezone.utc).isoformat()
     if cursor.fetchone()["total"] == 0:
         try:
-            now_iso = datetime.now(timezone.utc).isoformat()
             for p in INITIAL_PARQUEADEROS:
                 cursor.execute("""
                     INSERT INTO parqueaderos (
                         id, osm_id, etiqueta, capacidad, fuente_capacidad,
                         libres_iniciales, libres_actuales, plazas_discapacidad,
+                        plazas_accesibles_totales, plazas_accesibles_libres,
                         tipo_acceso, descripcion_acceso, perfiles_permitidos, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     p.get("id"),
                     p.get("osm_id"),
@@ -227,6 +248,8 @@ def _seed_parqueaderos(cursor):
                     p.get("libres_iniciales", 0),
                     p.get("libres_iniciales", 0),
                     p.get("plazas_discapacidad", 0),
+                    p.get("plazas_accesibles_totales", p.get("plazas_discapacidad", 0)),
+                    p.get("plazas_accesibles_libres", p.get("plazas_discapacidad", 0)),
                     p.get("tipo_acceso", "universal"),
                     p.get("descripcion_acceso", ""),
                     json.dumps(p.get("perfiles_permitidos", []), ensure_ascii=False),
@@ -235,6 +258,37 @@ def _seed_parqueaderos(cursor):
             print("[SQLite] Tabla 'parqueaderos' sembrada exitosamente.", flush=True)
         except Exception as e:
             print(f"[SQLite Error] Error al sembrar parqueaderos: {e}", flush=True)
+    else:
+        # Sincronizar y actualizar columnas de accesibilidad y perfiles en registros existentes
+        try:
+            for p in INITIAL_PARQUEADEROS:
+                cursor.execute("""
+                    UPDATE parqueaderos SET
+                        etiqueta = ?,
+                        capacidad = ?,
+                        plazas_discapacidad = ?,
+                        plazas_accesibles_totales = ?,
+                        plazas_accesibles_libres = CASE 
+                            WHEN plazas_accesibles_libres IS NULL OR plazas_accesibles_libres = 0 
+                            THEN ? ELSE plazas_accesibles_libres END,
+                        tipo_acceso = ?,
+                        descripcion_acceso = ?,
+                        perfiles_permitidos = ?
+                    WHERE id = ?
+                """, (
+                    p.get("etiqueta"),
+                    p.get("capacidad"),
+                    p.get("plazas_discapacidad", 0),
+                    p.get("plazas_accesibles_totales", 0),
+                    p.get("plazas_accesibles_libres", 0),
+                    p.get("tipo_acceso", "universal"),
+                    p.get("descripcion_acceso", ""),
+                    json.dumps(p.get("perfiles_permitidos", []), ensure_ascii=False),
+                    p.get("id")
+                ))
+            print("[SQLite] Tabla 'parqueaderos' sincronizada con permisos y plazas accesibles.", flush=True)
+        except Exception as e:
+            print(f"[SQLite Error] Error al sincronizar parqueaderos: {e}", flush=True)
 
 
 def _seed_predicciones(cursor):
@@ -301,7 +355,7 @@ def _seed_reportes(cursor):
 # ==========================================
 
 def get_parqueaderos():
-    """Devuelve los parqueaderos en el mismo formato estructurado que parking_occupancy_demo.json."""
+    """Devuelve los parqueaderos en el mismo formato estructurado que parking_occupancy_demo.json, con plazas accesibles diferenciadas."""
     with get_connection() as conn:
         rows = conn.execute("SELECT * FROM parqueaderos ORDER BY id ASC").fetchall()
         result = []
@@ -312,6 +366,10 @@ def get_parqueaderos():
                     perfiles = json.loads(r["perfiles_permitidos"])
                 except Exception:
                     perfiles = []
+            keys = r.keys()
+            pcd_totales = r["plazas_accesibles_totales"] if "plazas_accesibles_totales" in keys and r["plazas_accesibles_totales"] is not None else r["plazas_discapacidad"]
+            pcd_libres = r["plazas_accesibles_libres"] if "plazas_accesibles_libres" in keys and r["plazas_accesibles_libres"] is not None else pcd_totales
+
             result.append({
                 "osm_id": r["osm_id"],
                 "id": r["id"],
@@ -321,7 +379,9 @@ def get_parqueaderos():
                 "libres_iniciales": r["libres_iniciales"],
                 "libres_actuales": r["libres_actuales"],
                 "perfiles_permitidos": perfiles,
-                "plazas_discapacidad": r["plazas_discapacidad"],
+                "plazas_discapacidad": pcd_totales,
+                "plazas_accesibles_totales": pcd_totales,
+                "plazas_accesibles_libres": pcd_libres,
                 "tipo_acceso": r["tipo_acceso"],
                 "descripcion_acceso": r["descripcion_acceso"]
             })
@@ -333,14 +393,20 @@ def get_parqueaderos():
         }
 
 
-def update_parqueadero_libres(slot_id, libres, evento="ajuste_manual"):
-    """Actualiza los espacios libres de un parqueadero y guarda en la bitácora de telemetría."""
+def update_parqueadero_libres(slot_id, libres, pcd_libres=None, evento="ajuste_manual"):
+    """Actualiza los espacios libres de un parqueadero (totales y accesibles) y guarda en la bitácora de telemetría."""
     with get_connection() as conn:
         now_iso = datetime.now(timezone.utc).isoformat()
-        conn.execute(
-            "UPDATE parqueaderos SET libres_actuales = ?, updated_at = ? WHERE id = ?",
-            (int(libres), now_iso, slot_id)
-        )
+        if pcd_libres is not None:
+            conn.execute(
+                "UPDATE parqueaderos SET libres_actuales = ?, plazas_accesibles_libres = ?, updated_at = ? WHERE id = ?",
+                (int(libres), int(pcd_libres), now_iso, slot_id)
+            )
+        else:
+            conn.execute(
+                "UPDATE parqueaderos SET libres_actuales = ?, updated_at = ? WHERE id = ?",
+                (int(libres), now_iso, slot_id)
+            )
         conn.execute(
             "INSERT INTO telemetria_log (parqueadero_id, tipo_evento, libres, timestamp) VALUES (?, ?, ?, ?)",
             (slot_id, evento, int(libres), now_iso)
@@ -349,10 +415,14 @@ def update_parqueadero_libres(slot_id, libres, evento="ajuste_manual"):
 
 
 def reset_parqueaderos():
-    """Restaura los valores de libres_actuales a los libres_iniciales."""
+    """Restaura los valores de libres_actuales y plazas_accesibles_libres a sus valores iniciales."""
     with get_connection() as conn:
         now_iso = datetime.now(timezone.utc).isoformat()
-        conn.execute("UPDATE parqueaderos SET libres_actuales = libres_iniciales, updated_at = ?", (now_iso,))
+        for p in INITIAL_PARQUEADEROS:
+            conn.execute(
+                "UPDATE parqueaderos SET libres_actuales = ?, plazas_accesibles_libres = ?, updated_at = ? WHERE id = ?",
+                (p["libres_iniciales"], p.get("plazas_accesibles_libres", 2), now_iso, p["id"])
+            )
         conn.commit()
 
 
