@@ -117,6 +117,11 @@
                         </div>
                         <input type="range" id="plazas" min="1" max="5" value="1">
                     </div>
+
+                    <button type="button" id="btn-show-map-mobile" class="btn-show-map-mobile"
+                        title="Ir directamente a visualizar el mapa y la ruta">
+                        🗺️ Ver Ruta en el Mapa
+                    </button>
                 </div>
             </div>
 
@@ -242,18 +247,27 @@
                 <button type="button" id="tab-main-map" class="main-tab-btn active" role="tab" aria-selected="true"
                     onclick="switchMainView('map')">
                     <span class="tab-icon">🗺️</span>
-                    <span class="tab-label">Mapa en Vivo y Ruta</span>
+                    <span class="tab-label">
+                        <span class="tab-text-full">Mapa en Vivo y Ruta</span>
+                        <span class="tab-text-short">Mapa y Ruta</span>
+                    </span>
                 </button>
                 <button type="button" id="tab-main-ranking" class="main-tab-btn" role="tab" aria-selected="false"
                     onclick="switchMainView('ranking')">
                     <span class="tab-icon">🏆</span>
-                    <span class="tab-label">Comparación de Alternativas</span>
+                    <span class="tab-label">
+                        <span class="tab-text-full">Comparación de Alternativas</span>
+                        <span class="tab-text-short">Alternativas</span>
+                    </span>
                     <span class="main-tab-counter" id="tab-ranking-counter">5</span>
                 </button>
                 <button type="button" id="tab-main-pred" class="main-tab-btn" role="tab" aria-selected="false"
                     onclick="switchMainView('pred')">
                     <span class="tab-icon">🔮</span>
-                    <span class="tab-label">Modelo Predictivo y Demanda</span>
+                    <span class="tab-label">
+                        <span class="tab-text-full">Modelo Predictivo y Demanda</span>
+                        <span class="tab-text-short">Predicción</span>
+                    </span>
                 </button>
             </div>
 
@@ -339,6 +353,10 @@
                         <button type="button" id="btn-recenter-driver" class="btn-nav-recenter"
                             title="Centrar mapa en el vehículo">
                             🎯 Mi vehículo
+                        </button>
+                        <button type="button" id="btn-scroll-route-mobile" class="btn-scroll-route-mobile"
+                            title="Subir a modificar punto de partida o destino">
+                            ✏️ Modificar
                         </button>
                     </div>
                     <div id="map">

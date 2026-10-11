@@ -2545,6 +2545,27 @@ async function load() {
       }
     });
 
+    $("btn-show-map-mobile")?.addEventListener('click', () => {
+      const mapEl = $("map");
+      if (mapEl) {
+        mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => { if (map) map.invalidateSize(); }, 350);
+      }
+    });
+
+    $("btn-scroll-route-mobile")?.addEventListener('click', () => {
+      const sidebarEl = document.querySelector(".sidebar");
+      if (sidebarEl) sidebarEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    let windowResizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(windowResizeTimer);
+      windowResizeTimer = setTimeout(() => {
+        if (map) map.invalidateSize();
+      }, 150);
+    });
+
     for (const name of ['destino', 'prioridad']) {
       $(name)?.addEventListener('change', update);
     }

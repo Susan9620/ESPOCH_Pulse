@@ -3846,17 +3846,41 @@ footer strong {
   background: #f0fdfa;
 }
 
-/* ══ RESPONSIVE ══ */
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE & MOBILE DESIGN SYSTEM
+   Optimizado para Smartphones y Dispositivos Móviles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Elementos auxiliares para visualización responsive */
+.tab-text-short {
+  display: none;
+}
+
+.tab-text-full {
+  display: inline;
+}
+
+.btn-show-map-mobile {
+  display: none;
+}
+
+.btn-scroll-route-mobile {
+  display: none;
+}
+
+/* ── TABLETS & PANTALLAS MEDIANAS (<= 1024px) ── */
 @media (max-width: 1024px) {
   :root {
-    --sidebar-w: 310px;
+    --sidebar-w: 320px;
   }
 }
 
+/* ── TABLETS EN VERTICAL & PANTALLAS COMPACTAS (<= 860px) ── */
 @media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
     height: auto;
+    min-height: calc(100vh - var(--header-h));
     overflow: visible;
   }
 
@@ -3864,6 +3888,8 @@ footer strong {
     max-height: none;
     border-right: none;
     border-bottom: 1px solid var(--c-border);
+    overflow-y: visible;
+    padding: 14px 16px;
   }
 
   main {
@@ -3873,31 +3899,767 @@ footer strong {
 
   .mapwrap {
     flex: none;
-    min-height: 340px;
-    margin: 14px 14px 0;
+    min-height: auto;
+    margin: 12px 14px 0;
+    border-radius: 14px;
+  }
+
+  #map {
+    height: 380px !important;
+    min-height: 380px !important;
+    width: 100%;
   }
 
   .metrics {
-    padding: 14px 14px 0;
+    padding: 12px 14px 0;
   }
 
   .recommendation,
-  .ranking {
+  .ranking,
+  .prediction-card,
+  .ranking-header-card {
     margin-left: 14px;
     margin-right: 14px;
   }
 }
 
-@media (max-width: 520px) {
-  .metrics {
-    grid-template-columns: 1fr;
+/* ── TELÉFONOS MÓVILES (<= 640px) ── */
+@media (max-width: 640px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
-  .rec-main {
+  .layout,
+  main,
+  .sidebar,
+  .main-tab-view,
+  .mapwrap,
+  .prediction-card,
+  .ranking,
+  .recommendation {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Header compacto y estilizado */
+  .header {
+    padding: 10px 14px;
+    height: auto;
+    min-height: 52px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .brand {
+    gap: 10px;
+    font-size: 16px;
+  }
+
+  .mark {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    border-radius: 9px;
+  }
+
+  .brand h1 {
+    font-size: 16px;
+  }
+
+  .brand small {
+    font-size: 8px;
+    letter-spacing: 0.8px;
+  }
+
+  .header nav {
+    gap: 8px;
+    align-items: center;
+  }
+
+  .header a {
+    font-size: 11.5px;
+  }
+
+  .btn-nav-admin {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .db-pill-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    gap: 5px;
+  }
+
+  /* Barra Lateral y Planificador de Ruta */
+  .sidebar {
+    padding: 12px 12px 14px;
+  }
+
+  .sidebar h2 {
+    font-size: 15px;
+    margin: 2px 0 10px;
+  }
+
+  .sidebar-nav-tabs {
+    margin-bottom: 10px;
+    padding: 2px;
+  }
+
+  .sidebar-nav-tab {
+    padding: 8px 6px;
+    font-size: 11.5px;
+  }
+
+  .route-form-card {
+    padding: 10px 10px 12px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .form-group label {
+    font-size: 10.5px;
+  }
+
+  .sidebar select {
+    font-size: 13px;
+    padding: 10px 30px 10px 10px;
+    min-height: 42px;
+    border-radius: 8px;
+  }
+
+  /* Botón de salto rápido hacia el mapa */
+  .btn-show-map-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 11px 14px;
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 4px;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, .25);
+    font-family: inherit;
+    transition: all .15s ease;
+  }
+
+  .btn-show-map-mobile:active {
+    transform: scale(0.98);
+    background: #0369a1;
+  }
+
+  /* Botón para volver a editar ruta desde la barra del mapa */
+  .btn-scroll-route-mobile {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #bae6fd;
+    background: #f0f9ff;
+    color: #0284c7;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    margin-left: auto;
+    transition: background .15s ease;
+  }
+
+  .btn-scroll-route-mobile:active {
+    background: #e0f2fe;
+  }
+
+  /* Barra Principal de Pestañas (Sticky y con etiquetas adaptadas) */
+  .main-tabs-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 6px 8px;
+    gap: 4px;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .05);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .main-tab-btn {
+    padding: 7px 4px;
+    font-size: 11px;
+    gap: 4px;
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .main-tab-btn .tab-icon {
+    font-size: 13px;
+  }
+
+  .tab-text-full {
+    display: none;
+  }
+
+  .tab-text-short {
+    display: inline;
+  }
+
+  .main-tab-counter {
+    font-size: 9.5px;
+    padding: 1px 5px;
+  }
+
+  /* Métricas en 3 columnas compactas y limpias */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px;
+    padding: 8px 10px 0;
+  }
+
+  .metrics > div {
+    padding: 8px 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    border-radius: 10px;
+  }
+
+  .metrics span {
+    font-size: 8.5px;
+    letter-spacing: .4px;
+  }
+
+  .metrics strong {
     font-size: 17px;
   }
 
-  :root {
-    --header-h: 54px;
+  /* Contenedor del Mapa y Visor GIS */
+  .mapwrap {
+    margin: 8px 10px 0;
+    border-radius: 12px;
+  }
+
+  #map {
+    height: 360px !important;
+    min-height: 360px !important;
+    width: 100%;
+  }
+
+  .maptitle {
+    padding: 8px 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .maptitle h2 {
+    font-size: 13px;
+  }
+
+  .btn-alert-center {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .semaforo-legend {
+    width: 100%;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 5px;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .semaforo-legend-item {
+    font-size: 10px;
+  }
+
+  /* Franja de Información de Ruta */
+  .route-legend-strip {
+    padding: 8px 10px;
+    gap: 6px 10px;
+  }
+
+  .route-legend-item {
+    font-size: 10.5px;
+    gap: 4px;
+  }
+
+  .btn-nav-recenter {
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+
+  /* Instrucciones de Navegación */
+  .nav-instruction-bar {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .nav-step-item {
+    padding: 7px 10px;
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  .nav-step-badge {
+    font-size: 11px;
+  }
+
+  /* Tarjeta de Recomendación Principal */
+  .recommendation {
+    margin: 8px 10px 14px;
+    padding: 12px 12px 14px;
+    border-radius: 10px;
+  }
+
+  .rec-title-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .rec-main {
+    font-size: 15px;
+  }
+
+  .rec-meta-chips {
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .rec-meta-chips .badge-pcd-quota,
+  .rec-meta-chips .semaforo-pill,
+  .rec-meta-chips .badge-access-status,
+  .rec-meta-chips .badge {
+    font-size: 9.5px;
+    padding: 2px 6px;
+  }
+
+  .rec-detail-p {
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  /* Vista de Ranking de Alternativas */
+  .ranking-header-card {
+    margin: 8px 10px 0;
+    padding: 12px 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .ranking-header-text h2 {
+    font-size: 14.5px;
+  }
+
+  .btn-goto-map {
+    width: 100%;
+    text-align: center;
+    padding: 9px;
+    font-size: 12px;
+    justify-content: center;
+  }
+
+  .ranking {
+    margin: 8px 10px 14px;
+    padding: 10px;
+  }
+
+  .rankrow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 8px;
+    margin: 0 0 8px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+
+  .rankrow > div:last-child {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  .rankrow strong {
+    font-size: 13px;
+  }
+
+  .rankrow small {
+    font-size: 10.5px;
+  }
+
+  /* Vista de Modelo Predictivo */
+  .prediction-card {
+    margin: 8px 10px 14px;
+    padding: 12px 10px;
+  }
+
+  .pred-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .pred-card-header h2 {
+    font-size: 15px;
+  }
+
+  .pred-active-pill {
+    align-self: flex-start;
+    font-size: 11px;
+  }
+
+  .pred-timeline-wrapper {
+    margin: 10px 0 16px;
+  }
+
+  .pred-timeline-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+  }
+
+  .pred-time-chip {
+    min-width: 50px;
+    font-size: 11.5px;
+    padding: 6px 4px;
+  }
+
+  .pred-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .pred-slot-card {
+    grid-column: span 1 !important;
+    padding: 12px 10px;
+  }
+
+  .pred-chart-container {
+    padding: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pred-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .pred-chart-header h3 {
+    font-size: 13px;
+  }
+
+  .pred-chart-bars {
+    min-width: 440px;
+    height: 110px;
+  }
+
+  /* Controles de Simulación IoT */
+  .iot-mode-selector {
+    margin-bottom: 10px;
+  }
+
+  .iot-tab-btn {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  .slot {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .slot-actions {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .btn-sensor-step {
+    padding: 8px 6px;
+    font-size: 11.5px;
+    min-height: 38px;
+  }
+
+  .auto-config-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .btn-auto-toggle {
+    min-height: 42px;
+    font-size: 12.5px;
+  }
+
+  .pred-control-box {
+    padding: 10px;
+  }
+
+  .btn-pred-calc {
+    min-height: 40px;
+    font-size: 12.5px;
+  }
+
+  .iot-feed-wrapper {
+    max-height: 160px;
+  }
+
+  .sidebar-iot-footer-actions {
+    gap: 8px;
+  }
+
+  #reset,
+  .btn-sidebar-back {
+    min-height: 40px;
+  }
+
+  /* Panel Administrativo (Modal en pantalla completa móvil) */
+  .admin-modal-backdrop {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .admin-modal-card {
+    border-radius: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .admin-modal-header {
+    padding: 12px 14px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-modal-header-actions {
+    width: 100%;
+    justify-content: space-between;
+    order: -1;
+    margin-bottom: 4px;
+  }
+
+  .btn-admin-close {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+  }
+
+  .admin-modal-title-group h2 {
+    font-size: 16px;
+  }
+
+  .admin-modal-title-group p {
+    font-size: 11px;
+  }
+
+  .admin-tabs-nav {
+    padding: 0 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 3px;
+  }
+
+  .admin-tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-tab-btn {
+    padding: 9px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .admin-modal-body {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .admin-kpis-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px;
+  }
+
+  .admin-kpi-card {
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .admin-kpi-card .kpi-label {
+    font-size: 9px;
+  }
+
+  .admin-kpi-card .kpi-main-val {
+    font-size: 20px;
+  }
+
+  .admin-kpi-card .kpi-subtext {
+    font-size: 9.5px;
+  }
+
+  .admin-section-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .admin-section-box {
+    padding: 12px 10px;
+  }
+
+  .critical-hours-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .admin-spotlight-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .admin-hours-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .admin-jornada-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .admin-chart-box {
+    padding: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-hourly-bars-container {
+    min-width: 440px;
+  }
+
+  .admin-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 8px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .admin-modal-footer {
+    padding: 10px 14px;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .admin-footer-status {
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .admin-footer-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .btn-admin-peak-sim,
+  .btn-admin-secondary {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+  }
+
+  /* Alertas y Notificaciones */
+  .alert-history-dropdown {
+    position: fixed;
+    top: 56px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-width: none;
+    max-height: 80vh;
+    z-index: 999999;
+  }
+
+  .alert-toast-container {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: none;
+  }
+
+  .alert-toast {
+    max-width: 100%;
+  }
+
+  /* Pie de página */
+  footer {
+    padding: 10px 14px;
+    font-size: 10px;
+    text-align: center;
+  }
+}
+
+/* ── TELÉFONOS MUY PEQUEÑOS (<= 380px) ── */
+@media (max-width: 380px) {
+  .admin-kpis-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .metrics strong {
+    font-size: 15px;
+  }
+
+  .metrics span {
+    font-size: 8px;
+  }
+
+  .brand h1 {
+    font-size: 14px;
+  }
+
+  .brand {
+    gap: 6px;
+  }
+
+  .main-tab-btn {
+    font-size: 10.5px;
+    padding: 6px 4px;
   }
 }
