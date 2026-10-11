@@ -86,17 +86,24 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="perfil-usuario">Perfil del conductor / Restricción de acceso</label>
+                        <label for="perfil-usuario">Perfil institucional del conductor</label>
                         <select id="perfil-usuario">
-                            <option value="todos" selected>👥 Todos</option>
-                            <option value="estudiante">🎓 Estudiante</option>
+                            <option value="todos">👥 Todos (Vista General)</option>
+                            <option value="estudiante" selected>🎓 Estudiante</option>
                             <option value="docente">👨‍🏫 Docente</option>
                             <option value="administrativo">💼 Personal Administrativo</option>
-                            <option value="discapacidad">♿ Persona con Discapacidad</option>
                         </select>
                     </div>
 
-                    <div id="perfil-info-banner" class="perfil-info-banner hidden">
+                    <div class="form-group accessible-checkbox-group">
+                        <label class="accessible-checkbox-label" for="requiere-accesible">
+                            <input type="checkbox" id="requiere-accesible">
+                            <span class="accessible-checkbox-custom"></span>
+                            <span class="accessible-checkbox-text">♿ Necesito una plaza accesible</span>
+                        </label>
+                    </div>
+
+                    <div id="perfil-info-banner" class="perfil-info-banner">
                         <span id="perfil-info-icon" class="perfil-info-icon">💡</span>
                         <span id="perfil-info-text" class="perfil-info-text"></span>
                     </div>
@@ -279,8 +286,12 @@
                         <strong id="total-parking">5</strong>
                     </div>
                     <div>
-                        <span>LIBRES</span>
+                        <span>LIBRES TOTALES</span>
                         <strong id="total-libres">—</strong>
+                    </div>
+                    <div>
+                        <span>ACCESIBLES DISP.</span>
+                        <strong id="total-accesibles-libres">—</strong>
                     </div>
                     <div>
                         <span>ELEGIBLES</span>

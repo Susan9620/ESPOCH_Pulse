@@ -30,14 +30,14 @@ function updateDbStatusUI(connected, engine = "SQLite") {
   }
 }
 
-function syncSlotOccupancyToDb(slotId, freeCount, eventType = "simulacion") {
+function syncSlotOccupancyToDb(slotId, freeCount, pcdFreeCount = null, eventType = "simulacion") {
   if (!isDbConnected) return;
   clearTimeout(dbSyncDebounceTimer);
   dbSyncDebounceTimer = setTimeout(() => {
     fetch("/api/parking/occupancy", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: slotId, libres: freeCount, evento: eventType })
+      body: JSON.stringify({ id: slotId, libres: freeCount, pcd_libres: pcdFreeCount, evento: eventType })
     }).catch(() => {});
   }, 150);
 }
@@ -59,45 +59,40 @@ let sessionStats = {
   perSlotTurnover: {}
 };
 
-// Perfil del conductor y restricciones de acceso
-let currentDriverProfile = "todos";
+// Perfil del conductor y requerimiento de accesibilidad
+let currentDriverProfile = "estudiante";
+let needsAccessibleSlot = false;
 
 const PROFILE_INFO = {
   todos: {
     id: "todos",
     name: "Vista General",
     icon: "👥",
-    desc: "Mostrando todos los parqueaderos del campus sin filtro de acreditación institucional."
+    desc: "Visualización general sin filtro institucional (muestra todos los parqueaderos del campus)."
   },
   estudiante: {
     id: "estudiante",
     name: "Estudiante",
     icon: "🎓",
-    desc: "Acceso autorizado a Estacionamiento Sistemas (P-OESTE), Ciencias Básicas I (P-AULAS) y Diseño (P-DISENO). Sectores FIE1 y Software están reservados para docentes y administrativos."
+    desc: "Acceso autorizado a Estacionamiento Software (P-OESTE), Ciencias Básicas I (P-AULAS) y Diseño (P-DISENO). Sectores FIE1 y FIE2 están reservados para docentes y administrativos."
   },
   docente: {
     id: "docente",
     name: "Docente",
     icon: "👨‍🏫",
-    desc: "Acceso preferencial en todos los sectores del campus FIE (FIE1, Sistemas, Ciencias Básicas I, Diseño y Software)."
+    desc: "Acceso preferencial en todos los sectores del campus FIE (FIE1, Software, Ciencias Básicas I, Diseño y FIE2)."
   },
   administrativo: {
     id: "administrativo",
     name: "Personal Administrativo",
     icon: "💼",
-    desc: "Acceso asignado a Estacionamiento FIE1, Software, Diseño y FIE2."
-  },
-  discapacidad: {
-    id: "discapacidad",
-    name: "Persona con Discapacidad (PCD)",
-    icon: "♿",
-    desc: "Acceso preferencial garantizado a plazas reservadas PCD en todos los sectores, con prioridad de ruta cercana a rampas y accesos accesibles."
+    desc: "Acceso asignado a Estacionamiento FIE1, Software, Diseño y FIE2. Sector Ciencias Básicas I reservado para actividad académica docente/estudiantil."
   }
 };
 
 function isProfileAllowed(slot, profile = currentDriverProfile) {
   if (profile === "todos") return true;
-  const allowed = slot.perfiles_permitidos || ["estudiante", "docente", "administrativo", "discapacidad"];
+  const allowed = slot.perfiles_permitidos || ["estudiante", "docente", "administrativo"];
   return allowed.includes(profile);
 }
 
@@ -326,8 +321,24 @@ function logTelemetry(message, type = 'system') {
 
 function syncSlotUI(r) {
   const status = getAvailabilityStatus(r.free, r.capacidad);
+  const isAllowed = isProfileAllowed(r, currentDriverProfile);
+  const pcdTot = r.pcd_total || 0;
+  const pcdLib = r.pcd_free || 0;
+
+  const slotCard = $("slot-" + r.id);
+  if (slotCard) {
+    slotCard.className = `slot ${isAllowed ? '' : 'restringido-perfil'}`;
+  }
+
   const numEl = $("num-" + r.id);
-  if (numEl) numEl.innerHTML = `<strong>${r.free}</strong> / ${r.capacidad} libres`;
+  if (numEl) {
+    numEl.innerHTML = `<strong>${r.free}</strong>/${r.capacidad} libres · ♿ <strong>${pcdLib}</strong>/${pcdTot} disp`;
+  }
+  const pcdBadge = $("pcd-badge-" + r.id);
+  if (pcdBadge) {
+    pcdBadge.textContent = `♿ ${pcdLib}/${pcdTot} PCD`;
+    pcdBadge.title = `${pcdLib} plazas accesibles disponibles de ${pcdTot} totales`;
+  }
   const slider = $("slider-" + r.id);
   if (slider && Number(slider.value) !== r.free) slider.value = r.free;
   const dot = $("dot-" + r.id);
@@ -341,9 +352,13 @@ function syncSlotUI(r) {
     pill.innerHTML = `<span class="semaforo-indicator-dot"></span>${status.label}`;
   }
   const btnIn = $("btn-in-" + r.id);
-  if (btnIn) btnIn.disabled = (r.free <= 0);
+  if (btnIn) btnIn.disabled = (r.free - pcdLib <= 0);
   const btnOut = $("btn-out-" + r.id);
   if (btnOut) btnOut.disabled = (r.free >= r.capacidad);
+  const btnPcdIn = $("btn-pcd-in-" + r.id);
+  if (btnPcdIn) btnPcdIn.disabled = (pcdLib <= 0 || r.free <= 0);
+  const btnPcdOut = $("btn-pcd-out-" + r.id);
+  if (btnPcdOut) btnPcdOut.disabled = (pcdLib >= pcdTot || r.free >= r.capacidad);
 }
 
 /* ── MOTOR DE ALERTAS AUTOMÁTICAS (LLENO / DISPONIBILIDAD RECUPERADA) ── */
@@ -710,7 +725,9 @@ function renderControls() {
     const isAllowed = isProfileAllowed(r, currentDriverProfile);
     const profileMeta = PROFILE_INFO[currentDriverProfile] || PROFILE_INFO.todos;
 
-    const pcdQuotaHtml = r.plazas_discapacidad ? `<span class="badge-pcd-quota" title="${r.plazas_discapacidad} plazas reservadas para Personas con Discapacidad">♿ ${r.plazas_discapacidad} PCD</span>` : '';
+    const pcdTot = r.pcd_total || 0;
+    const pcdLib = r.pcd_free || 0;
+    const pcdQuotaHtml = pcdTot ? `<span class="badge-pcd-quota" id="pcd-badge-${r.id}" title="${pcdLib} plazas accesibles disponibles de ${pcdTot} totales reservadas">♿ ${pcdLib}/${pcdTot} PCD</span>` : '';
 
     let accessInfoHtml = '';
     if (currentDriverProfile !== "todos") {
@@ -718,9 +735,8 @@ function renderControls() {
         ? `<span class="badge-access-status allowed">✅ Autorizado</span>`
         : `<span class="badge-access-status restricted">🔒 Restringido (${profileMeta.name})</span>`;
     } else {
-      // Resumen limpio de acceso para evitar sobrecargar de etiquetas repetitivas
-      const allowed = r.perfiles_permitidos || ["estudiante", "docente", "administrativo", "discapacidad"];
-      if (allowed.length >= 4) {
+      const allowed = r.perfiles_permitidos || ["estudiante", "docente", "administrativo"];
+      if (allowed.length >= 3) {
         accessInfoHtml = `<span class="access-badge-summary">👥 Acceso General</span>`;
       } else {
         const names = allowed.map(p => (PROFILE_INFO[p]?.name || p).split(' ')[0]).join(', ');
@@ -741,7 +757,7 @@ function renderControls() {
           </div>
           <div class="slot-meta-row">
             <span class="sensor-chip">${sensorCode}</span>
-            <small id="num-${r.id}" class="slot-free-count"><strong>${r.free}</strong> / ${r.capacidad} libres</small>
+            <small id="num-${r.id}" class="slot-free-count"><strong>${r.free}</strong>/${r.capacidad} libres · ♿ <strong>${pcdLib}</strong>/${pcdTot} disp</small>
           </div>
           <div class="access-tag-row">
             ${accessInfoHtml}
@@ -753,11 +769,19 @@ function renderControls() {
         <input aria-label="Espacios disponibles simulados en ${htmlEscape(r.etiqueta)}" id="slider-${r.id}" data-id="${r.id}" type="range" min="0" max="${r.capacidad}" value="${r.free}">
       </div>
       <div class="slot-actions">
-        <button type="button" class="btn-sensor-step btn-step-in" id="btn-in-${r.id}" data-id="${r.id}" data-act="in" ${r.free <= 0 ? 'disabled' : ''}>
-          🚗 +1 Entrada
+        <button type="button" class="btn-sensor-step btn-step-in" id="btn-in-${r.id}" data-id="${r.id}" data-act="in" title="Simular ingreso de vehículo estándar (+1 ocupación general)" ${(r.free - pcdLib <= 0) ? 'disabled' : ''}>
+          🚗 +1 Entrada Gral
         </button>
-        <button type="button" class="btn-sensor-step btn-step-out" id="btn-out-${r.id}" data-id="${r.id}" data-act="out" ${r.free >= r.capacidad ? 'disabled' : ''}>
-          🚙 +1 Salida
+        <button type="button" class="btn-sensor-step btn-step-out" id="btn-out-${r.id}" data-id="${r.id}" data-act="out" title="Simular salida de vehículo estándar (-1 desocupación general)" ${r.free >= r.capacidad ? 'disabled' : ''}>
+          🚙 +1 Salida Gral
+        </button>
+      </div>
+      <div class="slot-actions" style="margin-top: 5px;">
+        <button type="button" class="btn-sensor-step accessible-step-in" id="btn-pcd-in-${r.id}" data-id="${r.id}" data-act="pcd-in" title="Simular ocupación de plaza accesible con sensor IoT" ${pcdLib <= 0 || r.free <= 0 ? 'disabled' : ''}>
+          ♿ Ocupar Accesible
+        </button>
+        <button type="button" class="btn-sensor-step accessible-step-out" id="btn-pcd-out-${r.id}" data-id="${r.id}" data-act="pcd-out" title="Simular liberación de plaza accesible con sensor IoT" ${pcdLib >= pcdTot || r.free >= r.capacidad ? 'disabled' : ''}>
+          ♿ Liberar Accesible
         </button>
       </div>
     `;
@@ -780,33 +804,62 @@ function renderControls() {
       if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].out += diff;
     }
     r.free = newFree;
-    checkSlotAlerts(r, oldFree);
-    syncSlotUI(r);
-    syncSlotOccupancyToDb(r.id, r.free, 'ajuste_manual');
-    logTelemetry(`[${r.id}] Ajuste manual sensor: ${r.free}/${r.capacidad} libres`, 'manual');
-    update();
-  }));
-
-  // Botones +1 Entrada / +1 Salida
-  host.querySelectorAll('.btn-sensor-step').forEach(btn => btn.addEventListener('click', () => {
-    const r = dataRows.find(x => x.id === btn.dataset.id);
-    if (!r) return;
-    const oldFree = r.free;
-    const isEntry = btn.dataset.act === 'in';
-    if (isEntry && r.free > 0) {
-      r.free--;
-      sessionStats.entries++;
-      if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].in++;
-      logTelemetry(`[${r.id}] Entrada manual: ocupada plaza en ${r.etiqueta} (${r.free}/${r.capacidad} libres)`, 'entry');
-    } else if (!isEntry && r.free < r.capacidad) {
-      r.free++;
-      sessionStats.exits++;
-      if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].out++;
-      logTelemetry(`[${r.id}] Salida manual: liberada plaza en ${r.etiqueta} (${r.free}/${r.capacidad} libres)`, 'exit');
+    if (r.pcd_free > r.free) {
+      r.pcd_free = r.free;
     }
     checkSlotAlerts(r, oldFree);
     syncSlotUI(r);
-    syncSlotOccupancyToDb(r.id, r.free, isEntry ? 'entrada_manual' : 'salida_manual');
+    syncSlotOccupancyToDb(r.id, r.free, r.pcd_free, 'ajuste_manual');
+    logTelemetry(`[${r.id}] Ajuste manual sensor: ${r.free}/${r.capacidad} libres (♿ ${r.pcd_free}/${r.pcd_total} accesibles)`, 'manual');
+    update();
+  }));
+
+  // Botones de simulación vehicular estándar (+1 Entrada / +1 Salida)
+  host.querySelectorAll('.btn-sensor-step').forEach(btn => btn.addEventListener('click', () => {
+    const r = dataRows.find(x => x.id === btn.dataset.id);
+    if (!r) return;
+    const act = btn.dataset.act;
+    const oldFree = r.free;
+
+    if (act === 'in') {
+      // Entrada vehículo general (espacio regular)
+      if (r.free > r.pcd_free) {
+        r.free--;
+        sessionStats.entries++;
+        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].in++;
+        logTelemetry(`[${r.id}] 🚗 Sensor Entrada: Vehículo general ingresó a ${r.etiqueta} (${r.free}/${r.capacidad} libres, ♿ ${r.pcd_free}/${r.pcd_total} accesibles)`, 'entry');
+      }
+    } else if (act === 'out') {
+      // Salida vehículo general
+      if (r.free < r.capacidad) {
+        r.free++;
+        sessionStats.exits++;
+        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].out++;
+        logTelemetry(`[${r.id}] 🚙 Sensor Salida: Vehículo general liberó plaza en ${r.etiqueta} (${r.free}/${r.capacidad} libres)`, 'exit');
+      }
+    } else if (act === 'pcd-in') {
+      // Ocupación plaza accesible
+      if (r.pcd_free > 0 && r.free > 0) {
+        r.pcd_free--;
+        r.free--;
+        sessionStats.entries++;
+        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].in++;
+        logTelemetry(`[${r.id}] ♿ Sensor IoT Plaza Accesible: Ocupada plaza reservada en ${r.etiqueta} (Quedan ${r.pcd_free}/${r.pcd_total} accesibles, ${r.free}/${r.capacidad} totales)`, 'entry');
+      }
+    } else if (act === 'pcd-out') {
+      // Liberación plaza accesible
+      if (r.pcd_free < r.pcd_total && r.free < r.capacidad) {
+        r.pcd_free++;
+        r.free++;
+        sessionStats.exits++;
+        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].out++;
+        logTelemetry(`[${r.id}] ♿ Sensor IoT Plaza Accesible: Liberada plaza reservada en ${r.etiqueta} (Quedan ${r.pcd_free}/${r.pcd_total} accesibles, ${r.free}/${r.capacidad} totales)`, 'exit');
+      }
+    }
+
+    checkSlotAlerts(r, oldFree);
+    syncSlotUI(r);
+    syncSlotOccupancyToDb(r.id, r.free, r.pcd_free, act);
     update();
   }));
 }
@@ -880,21 +933,39 @@ function tickAutoVehicle() {
   else if (target.free >= target.capacidad) wantsEntry = true;
 
   const oldFree = target.free;
-  if (wantsEntry && target.free > 0) {
-    target.free--;
-    sessionStats.entries++;
-    if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].in++;
-    logTelemetry(`[${target.id}] 🚗 Sensor detecta ENTRADA: ${target.etiqueta} (${target.free}/${target.capacidad} libres)`, 'entry');
-  } else if (!wantsEntry && target.free < target.capacidad) {
-    target.free++;
-    sessionStats.exits++;
-    if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].out++;
-    logTelemetry(`[${target.id}] 🚙 Sensor detecta SALIDA: ${target.etiqueta} (${target.free}/${target.capacidad} libres)`, 'exit');
+  const isPcdEvent = Math.random() < 0.25 && (target.pcd_total || 0) > 0;
+
+  if (isPcdEvent) {
+    if (wantsEntry && target.pcd_free > 0 && target.free > 0) {
+      target.pcd_free--;
+      target.free--;
+      sessionStats.entries++;
+      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].in++;
+      logTelemetry(`[${target.id}] ♿ Sensor IoT: Vehículo ocupó plaza accesible en ${target.etiqueta} (${target.pcd_free}/${target.pcd_total} accesibles, ${target.free}/${target.capacidad} totales)`, 'entry');
+    } else if (!wantsEntry && target.pcd_free < target.pcd_total && target.free < target.capacidad) {
+      target.pcd_free++;
+      target.free++;
+      sessionStats.exits++;
+      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].out++;
+      logTelemetry(`[${target.id}] ♿ Sensor IoT: Liberada plaza accesible en ${target.etiqueta} (${target.pcd_free}/${target.pcd_total} accesibles, ${target.free}/${target.capacidad} totales)`, 'exit');
+    }
+  } else {
+    if (wantsEntry && target.free > target.pcd_free) {
+      target.free--;
+      sessionStats.entries++;
+      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].in++;
+      logTelemetry(`[${target.id}] 🚗 Sensor detecta ENTRADA general: ${target.etiqueta} (${target.free}/${target.capacidad} libres)`, 'entry');
+    } else if (!wantsEntry && target.free < target.capacidad) {
+      target.free++;
+      sessionStats.exits++;
+      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].out++;
+      logTelemetry(`[${target.id}] 🚙 Sensor detecta SALIDA general: ${target.etiqueta} (${target.free}/${target.capacidad} libres)`, 'exit');
+    }
   }
 
   checkSlotAlerts(target, oldFree);
   syncSlotUI(target);
-  syncSlotOccupancyToDb(target.id, target.free, wantsEntry ? 'entrada_auto' : 'salida_auto');
+  syncSlotOccupancyToDb(target.id, target.free, target.pcd_free, wantsEntry ? 'entrada_auto' : 'salida_auto');
   update();
 }
 
@@ -1485,7 +1556,10 @@ function renderAdminRanking() {
             <strong>${htmlEscape(item.etiqueta)}</strong>
             <br><small style="color:#728d9f;">ID: ${item.id} · Cap. ${item.capacidad}</small>
           </td>
-          <td><strong>${item.capacidad}</strong> plazas</td>
+          <td>
+            <strong>${item.capacidad}</strong> plazas
+            <br><small style="color:#0284c7; font-weight:700;">♿ ${item.pcd_total} accesibles</small>
+          </td>
           <td>
             <div class="admin-bar-cell-wrap">
               <div class="admin-table-bar-bg">
@@ -1499,16 +1573,17 @@ function renderAdminRanking() {
           <td><span style="color:#0284c7; font-weight:700;">+${item.turnover.in} in / -${item.turnover.out} out</span></td>
           <td>
             <div class="access-tag-row">
-              ${(item.perfiles_permitidos || ["estudiante", "docente", "administrativo", "discapacidad"]).map(p => {
+              ${(item.perfiles_permitidos || ["estudiante", "docente", "administrativo"]).map(p => {
         const info = PROFILE_INFO[p];
+        if (!info) return '';
         return `<span class="access-badge ${p}">${info.icon} ${info.name.split(' ')[0]}</span>`;
       }).join('')}
             </div>
-            ${item.plazas_discapacidad ? `<div style="margin-top:3px;"><span class="badge-pcd-quota">♿ ${item.plazas_discapacidad} PCD</span></div>` : ''}
+            <div style="margin-top:3px;"><span class="badge-pcd-quota">♿ ${item.pcd_free ?? 0}/${item.pcd_total ?? 0} PCD disp.</span></div>
           </td>
           <td>
             <span class="semaforo-pill ${item.currentStatus.level}">
-              <span class="semaforo-indicator-dot"></span>${item.currentStatus.label} (${item.free} lib.)
+              <span class="semaforo-indicator-dot"></span>${item.currentStatus.label} (${item.free} lib / ♿ ${item.pcd_free} disp)
             </span>
           </td>
         </tr>
@@ -1522,6 +1597,8 @@ function renderAdminDashboard() {
 
   const totalCap = dataRows.reduce((acc, r) => acc + r.capacidad, 0);
   const totalLibres = dataRows.reduce((acc, r) => acc + r.free, 0);
+  const totalPcdTot = dataRows.reduce((acc, r) => acc + (r.pcd_total || 0), 0);
+  const totalPcdLib = dataRows.reduce((acc, r) => acc + (r.pcd_free || 0), 0);
   const totalOcupadas = Math.max(0, totalCap - totalLibres);
   const pctOcupado = totalCap > 0 ? Math.round((totalOcupadas / totalCap) * 100) : 0;
 
@@ -1539,7 +1616,7 @@ function renderAdminDashboard() {
   }
 
   const elPlazasSub = $("admin-kpi-plazas-sub");
-  if (elPlazasSub) elPlazasSub.textContent = `${totalOcupadas} plazas ocupadas · ${totalLibres} libres`;
+  if (elPlazasSub) elPlazasSub.textContent = `${totalOcupadas} plazas ocupadas · ${totalLibres} libres (♿ ${totalPcdLib} de ${totalPcdTot} accesibles disponibles)`;
 
   const elTurnover = $("admin-kpi-turnover");
   if (elTurnover) elTurnover.textContent = `${sessionStats.entries + sessionStats.exits}`;
@@ -1618,7 +1695,7 @@ function renderAdminDashboard() {
           <div class="admin-sector-bar-bg">
             <div class="admin-sector-bar-fill" style="width: ${pct}%; background: ${status.color};"></div>
           </div>
-          <span class="admin-sector-metrics">${occupied}/${r.capacidad} ocupadas</span>
+          <span class="admin-sector-metrics">${occupied}/${r.capacidad} ocupadas · <strong style="color:#0284c7;">♿ ${r.pcd_free}/${r.pcd_total}</strong></span>
           <span class="admin-sector-pct" style="color: ${status.color};">${pct}%</span>
         </div>
       `;
@@ -1804,12 +1881,13 @@ function exportAdminReport() {
                 <td style="padding: 6px 8px; text-align: center; font-weight: 700; color: #0284c7;">+${item.turnover.in} / -${item.turnover.out}</td>
                 <td style="padding: 6px 8px; text-align: center;">
                   <div>
-                    ${(item.perfiles_permitidos || ["estudiante", "docente", "administrativo", "discapacidad"]).map(p => {
+                    ${(item.perfiles_permitidos || ["estudiante", "docente", "administrativo"]).map(p => {
       const pInfo = PROFILE_INFO[p];
+      if (!pInfo) return '';
       return `<span style="display:inline-block; margin: 1px; padding: 1px 4px; border-radius: 4px; font-size: 7.5px; font-weight: 700; background: #e2e8f0; color: #334155;">${pInfo.icon} ${pInfo.name.split(' ')[0]}</span>`;
     }).join(' ')}
                   </div>
-                  ${item.plazas_discapacidad ? `<div style="margin-top:2px; font-size:7.5px; font-weight:700; color:#0284c7;">♿ ${item.plazas_discapacidad} PCD</div>` : ''}
+                  <div style="margin-top:2px; font-size:7.5px; font-weight:700; color:#0284c7;">♿ ${item.pcd_free ?? 0}/${item.pcd_total ?? 0} PCD disp.</div>
                 </td>
                 <td style="padding: 6px 8px; text-align: center;">
                   <span style="display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 8.5px; font-weight: 800; color: ${semPillColor}; background: ${semPillBg};">
@@ -2063,20 +2141,24 @@ function update() {
   const minPlaces = Number($("plazas").value);
   $("plazas-valor").textContent = minPlaces;
 
-  // Sincronizar perfil del conductor y banner informativo
+  // Sincronizar perfil del conductor y requerimiento de accesibilidad
   const perfilSelect = $("perfil-usuario");
   if (perfilSelect) {
-    currentDriverProfile = perfilSelect.value || "todos";
+    currentDriverProfile = perfilSelect.value || "estudiante";
+  }
+  const chkAccesible = $("requiere-accesible");
+  if (chkAccesible) {
+    needsAccessibleSlot = chkAccesible.checked;
   }
   const pMeta = PROFILE_INFO[currentDriverProfile] || PROFILE_INFO.todos;
   const banner = $("perfil-info-banner");
   if (banner) {
-    if (currentDriverProfile === "todos") {
-      banner.classList.add("hidden");
-    } else {
-      banner.classList.remove("hidden");
-      banner.innerHTML = `<span class="icon">${pMeta.icon}</span><span class="text"><strong>Modo ${pMeta.name}:</strong> ${pMeta.desc}</span>`;
+    let bannerHtml = `<span class="icon">${pMeta.icon}</span><span class="text"><strong>${pMeta.name}:</strong> ${pMeta.desc}`;
+    if (needsAccessibleSlot) {
+      bannerHtml += ` <br><strong style="color:#0284c7;">♿ Filtro de Accesibilidad Activo:</strong> Se priorizan y exigen estacionamientos autorizados con plazas accesibles reservadas disponibles.`;
     }
+    bannerHtml += `</span>`;
+    banner.innerHTML = bannerHtml;
   }
 
   // 1. Cálculo de tramo vehicular desde el conductor
@@ -2099,10 +2181,38 @@ function update() {
     const effFree = predApplyMap ? pred.freeEstimated : p.free;
     const ratio = p.capacidad > 0 ? (effFree / p.capacidad) : 0;
 
-    // Verificación de restricciones de acceso por perfil de usuario
+    // Verificación de restricciones institucionales y plazas accesibles
     const isAllowed = isProfileAllowed(p, currentDriverProfile);
-    const hasPcdQuota = Boolean(p.plazas_discapacidad && p.plazas_discapacidad > 0);
-    const pcdQuota = p.plazas_discapacidad || 0;
+    const pcdTot = p.pcd_total || 0;
+    const pcdLib = p.pcd_free || 0;
+    const hasPcdQuota = Boolean(pcdTot > 0);
+    const hasPcdFree = Boolean(pcdLib > 0);
+
+    let eligible = false;
+    let ineligibilityReason = "";
+    let ineligibilityTag = "";
+
+    if (!isAllowed) {
+      eligible = false;
+      ineligibilityReason = `🔒 Acceso restringido para perfil ${pMeta.name} (${htmlEscape(p.descripcion_acceso || 'Uso exclusivo')})`;
+      ineligibilityTag = `<span class="badge-access-status restricted">🚫 Restringido</span>`;
+    } else if (needsAccessibleSlot && pcdLib <= 0) {
+      eligible = false;
+      ineligibilityReason = pcdTot > 0
+        ? `♿ Sin plazas accesibles disponibles (0/${pcdTot} libres)`
+        : `♿ No dispone de plazas reservadas accesibles`;
+      ineligibilityTag = `<span class="badge disabled">♿ Sin plaza PCD</span>`;
+    } else if (effFree < minPlaces) {
+      eligible = false;
+      ineligibilityReason = `⚠️ Plazas insuficientes (${effFree} libres, se requieren ${minPlaces})`;
+      ineligibilityTag = `<span class="badge disabled">Saturado</span>`;
+    } else if (!isConnectedWalk || !isConnectedVeh) {
+      eligible = false;
+      ineligibilityReason = `⚠️ Red vial/peatonal sin conexión en el grafo GIS`;
+      ineligibilityTag = `<span class="badge disabled">Sin ruta</span>`;
+    } else {
+      eligible = true;
+    }
 
     return {
       ...p,
@@ -2113,10 +2223,14 @@ function update() {
       pred,
       isAllowed,
       hasPcdQuota,
-      pcdQuota,
+      hasPcdFree,
+      pcdQuota: pcdTot,
+      pcdLibres: pcdLib,
+      eligible,
+      ineligibilityReason,
+      ineligibilityTag,
       pathWalk: isConnectedWalk ? pathTo(route, snap.key, src.key) : null,
-      pathVeh: isConnectedVeh ? (() => { const p = pathTo(driverRoute, snap.key, driverSnap.key); return p ? p.reverse() : null; })() : null,
-      eligible: effFree >= minPlaces && isConnectedWalk && isConnectedVeh && isAllowed
+      pathVeh: isConnectedVeh ? (() => { const p = pathTo(driverRoute, snap.key, driverSnap.key); return p ? p.reverse() : null; })() : null
     };
   });
 
@@ -2124,16 +2238,23 @@ function update() {
   const profile = $("prioridad").value;
   const weight = profile === 'cercania' ? .85 : profile === 'disponibilidad' ? .25 : .60;
   valid.forEach(p => {
-    let baseScore = weight * (p.dist / maxDist) + (1 - weight) * (1 - p.ratio);
-    // Para perfil de Personas con Discapacidad (PCD), bonificar parqueaderos con plazas reservadas PCD
-    if (currentDriverProfile === 'discapacidad' && p.hasPcdQuota) {
-      baseScore -= 0.35;
+    if (needsAccessibleSlot) {
+      // Priorizar menor distancia caminable + ventaja por disponibilidad de plazas accesibles
+      const walkScore = p.dist / maxDist;
+      const pcdScore = p.pcd_total > 0 ? (1 - (p.pcd_free / p.pcd_total)) : 1;
+      p.score = 0.75 * walkScore + 0.25 * pcdScore;
+    } else {
+      let baseScore = weight * (p.dist / maxDist) + (1 - weight) * (1 - p.ratio);
+      p.score = baseScore;
     }
-    p.score = baseScore;
   });
   valid.sort((a, b) => a.score - b.score || a.dist - b.dist);
 
   $("total-libres").textContent = calculated.reduce((s, r) => s + r.effFree, 0);
+  const totalPcdFree = calculated.reduce((s, r) => s + (r.pcd_free || 0), 0);
+  const totalPcdTot = calculated.reduce((s, r) => s + (r.pcd_total || 0), 0);
+  const elPcdMetric = $("total-accesibles-libres");
+  if (elPcdMetric) elPcdMetric.textContent = `${totalPcdFree} / ${totalPcdTot}`;
   $("total-elegibles").textContent = valid.length;
   const tabCounter = $("tab-ranking-counter");
   if (tabCounter) tabCounter.textContent = valid.length;
@@ -2258,9 +2379,13 @@ function update() {
     const accessBadge = (currentDriverProfile !== "todos")
       ? `<span class="badge-access-status allowed">✅ Acreditado (${pMeta.name})</span>`
       : '';
-    const pcdNotice = (currentDriverProfile === 'discapacidad' && p.hasPcdQuota)
-      ? `<span class="badge-pcd-quota" style="font-weight:700;">♿ ${p.pcdQuota} Plazas Reservadas PCD</span>`
-      : (p.hasPcdQuota ? `<span class="badge-pcd-quota">♿ ${p.pcdQuota} PCD</span>` : '');
+    const pcdNotice = needsAccessibleSlot
+      ? `<span class="badge-pcd-quota" style="font-weight:700;">♿ ${p.pcd_free} de ${p.pcd_total} Plazas Accesibles Disponibles</span>`
+      : `<span class="badge-pcd-quota">♿ ${p.pcd_free}/${p.pcd_total} PCD</span>`;
+
+    const accessRouteNote = needsAccessibleSlot
+      ? `<strong>♿ Plaza accesible garantizada:</strong> El sector cuenta con plaza accesible disponible (${p.pcd_free}/${p.pcd_total} libres). <em>Nota técnica GIS: El tramo peatonal sigue la red de caminerías del campus (las pendientes y rampas en aceras están pendientes de verificación técnica en terreno).</em>`
+      : `${htmlEscape(p.pred.recommendation)}`;
 
     rec.innerHTML = `
       <div class="rec-title">${modeBadge}NAVEGACIÓN INTELIGENTE · ESTACIONAMIENTO RECOMENDADO</div>
@@ -2273,26 +2398,34 @@ function update() {
         <span style="background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-weight:700;">🚶 ${p.dist} m a pie hasta destino</span>
         <span class="pred-risk-badge ${p.pred.riskLevel}" style="font-size: 11px;">🔮 Pronóstico ${predHour}: ${p.pred.pct}% ocupado (${p.pred.riskLabel})</span>
       </div>
-      <p>Ruta multimodal trazada en el mapa: <strong>Tramo vehicular en azul continuo</strong> hasta el parqueadero + <strong>tramo peatonal en verde punteado</strong> hasta ${htmlEscape(dest.name)}. ${currentDriverProfile === 'discapacidad' ? '<strong>♿ Acceso prioritario:</strong> Ruta directa con rampas peatonales hacia el destino.' : ''} ${htmlEscape(p.pred.recommendation)}</p>`;
+      <p>Ruta multimodal trazada en el mapa: <strong>Tramo vehicular en azul continuo</strong> hasta el parqueadero + <strong>tramo peatonal en verde punteado</strong> hasta ${htmlEscape(dest.name)}. ${accessRouteNote}</p>`;
   } else {
-    const hasDisallowedWithSpaces = calculated.some(c => !c.isAllowed && c.effFree >= minPlaces);
+    let noReason = "";
+    if (needsAccessibleSlot) {
+      noReason = `No hay plazas accesibles disponibles en los parqueaderos autorizados para el perfil <strong>${pMeta.name}</strong>. Todas las plazas reservadas en dichos sectores se encuentran ocupadas o el sector no está permitido.`;
+    } else {
+      const hasDisallowedWithSpaces = calculated.some(c => !c.isAllowed && c.effFree >= minPlaces);
+      if (hasDisallowedWithSpaces) {
+        noReason = `Existen parqueaderos con plazas libres en el campus, pero su acceso está <strong>restringido para el perfil ${pMeta.name}</strong> según las políticas de acreditación vehicular de la ESPOCH.`;
+      } else {
+        noReason = `Todos los estacionamientos autorizados para tu perfil se encuentran actualmente saturados (${minPlaces} o más plazas requeridas) o sin conexión en la red GIS.`;
+      }
+    }
     rec.innerHTML = `
       <div class="rec-title">SIN ALTERNATIVAS ELEGIBLES</div>
       <div class="rec-main">No hay parqueaderos recomendables en este escenario</div>
-      <p>${hasDisallowedWithSpaces
-        ? `Existen parqueaderos con plazas libres, pero su <strong>acceso está restringido para el perfil ${pMeta.name}</strong> según las políticas de acreditación vehicular de la ESPOCH.`
-        : 'Se descartaron por saturación según el escenario evaluado o por ausencia de conexión en la red GIS.'}</p>`;
+      <p>${noReason}</p>`;
   }
 
   // ── RANKING DE ALTERNATIVAS ──
   $("ranking").innerHTML = valid.map((p, i) => {
     const status = getAvailabilityStatus(p.effFree, p.capacidad);
-    const pcdTag = p.hasPcdQuota ? `<span class="badge-pcd-quota">♿ ${p.pcdQuota} PCD</span>` : '';
+    const pcdTag = `<span class="badge-pcd-quota">♿ ${p.pcd_free}/${p.pcd_total} PCD</span>`;
     const allowedTag = (currentDriverProfile !== "todos") ? `<span class="badge-access-status allowed">✅ Autorizado</span>` : '';
-    return `<div class="rankrow ${currentDriverProfile === 'discapacidad' && p.hasPcdQuota ? 'pcd-priority' : ''}">
+    return `<div class="rankrow ${needsAccessibleSlot ? 'pcd-priority' : ''}">
       <div>
         <strong><span class="rankno">${i + 1}.</span>${htmlEscape(p.etiqueta)}</strong>
-        <small>🚗 ${p.distVeh} m en auto · 🚶 ${p.dist} m a pie · ${p.effFree}/${p.capacidad} plazas libres · Pronóstico: ${p.pred.pct}% ocupado</small>
+        <small>🚗 ${p.distVeh} m en auto · 🚶 ${p.dist} m a pie · ${p.effFree}/${p.capacidad} libres (♿ ${p.pcd_free}/${p.pcd_total}) · Pronóstico: ${p.pred.pct}% ocupado</small>
       </div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap: wrap;">
         ${pcdTag}
@@ -2306,28 +2439,15 @@ function update() {
     calculated.filter(r => !r.eligible).map(p => {
       const status = getAvailabilityStatus(p.effFree, p.capacidad);
       const isRestrictedByProfile = !p.isAllowed;
-      let reasonText = '';
-      let badgeHtml = '';
-
-      if (isRestrictedByProfile) {
-        reasonText = `🔒 Restringido para perfil ${pMeta.name} (${htmlEscape(p.descripcion_acceso || 'Acceso restringido')})`;
-        badgeHtml = `<span class="badge-access-status restricted">🚫 Restringido</span>`;
-      } else if (p.effFree < minPlaces) {
-        reasonText = 'Saturado / Sin plazas suficientes';
-        badgeHtml = `<span class="badge disabled">No elegible</span>`;
-      } else {
-        reasonText = 'Red vial/peatonal sin conexión';
-        badgeHtml = `<span class="badge disabled">No elegible</span>`;
-      }
 
       return `<div class="rankrow ${isRestrictedByProfile ? 'restricted-slot' : ''}">
       <div>
         <strong>${htmlEscape(p.etiqueta)}</strong>
-        <small>${reasonText}</small>
+        <small>${p.ineligibilityReason}</small>
       </div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap: wrap;">
-        ${p.hasPcdQuota ? `<span class="badge-pcd-quota">♿ ${p.pcdQuota} PCD</span>` : ''}
-        ${badgeHtml}
+        <span class="badge-pcd-quota">♿ ${p.pcd_free}/${p.pcd_total} PCD</span>
+        ${p.ineligibilityTag}
         <span class="pred-risk-badge ${p.pred.riskLevel}" style="font-size: 10px;">${p.pred.riskLabel}</span>
         <span class="semaforo-pill ${status.level}"><span class="semaforo-indicator-dot"></span>${status.label}</span>
       </div>
@@ -2365,12 +2485,13 @@ function update() {
         })
       });
 
-      const allowedBadgesMini = (p.perfiles_permitidos || ["estudiante", "docente", "administrativo", "discapacidad"]).map(perf => {
+      const allowedBadgesMini = (p.perfiles_permitidos || ["estudiante", "docente", "administrativo"]).map(perf => {
         const info = PROFILE_INFO[perf];
+        if (!info) return '';
         return `<span class="access-badge ${perf}" style="font-size:9.5px; padding:2px 6px;">${info.icon} ${info.name.split(' ')[0]}</span>`;
       }).join('');
 
-      const pcdBadgeMini = p.hasPcdQuota ? `<span class="badge-pcd-quota" style="font-size:9.5px; padding:2px 6px;">♿ ${p.pcdQuota} PCD</span>` : '';
+      const pcdBadgeMini = `<span class="badge-pcd-quota" style="font-size:9.5px; padding:2px 6px;">♿ ${p.pcd_free}/${p.pcd_total} PCD</span>`;
 
       const restrictionNotice = (currentDriverProfile !== "todos")
         ? (p.isAllowed
@@ -2394,13 +2515,14 @@ function update() {
             <strong>Ruta desde tu vehículo:</strong> ≈ ${p.distVeh} m en auto<br>
             <strong>Caminata a destino:</strong> ≈ ${p.dist} m a pie<br>
             <strong>Disponibilidad:</strong> ${p.effFree} libres de ${p.capacidad} total<br>
+            <strong>Plazas accesibles:</strong> ${p.pcd_free} de ${p.pcd_total} libres<br>
             <strong>Pronóstico (${predHour}):</strong> ${p.pred.pct}% ocupación esperada<br>
             <span style="font-size: 11px; color: #607d8e;">Horario pico: ${htmlEscape(p.pred.peakHours)}</span>
           </div>
         </div>
       `);
 
-      layer.bindTooltip(`<strong>${htmlEscape(p.etiqueta)}</strong>: <span style="font-weight:700; color:${status.color};">${status.label} (${p.effFree}/${p.capacidad})</span>${!p.isAllowed ? ' <strong style="color:#dc2626;">[🔒 Restringido]</strong>' : ''}<br><small style="color:#2563eb;">🚗 ~${p.distVeh}m auto</small> · <small style="color:#0d9488;">🚶 ${p.dist}m a pie</small>`, {
+      layer.bindTooltip(`<strong>${htmlEscape(p.etiqueta)}</strong>: <span style="font-weight:700; color:${status.color};">${status.label} (${p.effFree}/${p.capacidad})</span>${!p.isAllowed ? ' <strong style="color:#dc2626;">[🔒 Restringido]</strong>' : ''}<br><small style="color:#0284c7;">♿ ${p.pcd_free}/${p.pcd_total} PCD</small> · <small style="color:#2563eb;">🚗 ~${p.distVeh}m auto</small> · <small style="color:#0d9488;">🚶 ${p.dist}m pie</small>`, {
         direction: 'top',
         sticky: true
       });
@@ -2458,7 +2580,16 @@ async function load() {
     dataRows = occ.parqueaderos.map(p => {
       const feature = parkJson.features.find(f => Number(f.properties.osm_id) === p.osm_id);
       const freeSlots = (typeof p.libres_actuales === 'number') ? p.libres_actuales : p.libres_iniciales;
-      return { ...p, feature, center: feature && center(feature), free: freeSlots };
+      const pcdTotal = (typeof p.plazas_accesibles_totales === 'number') ? p.plazas_accesibles_totales : (p.plazas_discapacidad || 2);
+      const pcdFree = (typeof p.plazas_accesibles_libres === 'number') ? p.plazas_accesibles_libres : Math.min(pcdTotal, freeSlots);
+      return {
+        ...p,
+        feature,
+        center: feature && center(feature),
+        free: freeSlots,
+        pcd_total: pcdTotal,
+        pcd_free: Math.max(0, Math.min(pcdTotal, Math.min(freeSlots, pcdFree)))
+      };
     }).filter(p => p.feature && p.center);
 
     // Inicializar rotación de sesión para cada parqueadero
@@ -2467,7 +2598,7 @@ async function load() {
     }
 
     if (dataRows.length < 2) throw new Error('No se pudieron vincular los polígonos del escenario con las capas OSM.');
-    initialRows = dataRows.map(r => ({ id: r.id, free: r.free }));
+    initialRows = dataRows.map(r => ({ id: r.id, free: r.free, pcd_free: r.pcd_free }));
 
     if (typeof L === 'undefined') throw new Error('No se cargó Leaflet: comprueba la conexión a Internet.');
 
@@ -2564,6 +2695,13 @@ async function load() {
       update();
     });
 
+    // Escuchador de requerimiento de plaza accesible
+    $("requiere-accesible")?.addEventListener('change', (e) => {
+      needsAccessibleSlot = e.target.checked;
+      logTelemetry(`[Accesibilidad] Requerimiento de plaza accesible: ${needsAccessibleSlot ? 'ACTIVADO' : 'DESACTIVADO'}`, 'system');
+      update();
+    });
+
     $("reset")?.addEventListener('click', () => {
       stopAutoSimulation(true);
       if (isDbConnected) {
@@ -2572,7 +2710,10 @@ async function load() {
       }
       for (const r of dataRows) {
         const init = initialRows.find(v => v.id === r.id);
-        if (init) r.free = init.free;
+        if (init) {
+          r.free = init.free;
+          r.pcd_free = init.pcd_free;
+        }
         syncSlotUI(r);
       }
       predHour = "07:00";
@@ -2590,12 +2731,15 @@ async function load() {
       if (origenSelect) origenSelect.value = "puerta_posterior";
       if (driverMarker) driverMarker.setLatLng([driverLocation[1], driverLocation[0]]);
 
-      // Resetear perfil de conductor
-      currentDriverProfile = "todos";
+      // Resetear perfil de conductor y accesibilidad
+      currentDriverProfile = "estudiante";
+      needsAccessibleSlot = false;
       const perfilSelect = $("perfil-usuario");
-      if (perfilSelect) perfilSelect.value = "todos";
+      if (perfilSelect) perfilSelect.value = "estudiante";
+      const chkPcd = $("requiere-accesible");
+      if (chkPcd) chkPcd.checked = false;
       const banner = $("perfil-info-banner");
-      if (banner) banner.classList.add("hidden");
+      if (banner) banner.classList.remove("hidden");
 
       const destSelect = $("destino");
       if (destSelect && destSelect.options.length) destSelect.value = destSelect.options[0].value;

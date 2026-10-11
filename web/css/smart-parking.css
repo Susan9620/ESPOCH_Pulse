@@ -446,6 +446,68 @@ body {
   flex-shrink: 0;
 }
 
+/* Casilla de requerimiento de plaza accesible */
+.accessible-checkbox-group {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.accessible-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all .15s ease;
+  user-select: none;
+}
+
+.accessible-checkbox-label:hover {
+  background: #ccfbf1;
+  border-color: #5eead4;
+}
+
+.accessible-checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #0d9488;
+  cursor: pointer;
+  margin: 0;
+}
+
+.accessible-checkbox-text {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0f766e;
+}
+
+.btn-sensor-step.accessible-step-in {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.btn-sensor-step.accessible-step-in:hover:not(:disabled) {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+
+.btn-sensor-step.accessible-step-out {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+.btn-sensor-step.accessible-step-out:hover:not(:disabled) {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
 /* Tarjeta de acceso rápido a IoT */
 .sidebar-iot-shortcut-card {
   margin-top: 14px;
