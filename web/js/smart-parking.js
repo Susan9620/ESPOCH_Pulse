@@ -10,6 +10,317 @@ let roadGraph = new Map(), roadNodes = [], largeComponent = new Set(), buildings
 let autoTimer = null, isAutoRunning = false;
 let historicalData = null, predHour = "07:00", predDay = "laborable", predApplyMap = false;
 
+// Plazas esquemáticas: estados y simulación derivados de sensores individuales.
+const PARKING_SPACES_ZOOM = 18;
+let parkingSpacesLayer, parkingCirculationLayer, parkingSpacesLegend;
+let parkingSpaceStates = new Map();
+
+let parkingSpaceLayers = new Map();
+let recommendedParkingSpaceId = null;
+let parkingSpaceMutationBusy = false;
+let parkingSpacesReady = false;
+
+function getSpacesForParking(parkingId) {
+  return [...parkingSpaceStates.values()].filter(s => s.parqueadero_id === parkingId)
+    .sort((a, b) => a.numero - b.numero);
+}
+
+function getMatchingSpaces(parkingId, tipo, estado) {
+  return getSpacesForParking(parkingId).filter(s => s.tipo === tipo && s.estado === estado);
+}
+
+function syncParkingTotalsFromSpaces(parkingId) {
+  const r = dataRows.find(row => row.id === parkingId);
+  if (!r || !parkingSpacesReady) return;
+  const spaces = getSpacesForParking(parkingId);
+  r.free = spaces.filter(s => s.estado === 'libre').length;
+  r.pcd_free = spaces.filter(s => s.tipo === 'accesible' && s.estado === 'libre').length;
+}
+
+function getRecommendedParkingSpace(parkingId) {
+  if (!parkingSpacesReady) return null;
+  return getMatchingSpaces(parkingId, needsAccessibleSlot ? 'accesible' : 'general', 'libre')[0] || null;
+}
+
+function setRecommendedParkingSpace(spaceId) {
+  const previousId = recommendedParkingSpaceId;
+  recommendedParkingSpaceId = spaceId;
+  if (previousId) refreshParkingSpaceStyle(previousId);
+  if (spaceId && spaceId !== previousId) refreshParkingSpaceStyle(spaceId);
+}
+
+function focusParkingSpaceOnMap(spaceId) {
+  const layer = parkingSpaceLayers.get(spaceId);
+  const space = parkingSpaceStates.get(spaceId);
+  if (!map || !layer || predApplyMap || spaceId !== recommendedParkingSpaceId || space?.estado !== 'libre') return;
+  const center = layer.getBounds().getCenter();
+  const open = () => {
+    if (spaceId !== recommendedParkingSpaceId || predApplyMap || parkingSpaceStates.get(spaceId)?.estado !== 'libre') return;
+    updateParkingSpacesVisibility();
+    layer.openPopup();
+  };
+  if (map.getZoom() === 19 && map.getCenter().equals(center)) {
+    open();
+  } else {
+    map.once('moveend', open);
+    map.flyTo(center, 19);
+  }
+}
+
+function refreshParkingSpaceStyle(spaceId) {
+  const layer = parkingSpaceLayers.get(spaceId);
+  if (layer) {
+    layer.setStyle(parkingSpaceStyle(layer.feature));
+    layer.getElement()?.classList.toggle('parking-space-recommended',
+      spaceId === recommendedParkingSpaceId && parkingSpaceStates.get(spaceId)?.estado === 'libre');
+  }
+}
+
+function parkingSensorUnavailable(error) {
+  parkingSpacesReady = false;
+  stopAutoSimulation(true);
+  logTelemetry('[IoT] No se pudo actualizar el sensor simulado. API no disponible: ' + error.message, 'system');
+  dataRows.forEach(syncSlotUI);
+}
+
+function applyParkingSpaceStates(states) {
+  if (!Array.isArray(states) || states.some(s => !s || typeof s.id !== 'string' ||
+      !['libre', 'ocupada', 'fuera_servicio'].includes(s.estado) ||
+      !['general', 'accesible'].includes(s.tipo))) throw new Error('Estados de plazas inválidos');
+  const next = new Map(states.map(s => [s.id, s]));
+  if (next.size !== states.length || dataRows.some(r =>
+      states.filter(s => s.parqueadero_id === r.id).length !== r.capacidad)) {
+    throw new Error('La consulta no contiene todas las plazas');
+  }
+  parkingSpaceStates = next;
+  parkingSpacesReady = true;
+  for (const r of dataRows) {
+    syncParkingTotalsFromSpaces(r.id);
+    syncSlotUI(r);
+  }
+  parkingSpaceLayers.forEach((layer, id) => refreshParkingSpaceStyle(id));
+  update();
+}
+
+async function reloadParkingSpaceStates() {
+  const response = await fetch('/api/parking/spaces');
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  applyParkingSpaceStates(await response.json());
+}
+
+// Único punto de escritura; se invoca bajo el bloqueo de runParkingSpaceMutation.
+async function commitParkingSpaceState(spaceId, newState, eventType) {
+  const space = parkingSpaceStates.get(spaceId);
+  if (!space || space.estado === 'fuera_servicio' ||
+      !['libre', 'ocupada'].includes(newState) || space.estado === newState) return false;
+  const response = await fetch('/api/parking/spaces/state', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: spaceId, estado: newState, evento: eventType })
+  });
+  const result = await response.json();
+  if (!response.ok || result.success !== true || result.id !== spaceId || result.estado !== newState) {
+    throw new Error(result.error || 'El servidor no confirmó el cambio');
+  }
+  const r = dataRows.find(row => row.id === space.parqueadero_id);
+  const oldFree = r.free;
+  parkingSpaceStates.set(spaceId, { ...space, estado: result.estado });
+  refreshParkingSpaceStyle(spaceId);
+  syncParkingTotalsFromSpaces(r.id);
+  const entry = newState === 'ocupada';
+  sessionStats[entry ? 'entries' : 'exits']++;
+  if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id][entry ? 'in' : 'out']++;
+  syncSlotUI(r);
+  checkSlotAlerts(r, oldFree);
+  update();
+  const prefix = eventType === 'sensor_simulado_auto' ? '[Auto]' : '';
+  logTelemetry(`${prefix}[${space.sensor_id}] Sensor geomagnético simulado → ${spaceId} ${newState.toUpperCase()} · ${r.id}: ${r.free}/${r.capacidad} libres`, entry ? 'entry' : 'exit');
+  return true;
+}
+
+async function runParkingSpaceMutation(operation, requireReady = true) {
+  if (parkingSpaceMutationBusy) return false;
+  if (requireReady && !parkingSpacesReady) {
+    parkingSensorUnavailable(new Error('Consulta de plazas no disponible; simulación detenida'));
+    return false;
+  }
+  parkingSpaceMutationBusy = true;
+  dataRows.forEach(syncSlotUI);
+  try {
+    return await operation();
+  } catch (error) {
+    parkingSensorUnavailable(error);
+    return false;
+  } finally {
+    parkingSpaceMutationBusy = false;
+    dataRows.forEach(syncSlotUI);
+  }
+}
+
+function setParkingSpaceState(spaceId, newState, eventType = 'sensor_simulado') {
+  return runParkingSpaceMutation(() => commitParkingSpaceState(spaceId, newState, eventType));
+}
+
+function simulateParkingSpace(parkingId, action) {
+  if (parkingSpaceMutationBusy || !parkingSpacesReady) {
+    return runParkingSpaceMutation(() => false);
+  }
+  const tipo = action.startsWith('pcd-') ? 'accesible' : 'general';
+  const occupy = action === 'in' || action === 'pcd-in';
+  const space = getMatchingSpaces(parkingId, tipo, occupy ? 'libre' : 'ocupada')[0];
+  if (!space) return Promise.resolve(false);
+  return setParkingSpaceState(space.id, occupy ? 'ocupada' : 'libre');
+}
+
+function setParkingFreeTarget(parkingId, requested) {
+  return runParkingSpaceMutation(async () => {
+    const r = dataRows.find(row => row.id === parkingId);
+    if (!r || !Number.isFinite(requested)) return false;
+    syncParkingTotalsFromSpaces(parkingId);
+    const operational = getSpacesForParking(parkingId).filter(s => s.estado !== 'fuera_servicio').length;
+    const target = Math.max(0, Math.min(operational, Math.round(requested)));
+    while (r.free !== target) {
+      const occupy = r.free > target;
+      const state = occupy ? 'libre' : 'ocupada';
+      const space = getMatchingSpaces(parkingId, 'general', state)[0] ||
+        getMatchingSpaces(parkingId, 'accesible', state)[0];
+      if (!space) break;
+      await commitParkingSpaceState(space.id, occupy ? 'ocupada' : 'libre', 'sensor_simulado_slider');
+    }
+    return true;
+  });
+}
+
+async function resetParkingSpaces() {
+  stopAutoSimulation(true);
+  return runParkingSpaceMutation(async () => {
+    if (!isDbConnected) throw new Error('SQLite no disponible para restablecer plazas');
+    const response = await fetch('/api/parking/reset', { method: 'POST' });
+    const result = await response.json();
+    if (!response.ok || result.success !== true) throw new Error(result.error || 'Reset no confirmado');
+    await reloadParkingSpaceStates();
+    logTelemetry('[SQLite] Plazas y sensores simulados restablecidos', 'system');
+    return true;
+  }, false);
+}
+
+function parkingSpaceStyle(feature) {
+  const state = parkingSpaceStates.get(feature.properties.id);
+  const accessible = feature.properties.tipo === 'accesible';
+  const recommended = feature.properties.id === recommendedParkingSpaceId && state?.estado === 'libre';
+  return {
+    pane: 'parkingSpacesPane',
+    color: accessible ? '#2563eb' : (recommended ? '#eab308' : '#ffffff'),
+    weight: recommended ? 4 : (accessible ? 2.5 : 1),
+    fillColor: ({ libre: '#16a34a', ocupada: '#dc2626', fuera_servicio: '#6b7280' })[state?.estado] || '#9ca3af',
+    fillOpacity: .85,
+    opacity: 1
+  };
+}
+
+function parkingSpacePopup(feature) {
+  const props = feature.properties;
+  const state = parkingSpaceStates.get(props.id);
+  const parking = dataRows.find(p => p.id === props.parqueadero_id);
+  const states = { libre: 'Libre', ocupada: 'Ocupada', fuera_servicio: 'Fuera de servicio' };
+  const text = value => htmlEscape(String(value ?? 'No disponible'));
+  const rows = [
+    ['Parqueadero', parking?.etiqueta || props.parqueadero_id],
+    ['Estado', states[state?.estado] || 'Estado no disponible'],
+    ['Tipo', props.tipo === 'accesible' ? 'Accesible ♿' : 'General'],
+    ['Sensor', state?.sensor_id || props.sensor_id],
+    ['Tecnología', state?.sensor_tipo === 'geomagnetico' ? 'Geomagnético' : state?.sensor_tipo],
+    ['Comunicación', state?.conectividad],
+    ['Estado del sensor', state?.estado_sensor === 'simulado' ? 'Simulado' : state?.estado_sensor]
+  ];
+  return `<div class="parking-space-popup"><strong>Plaza ${text(props.id)}</strong><dl>${rows.map(([label, value]) => `<dt>${label}:</dt><dd>${text(value)}</dd>`).join('')}</dl><small>Distribución esquemática de demostración, no a escala.</small></div>`;
+}
+
+function updateParkingSpacesVisibility() {
+  const visible = map.getZoom() >= PARKING_SPACES_ZOOM;
+  for (const layer of [parkingSpacesLayer, parkingCirculationLayer]) {
+    if (visible && !map.hasLayer(layer)) map.addLayer(layer);
+    else if (!visible && map.hasLayer(layer)) map.removeLayer(layer);
+  }
+  const legend = parkingSpacesLegend?.getContainer();
+  if (legend) legend.hidden = !visible || parkingSpacesLayer.getLayers().length === 0;
+}
+
+async function loadParkingSpaces() {
+  // Fallos de estas capas no interrumpen la aplicación principal.
+  const read = async (url, type) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (type === 'states' ? !Array.isArray(data) : data?.type !== 'FeatureCollection' || !Array.isArray(data.features)) {
+        throw new Error('Formato de datos inválido');
+      }
+      return data;
+    } catch (error) {
+      console.error(`[Plazas esquemáticas] ${url}`, error);
+      return null;
+    }
+  };
+  const [spaces, circulation, states] = await Promise.all([
+    read(ROOT + 'processed/plazas_estacionamiento.geojson', 'geojson'),
+    read(ROOT + 'processed/circulacion_parqueaderos.geojson', 'geojson'),
+    read('/api/parking/spaces', 'states')
+  ]);
+  try {
+    if (!states) throw new Error('GET /api/parking/spaces no disponible');
+    applyParkingSpaceStates(states);
+  } catch (error) { parkingSensorUnavailable(error); }
+  if (spaces) {
+    try {
+      L.geoJSON(spaces, {
+        style: parkingSpaceStyle,
+        pane: 'parkingSpacesPane',
+        bubblingMouseEvents: false,
+        onEachFeature: (feature, layer) => {
+          parkingSpaceLayers.set(feature.properties.id, layer);
+          layer.on('add', () => refreshParkingSpaceStyle(feature.properties.id));
+          layer.bindPopup(() => parkingSpacePopup(feature), { maxWidth: 285 });
+        }
+      }).eachLayer(layer => parkingSpacesLayer.addLayer(layer));
+    } catch (error) { console.error('[Plazas esquemáticas] Geometrías de plazas inválidas', error); }
+  }
+  if (circulation) {
+    try {
+      L.geoJSON(circulation, {
+        pane: 'parkingCirculationPane', interactive: false,
+        style: { color: '#64748b', weight: 1.5, dashArray: '4 5', opacity: .8 }
+      }).eachLayer(layer => parkingCirculationLayer.addLayer(layer));
+    } catch (error) { console.error('[Plazas esquemáticas] Geometrías de circulación inválidas', error); }
+  }
+  updateParkingSpacesVisibility();
+}
+
+function initParkingSpaces() {
+  map.createPane('parkingCirculationPane').style.zIndex = 410;
+  map.getPane('parkingCirculationPane').style.pointerEvents = 'none';
+  map.createPane('parkingSpacesPane').style.zIndex = 420;
+  parkingSpacesLayer = L.layerGroup();
+  parkingCirculationLayer = L.layerGroup();
+  parkingSpacesLegend = L.control({ position: 'bottomleft' });
+  parkingSpacesLegend.onAdd = () => {
+    const div = L.DomUtil.create('div', 'parking-spaces-legend');
+    div.hidden = true;
+    div.innerHTML = `<strong>PLAZAS — SIMULACIÓN</strong>
+      <span><i class="space-key space-key-free"></i>Libre</span>
+      <span><i class="space-key space-key-occupied"></i>Ocupada</span>
+      <span><i class="space-key space-key-unavailable"></i>Fuera de servicio</span>
+      <span><i class="space-key space-key-accessible"></i>Borde azul = plaza accesible</span>
+      <span><i class="space-key space-key-circulation"></i>Circulación interna</span>
+      <small>Distribución esquemática de demostración, no a escala.</small>`;
+    L.DomEvent.disableClickPropagation(div);
+    L.DomEvent.disableScrollPropagation(div);
+    return div;
+  };
+  parkingSpacesLegend.addTo(map);
+  map.on('zoomend', updateParkingSpacesVisibility);
+  void loadParkingSpaces().catch(error => console.error('[Plazas esquemáticas]', error));
+}
+
 // Estado y sincronización con Base de Datos SQLite
 let isDbConnected = false;
 let dbSyncDebounceTimer = null;
@@ -319,7 +630,32 @@ function logTelemetry(message, type = 'system') {
   feed.scrollTop = feed.scrollHeight;
 }
 
+function parkingSensorLabel(parkingId) {
+  return parkingSpacesReady
+    ? `IoT: ${getSpacesForParking(parkingId).length} sensores · LoRaWAN`
+    : 'IoT plaza a plaza';
+}
+
+function renderIotInfrastructureSummary() {
+  const summary = $("iot-infrastructure-summary");
+  if (!summary) return;
+  if (!parkingSpacesReady) {
+    summary.textContent = 'IoT plaza a plaza · Esperando datos simulados de las plazas.';
+    return;
+  }
+  const spaces = [...parkingSpaceStates.values()];
+  const sensors = spaces.filter(s => s.sensor_id).length;
+  const technologies = [...new Set(spaces.map(s => s.sensor_tipo).filter(Boolean))]
+    .map(type => type === 'geomagnetico' ? 'geomagnéticos' : type).join(', ');
+  const connectivity = [...new Set(spaces.map(s => s.conectividad).filter(Boolean))].join(', ');
+  summary.textContent = `${dataRows.length} parqueaderos · ${parkingSpaceStates.size} plazas monitorizadas · ${sensors} sensores ${technologies || '(tecnología no disponible)'} simulados · Comunicación propuesta: ${connectivity || 'No disponible'}`;
+}
+
 function syncSlotUI(r) {
+  const sensorLabel = $("sensor-label-" + r.id);
+  if (sensorLabel) sensorLabel.textContent = parkingSensorLabel(r.id);
+  renderIotInfrastructureSummary();
+  syncParkingTotalsFromSpaces(r.id);
   const status = getAvailabilityStatus(r.free, r.capacidad);
   const isAllowed = isProfileAllowed(r, currentDriverProfile);
   const pcdTot = r.pcd_total || 0;
@@ -352,13 +688,15 @@ function syncSlotUI(r) {
     pill.innerHTML = `<span class="semaforo-indicator-dot"></span>${status.label}`;
   }
   const btnIn = $("btn-in-" + r.id);
-  if (btnIn) btnIn.disabled = (r.free - pcdLib <= 0);
+  const blocked = parkingSpaceMutationBusy || !parkingSpacesReady;
+  if (slider) slider.disabled = blocked;
+  if (btnIn) btnIn.disabled = blocked || !getMatchingSpaces(r.id, 'general', 'libre').length;
   const btnOut = $("btn-out-" + r.id);
-  if (btnOut) btnOut.disabled = (r.free >= r.capacidad);
+  if (btnOut) btnOut.disabled = blocked || !getMatchingSpaces(r.id, 'general', 'ocupada').length;
   const btnPcdIn = $("btn-pcd-in-" + r.id);
-  if (btnPcdIn) btnPcdIn.disabled = (pcdLib <= 0 || r.free <= 0);
+  if (btnPcdIn) btnPcdIn.disabled = blocked || !getMatchingSpaces(r.id, 'accesible', 'libre').length;
   const btnPcdOut = $("btn-pcd-out-" + r.id);
-  if (btnPcdOut) btnPcdOut.disabled = (pcdLib >= pcdTot || r.free >= r.capacidad);
+  if (btnPcdOut) btnPcdOut.disabled = blocked || !getMatchingSpaces(r.id, 'accesible', 'ocupada').length;
 }
 
 /* ── MOTOR DE ALERTAS AUTOMÁTICAS (LLENO / DISPONIBILIDAD RECUPERADA) ── */
@@ -720,7 +1058,7 @@ function renderControls() {
 
   for (let i = 0; i < dataRows.length; i++) {
     const r = dataRows[i];
-    const sensorCode = `NODO-IoT-${String(i + 1).padStart(2, '0')}`;
+    const sensorLabel = parkingSensorLabel(r.id);
     const status = getAvailabilityStatus(r.free, r.capacidad);
     const isAllowed = isProfileAllowed(r, currentDriverProfile);
     const profileMeta = PROFILE_INFO[currentDriverProfile] || PROFILE_INFO.todos;
@@ -756,7 +1094,7 @@ function renderControls() {
             <span class="sensor-dot ${status.level}" id="dot-${r.id}" style="display:none;" title="Estado: ${status.label}"></span>
           </div>
           <div class="slot-meta-row">
-            <span class="sensor-chip">${sensorCode}</span>
+            <span class="sensor-chip" id="sensor-label-${r.id}">${sensorLabel}</span>
             <small id="num-${r.id}" class="slot-free-count"><strong>${r.free}</strong>/${r.capacidad} libres · ♿ <strong>${pcdLib}</strong>/${pcdTot} disp</small>
           </div>
           <div class="access-tag-row">
@@ -769,11 +1107,11 @@ function renderControls() {
         <input aria-label="Espacios disponibles simulados en ${htmlEscape(r.etiqueta)}" id="slider-${r.id}" data-id="${r.id}" type="range" min="0" max="${r.capacidad}" value="${r.free}">
       </div>
       <div class="slot-actions">
-        <button type="button" class="btn-sensor-step btn-step-in" id="btn-in-${r.id}" data-id="${r.id}" data-act="in" title="Simular ingreso de vehículo estándar (+1 ocupación general)" ${(r.free - pcdLib <= 0) ? 'disabled' : ''}>
-          🚗 +1 Entrada Gral
+        <button type="button" class="btn-sensor-step btn-step-in" id="btn-in-${r.id}" data-id="${r.id}" data-act="in" title="Simular sensor geomagnético: ocupar una plaza general" ${(r.free - pcdLib <= 0) ? 'disabled' : ''}>
+          🚗 Ocupar Plaza Gral
         </button>
-        <button type="button" class="btn-sensor-step btn-step-out" id="btn-out-${r.id}" data-id="${r.id}" data-act="out" title="Simular salida de vehículo estándar (-1 desocupación general)" ${r.free >= r.capacidad ? 'disabled' : ''}>
-          🚙 +1 Salida Gral
+        <button type="button" class="btn-sensor-step btn-step-out" id="btn-out-${r.id}" data-id="${r.id}" data-act="out" title="Simular sensor geomagnético: liberar una plaza general" ${r.free >= r.capacidad ? 'disabled' : ''}>
+          🅿️ Liberar Plaza Gral
         </button>
       </div>
       <div class="slot-actions" style="margin-top: 5px;">
@@ -788,80 +1126,16 @@ function renderControls() {
     host.append(div);
   }
 
-  // Sliders manuales
-  host.querySelectorAll('input[type=range]').forEach(el => el.addEventListener('input', () => {
-    const r = dataRows.find(x => x.id === el.dataset.id);
-    if (!r) return;
-    const oldFree = r.free;
-    const newFree = Number(el.value);
-    if (newFree < oldFree) {
-      const diff = oldFree - newFree;
-      sessionStats.entries += diff;
-      if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].in += diff;
-    } else if (newFree > oldFree) {
-      const diff = newFree - oldFree;
-      sessionStats.exits += diff;
-      if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].out += diff;
-    }
-    r.free = newFree;
-    if (r.pcd_free > r.free) {
-      r.pcd_free = r.free;
-    }
-    checkSlotAlerts(r, oldFree);
-    syncSlotUI(r);
-    syncSlotOccupancyToDb(r.id, r.free, r.pcd_free, 'ajuste_manual');
-    logTelemetry(`[${r.id}] Ajuste manual sensor: ${r.free}/${r.capacidad} libres (♿ ${r.pcd_free}/${r.pcd_total} accesibles)`, 'manual');
-    update();
+  // Una operación por cambio confirmado del slider; peticiones secuenciales.
+  host.querySelectorAll('input[type=range]').forEach(el => el.addEventListener('change', async () => {
+    await setParkingFreeTarget(el.dataset.id, Number(el.value));
+    const r = dataRows.find(row => row.id === el.dataset.id);
+    if (r) syncSlotUI(r);
   }));
-
-  // Botones de simulación vehicular estándar (+1 Entrada / +1 Salida)
   host.querySelectorAll('.btn-sensor-step').forEach(btn => btn.addEventListener('click', () => {
-    const r = dataRows.find(x => x.id === btn.dataset.id);
-    if (!r) return;
-    const act = btn.dataset.act;
-    const oldFree = r.free;
-
-    if (act === 'in') {
-      // Entrada vehículo general (espacio regular)
-      if (r.free > r.pcd_free) {
-        r.free--;
-        sessionStats.entries++;
-        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].in++;
-        logTelemetry(`[${r.id}] 🚗 Sensor Entrada: Vehículo general ingresó a ${r.etiqueta} (${r.free}/${r.capacidad} libres, ♿ ${r.pcd_free}/${r.pcd_total} accesibles)`, 'entry');
-      }
-    } else if (act === 'out') {
-      // Salida vehículo general
-      if (r.free < r.capacidad) {
-        r.free++;
-        sessionStats.exits++;
-        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].out++;
-        logTelemetry(`[${r.id}] 🚙 Sensor Salida: Vehículo general liberó plaza en ${r.etiqueta} (${r.free}/${r.capacidad} libres)`, 'exit');
-      }
-    } else if (act === 'pcd-in') {
-      // Ocupación plaza accesible
-      if (r.pcd_free > 0 && r.free > 0) {
-        r.pcd_free--;
-        r.free--;
-        sessionStats.entries++;
-        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].in++;
-        logTelemetry(`[${r.id}] ♿ Sensor IoT Plaza Accesible: Ocupada plaza reservada en ${r.etiqueta} (Quedan ${r.pcd_free}/${r.pcd_total} accesibles, ${r.free}/${r.capacidad} totales)`, 'entry');
-      }
-    } else if (act === 'pcd-out') {
-      // Liberación plaza accesible
-      if (r.pcd_free < r.pcd_total && r.free < r.capacidad) {
-        r.pcd_free++;
-        r.free++;
-        sessionStats.exits++;
-        if (sessionStats.perSlotTurnover[r.id]) sessionStats.perSlotTurnover[r.id].out++;
-        logTelemetry(`[${r.id}] ♿ Sensor IoT Plaza Accesible: Liberada plaza reservada en ${r.etiqueta} (Quedan ${r.pcd_free}/${r.pcd_total} accesibles, ${r.free}/${r.capacidad} totales)`, 'exit');
-      }
-    }
-
-    checkSlotAlerts(r, oldFree);
-    syncSlotUI(r);
-    syncSlotOccupancyToDb(r.id, r.free, r.pcd_free, act);
-    update();
+    void simulateParkingSpace(btn.dataset.id, btn.dataset.act);
   }));
+  dataRows.forEach(syncSlotUI);
 }
 
 /* --- MOTOR DE SIMULACIÓN AUTOMÁTICA --- */
@@ -870,7 +1144,7 @@ function setAutoBadge(running) {
   if (!badge) return;
   if (running) {
     badge.className = "iot-badge active";
-    badge.textContent = "● Transmitiendo en vivo";
+    badge.textContent = "● Simulación IoT activa";
   } else {
     badge.className = "iot-badge paused";
     badge.textContent = "● Pausado";
@@ -878,7 +1152,11 @@ function setAutoBadge(running) {
 }
 
 function startAutoSimulation() {
-  if (isAutoRunning) return;
+  if (isAutoRunning || parkingSpaceMutationBusy) return;
+  if (!parkingSpacesReady) {
+    parkingSensorUnavailable(new Error('No se puede iniciar sin los estados de las plazas'));
+    return;
+  }
   isAutoRunning = true;
   setAutoBadge(true);
   const btn = $("btn-toggle-auto");
@@ -920,53 +1198,22 @@ function toggleAutoSimulation() {
   }
 }
 
-function tickAutoVehicle() {
-  if (!dataRows.length) return;
+async function tickAutoVehicle() {
+  if (!isAutoRunning || parkingSpaceMutationBusy || !parkingSpacesReady || !dataRows.length) return;
   const target = dataRows[Math.floor(Math.random() * dataRows.length)];
   const pattern = $("auto-traffic-pattern")?.value || "balanced";
-
   let wantsEntry = Math.random() < 0.5;
   if (pattern === "rush_in") wantsEntry = Math.random() < 0.75;
   if (pattern === "rush_out") wantsEntry = Math.random() < 0.25;
-
-  if (target.free <= 0) wantsEntry = false;
-  else if (target.free >= target.capacidad) wantsEntry = true;
-
-  const oldFree = target.free;
-  const isPcdEvent = Math.random() < 0.25 && (target.pcd_total || 0) > 0;
-
-  if (isPcdEvent) {
-    if (wantsEntry && target.pcd_free > 0 && target.free > 0) {
-      target.pcd_free--;
-      target.free--;
-      sessionStats.entries++;
-      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].in++;
-      logTelemetry(`[${target.id}] ♿ Sensor IoT: Vehículo ocupó plaza accesible en ${target.etiqueta} (${target.pcd_free}/${target.pcd_total} accesibles, ${target.free}/${target.capacidad} totales)`, 'entry');
-    } else if (!wantsEntry && target.pcd_free < target.pcd_total && target.free < target.capacidad) {
-      target.pcd_free++;
-      target.free++;
-      sessionStats.exits++;
-      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].out++;
-      logTelemetry(`[${target.id}] ♿ Sensor IoT: Liberada plaza accesible en ${target.etiqueta} (${target.pcd_free}/${target.pcd_total} accesibles, ${target.free}/${target.capacidad} totales)`, 'exit');
-    }
-  } else {
-    if (wantsEntry && target.free > target.pcd_free) {
-      target.free--;
-      sessionStats.entries++;
-      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].in++;
-      logTelemetry(`[${target.id}] 🚗 Sensor detecta ENTRADA general: ${target.etiqueta} (${target.free}/${target.capacidad} libres)`, 'entry');
-    } else if (!wantsEntry && target.free < target.capacidad) {
-      target.free++;
-      sessionStats.exits++;
-      if (sessionStats.perSlotTurnover[target.id]) sessionStats.perSlotTurnover[target.id].out++;
-      logTelemetry(`[${target.id}] 🚙 Sensor detecta SALIDA general: ${target.etiqueta} (${target.free}/${target.capacidad} libres)`, 'exit');
-    }
+  const tipo = Math.random() < 0.25 && (target.pcd_total || 0) > 0 ? 'accesible' : 'general';
+  let candidates = getMatchingSpaces(target.id, tipo, wantsEntry ? 'libre' : 'ocupada');
+  if (!candidates.length) {
+    wantsEntry = !wantsEntry;
+    candidates = getMatchingSpaces(target.id, tipo, wantsEntry ? 'libre' : 'ocupada');
   }
-
-  checkSlotAlerts(target, oldFree);
-  syncSlotUI(target);
-  syncSlotOccupancyToDb(target.id, target.free, target.pcd_free, wantsEntry ? 'entrada_auto' : 'salida_auto');
-  update();
+  if (!candidates.length) return;
+  const space = candidates[Math.floor(Math.random() * candidates.length)];
+  await setParkingSpaceState(space.id, wantsEntry ? 'ocupada' : 'libre', 'sensor_simulado_auto');
 }
 
 function getPredictionForSlot(slotId, hour = predHour, day = predDay) {
@@ -1277,7 +1524,7 @@ function initTabs() {
     if (predApplyMap) {
       logTelemetry(`[Predicción] Modo predictivo ACTIVADO: mapa y recomendación proyectados a las ${predHour}`, 'system');
     } else {
-      logTelemetry(`[Predicción] Modo predictivo DESACTIVADO: volviendo a sensores IoT en tiempo real`, 'system');
+      logTelemetry(`[Predicción] Modo predictivo DESACTIVADO: volviendo al estado actual simulado de los sensores IoT`, 'system');
     }
   });
 
@@ -1622,7 +1869,7 @@ function renderAdminDashboard() {
   if (elTurnover) elTurnover.textContent = `${sessionStats.entries + sessionStats.exits}`;
 
   const elTurnoverSub = $("admin-kpi-turnover-sub");
-  if (elTurnoverSub) elTurnoverSub.textContent = `${sessionStats.entries} entradas · ${sessionStats.exits} salidas registradas`;
+  if (elTurnoverSub) elTurnoverSub.textContent = `${sessionStats.entries} ocupaciones · ${sessionStats.exits} liberaciones`;
 
   const elStatus = $("admin-kpi-status-campus");
   const elStatusSub = $("admin-kpi-status-sub");
@@ -1709,7 +1956,7 @@ function renderAdminDashboard() {
   // Timestamp de actualización
   const timeText = $("admin-footer-status-text");
   if (timeText) {
-    timeText.textContent = `Telemetría sincronizada: ${new Date().toLocaleTimeString('es-EC')} (5 nodos activos)`;
+    timeText.textContent = `Telemetría simulada actualizada: ${new Date().toLocaleTimeString('es-EC')} · ${parkingSpaceStates.size} sensores · ${dataRows.length} parqueaderos`;
   }
 }
 
@@ -1788,7 +2035,9 @@ function exportAdminReport() {
             <div><strong>Código:</strong> <span style="color:#0b7490; font-weight:700;">${reportCode}</span></div>
             <div><strong>Fecha:</strong> ${fechaStr} · ${horaStr}</div>
             <div><strong>Jornada:</strong> ${jornadaNombre}</div>
-            <div><strong>Red de Sensores:</strong> 5 Nodos IoT Activos</div>
+            <div><strong>Red IoT simulada:</strong> ${parkingSpaceStates.size} sensores geomagnéticos asociados a plazas</div>
+            <div><strong>Comunicación propuesta:</strong> LoRaWAN</div>
+            <div><strong>Parqueaderos modelados:</strong> ${dataRows.length}</div>
           </div>
         </td>
       </tr>
@@ -1810,12 +2059,12 @@ function exportAdminReport() {
         <td style="width: 25%; background: ${campusStatusBg}; border: 1px solid ${campusStatusColor}40; border-radius: 8px; padding: 10px 12px; vertical-align: top;">
           <div style="font-size: 8.5px; font-weight: 800; color: ${campusStatusColor}; text-transform: uppercase; letter-spacing: .5px;">Estado General</div>
           <div style="font-size: 14px; font-weight: 900; color: ${campusStatusColor}; margin: 5px 0 2px;">${campusStatusLabel}</div>
-          <div style="font-size: 8.5px; color: #475569;">${pctOcupado >= 80 ? 'Saturación en accesos' : pctOcupado >= 60 ? 'Carga vehicular moderada' : 'Fluidez garantizada'}</div>
+          <div style="font-size: 8.5px; color: #475569;">${pctOcupado >= 80 ? 'Alta ocupación de plazas' : pctOcupado >= 60 ? 'Carga vehicular moderada' : 'Disponibilidad simulada favorable'}</div>
         </td>
         <td style="width: 25%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; vertical-align: top;">
           <div style="font-size: 8.5px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: .5px;">Rotación de Sesión</div>
-          <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 2px 0;">${turnoverTotal} <span style="font-size: 11px; font-weight: 600; color: #64748b;">vehículos</span></div>
-          <div style="font-size: 9px; color: #0284c7;">+${sessionStats.entries} entradas · -${sessionStats.exits} salidas</div>
+          <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 2px 0;">${turnoverTotal} <span style="font-size: 11px; font-weight: 600; color: #64748b;">cambios de estado</span></div>
+          <div style="font-size: 9px; color: #0284c7;">${sessionStats.entries} ocupaciones · ${sessionStats.exits} liberaciones</div>
         </td>
       </tr>
     </table>
@@ -1929,7 +2178,7 @@ function exportAdminReport() {
     <div style="background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 8px; padding: 9px 12px; margin-bottom: 14px;">
       <div style="font-size: 10px; font-weight: 800; color: #0369a1; margin-bottom: 2px;">DIRECTRICES OPERATIVAS PARA SEGURIDAD INSTITUCIONAL Y GARITAS:</div>
       <div style="font-size: 9px; color: #0c4a6e; line-height: 1.45;">
-        Ante la saturación en los accesos de la Av. Canónigo Ramos (Garita Este) y transversal Shyris, se instruye canalizar de manera preventiva el flujo vehicular entrante hacia el <strong>Estacionamiento Software (50 plazas totales)</strong>, el cual actúa como el principal amortiguador de capacidad del campus FIE. Se recomienda alertar oportunamente a los conductores mediante la señalización digital del sistema Pulse Smart Parking.
+        Ante una alta ocupación de plazas en el escenario simulado, se propone evaluar la orientación de los conductores hacia el <strong>Estacionamiento Software (50 plazas totales)</strong>, el cual actúa como el principal amortiguador de capacidad del campus FIE. Se recomienda alertar oportunamente a los conductores mediante la señalización digital del sistema Pulse Smart Parking.
       </div>
     </div>
 
@@ -1937,7 +2186,7 @@ function exportAdminReport() {
     <table style="width: 100%; border-top: 1px solid #cbd5e1; padding-top: 8px; font-size: 8px; color: #64748b;">
       <tr>
         <td>Plataforma Institucional ESPOCH Pulse · Demostración y Prototipo Académico GIS FIE</td>
-        <td style="text-align: right;">Datos certificados por la red de telemetría IoT · Documento generado en tiempo real</td>
+        <td style="text-align: right;">Datos simulados del prototipo IoT · Documento generado desde el escenario de demostración</td>
       </tr>
     </table>
   `;
@@ -2031,38 +2280,53 @@ function fallbackPrintWindow(container, reportCode) {
   logTelemetry("[Admin] Ventana de impresión de informe PDF desplegada", 'system');
 }
 
-function simulateAdminPeakHour() {
-  if (!historicalData || !historicalData.perfiles_parqueaderos) return;
-  const hour = "07:00";
-  logTelemetry(`[Admin] Simulando escenario de Hora Pico Matutina (${hour} AM)...`, 'system');
-
-  for (const r of dataRows) {
-    const prof = historicalData.perfiles_parqueaderos[r.id];
-    if (prof) {
-      const curve = (adminSelectedJornada === 'sabado') ? prof.curva_sabado : prof.curva_laborable;
-      const occPct = curve[hour] || 88;
-      const oldFree = r.free;
-      const occSlots = Math.round(r.capacidad * occPct / 100);
-      r.free = Math.max(0, r.capacidad - occSlots);
-      checkSlotAlerts(r, oldFree);
-      syncSlotUI(r);
-    }
+async function simulateAdminPeakHour() {
+  const button = $("btn-admin-peak-sim");
+  if (button?.disabled) return;
+  stopAutoSimulation(true);
+  if (!parkingSpacesReady) {
+    logTelemetry('[Admin] No se puede simular hora pico: estados de plazas no disponibles.', 'system');
+    return;
   }
+  if (!historicalData || !historicalData.perfiles_parqueaderos) return;
+  if (button) button.disabled = true;
+  try {
+    const hour = "07:00";
+    logTelemetry(`[Admin] Simulando escenario de Hora Pico Matutina (${hour} AM)...`, 'system');
 
-  update();
+    for (const r of dataRows) {
+      const prof = historicalData.perfiles_parqueaderos[r.id];
+      if (prof) {
+        const curve = (adminSelectedJornada === 'sabado') ? prof.curva_sabado : prof.curva_laborable;
+        const occPct = curve[hour] || 88;
+        const occSlots = Math.round(r.capacidad * occPct / 100);
+        const targetFree = Math.max(0, r.capacidad - occSlots);
+        if (!await setParkingFreeTarget(r.id, targetFree)) {
+          throw new Error('No se completó el ajuste de plazas de ' + r.id);
+        }
+      }
+    }
 
-  showToastNotification({
-    id: 'peak-sim-' + Date.now(),
-    type: 'warning',
-    slotId: 'peak-sim',
-    slotName: 'Campus ESPOCH',
-    free: dataRows.reduce((a, b) => a + b.free, 0),
-    capacidad: dataRows.reduce((a, b) => a + b.capacidad, 0),
-    title: 'Hora Pico Simulada (07:00)',
-    message: 'Sensores ajustados a la curva histórica de máxima afluencia matutina.',
-    icon: '⚡',
-    timestamp: new Date().toTimeString().split(' ')[0]
-  });
+    update();
+
+    showToastNotification({
+      id: 'peak-sim-' + Date.now(),
+      type: 'warning',
+      slotId: 'peak-sim',
+      slotName: 'Campus ESPOCH',
+      free: dataRows.reduce((a, b) => a + b.free, 0),
+      capacidad: dataRows.reduce((a, b) => a + b.capacidad, 0),
+      title: 'Hora Pico Simulada (07:00)',
+      message: 'Sensores ajustados a la curva histórica de máxima afluencia matutina.',
+      icon: '⚡',
+      timestamp: new Date().toTimeString().split(' ')[0]
+    });
+  } catch (error) {
+    logTelemetry('[Admin] No se pudo completar la simulación de hora pico: ' + error.message, 'system');
+  } finally {
+    if (button) button.disabled = false;
+    if (isAdminModalOpen) renderAdminDashboard();
+  }
 }
 
 function initAdminPanelUI() {
@@ -2206,6 +2470,12 @@ function update() {
       eligible = false;
       ineligibilityReason = `⚠️ Plazas insuficientes (${effFree} libres, se requieren ${minPlaces})`;
       ineligibilityTag = `<span class="badge disabled">Saturado</span>`;
+    } else if (!predApplyMap && !getRecommendedParkingSpace(p.id)) {
+      eligible = false;
+      ineligibilityReason = parkingSpacesReady
+        ? 'Sin plazas libres compatibles con el requerimiento del usuario'
+        : 'Telemetría de plazas no disponible';
+      ineligibilityTag = `<span class="badge disabled">Sin plaza compatible</span>`;
     } else if (!isConnectedWalk || !isConnectedVeh) {
       eligible = false;
       ineligibilityReason = `⚠️ Red vial/peatonal sin conexión en el grafo GIS`;
@@ -2249,6 +2519,8 @@ function update() {
     }
   });
   valid.sort((a, b) => a.score - b.score || a.dist - b.dist);
+  const suggestedSpace = !predApplyMap && valid.length ? getRecommendedParkingSpace(valid[0].id) : null;
+  setRecommendedParkingSpace(suggestedSpace?.id || null);
 
   $("total-libres").textContent = calculated.reduce((s, r) => s + r.effFree, 0);
   const totalPcdFree = calculated.reduce((s, r) => s + (r.pcd_free || 0), 0);
@@ -2384,12 +2656,23 @@ function update() {
       : `<span class="badge-pcd-quota">♿ ${p.pcd_free}/${p.pcd_total} PCD</span>`;
 
     const accessRouteNote = needsAccessibleSlot
-      ? `<strong>♿ Plaza accesible garantizada:</strong> El sector cuenta con plaza accesible disponible (${p.pcd_free}/${p.pcd_total} libres). <em>Nota técnica GIS: El tramo peatonal sigue la red de caminerías del campus (las pendientes y rampas en aceras están pendientes de verificación técnica en terreno).</em>`
+      ? `<strong>♿ Disponibilidad accesible simulada:</strong> Disponibilidad actual del sector: ${p.pcd_free}/${p.pcd_total} libres; no constituye una reserva. <em>Nota técnica GIS: El tramo peatonal sigue la red de caminerías del campus (las pendientes y rampas en aceras están pendientes de verificación técnica en terreno).</em>`
       : `${htmlEscape(p.pred.recommendation)}`;
+
+    const spaceNotice = predApplyMap
+      ? `<div class="rec-space"><p>Plaza específica: se asignará con telemetría IoT al momento de llegada.</p></div>`
+      : suggestedSpace ? `<div class="rec-space">
+          <span class="rec-space-label">PLAZA SUGERIDA</span>
+          <strong>${suggestedSpace.tipo === 'accesible' ? '♿ Plaza accesible sugerida: ' : ''}${htmlEscape(suggestedSpace.id)}</strong>
+          <span>Sensor: ${htmlEscape(suggestedSpace.sensor_id)} · Estado: Libre</span>
+          <button type="button" class="btn-focus-space" id="btn-focus-recommended-space">📍 Ver plaza en mapa</button>
+          <small>Asignación basada en disponibilidad simulada por plaza. No constituye una reserva.</small>
+        </div>` : '';
 
     rec.innerHTML = `
       <div class="rec-title">${modeBadge}NAVEGACIÓN INTELIGENTE · ESTACIONAMIENTO RECOMENDADO</div>
       <div class="rec-main">${htmlEscape(p.etiqueta)}</div>
+      ${spaceNotice}
       <div class="rec-details">
         <span class="semaforo-pill ${status.level}"><span class="semaforo-indicator-dot"></span>${status.label} (${p.effFree} plazas)</span>
         ${accessBadge}
@@ -2399,6 +2682,7 @@ function update() {
         <span class="pred-risk-badge ${p.pred.riskLevel}" style="font-size: 11px;">🔮 Pronóstico ${predHour}: ${p.pred.pct}% ocupado (${p.pred.riskLabel})</span>
       </div>
       <p>Ruta multimodal trazada en el mapa: <strong>Tramo vehicular en azul continuo</strong> hasta el parqueadero + <strong>tramo peatonal en verde punteado</strong> hasta ${htmlEscape(dest.name)}. ${accessRouteNote}</p>`;
+    $("btn-focus-recommended-space")?.addEventListener('click', () => focusParkingSpaceOnMap(suggestedSpace.id));
   } else {
     let noReason = "";
     if (needsAccessibleSlot) {
@@ -2636,7 +2920,8 @@ async function load() {
     initAdminPanelUI();
     renderPredictionSection();
     update();
-    logTelemetry(`[Sistema] Red IoT inicializada con ${dataRows.length} parqueaderos activos`, 'system');
+    initParkingSpaces();
+    logTelemetry(`[Sistema] Prototipo IoT simulado inicializado con ${dataRows.length} parqueaderos modelados`, 'system');
 
     // Escuchador del selector de origen del conductor
     $("origen")?.addEventListener('change', (e) => {
@@ -2702,20 +2987,8 @@ async function load() {
       update();
     });
 
-    $("reset")?.addEventListener('click', () => {
-      stopAutoSimulation(true);
-      if (isDbConnected) {
-        fetch('/api/parking/reset', { method: 'POST' }).catch(() => {});
-        logTelemetry('[SQLite] Plazas de parqueaderos restablecidas en la base de datos', 'system');
-      }
-      for (const r of dataRows) {
-        const init = initialRows.find(v => v.id === r.id);
-        if (init) {
-          r.free = init.free;
-          r.pcd_free = init.pcd_free;
-        }
-        syncSlotUI(r);
-      }
+    $("reset")?.addEventListener('click', async () => {
+      if (!await resetParkingSpaces()) return;
       predHour = "07:00";
       predDay = "laborable";
       predApplyMap = false;

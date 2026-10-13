@@ -1,0 +1,4185 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S01",
+        "parqueadero_id": "P-FIE1",
+        "numero": 1,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-FIE1-S01",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.675965303,
+              -1.6566775235
+            ],
+            [
+              -78.6759818305,
+              -1.6566633335
+            ],
+            [
+              -78.6759910253,
+              -1.656674034
+            ],
+            [
+              -78.6759744978,
+              -1.656688224
+            ],
+            [
+              -78.675965303,
+              -1.6566775235
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S02",
+        "parqueadero_id": "P-FIE1",
+        "numero": 2,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-FIE1-S02",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6759840843,
+              -1.6566613985
+            ],
+            [
+              -78.6760006118,
+              -1.6566472085
+            ],
+            [
+              -78.6760098065,
+              -1.656657909
+            ],
+            [
+              -78.675993279,
+              -1.656672099
+            ],
+            [
+              -78.6759840843,
+              -1.6566613985
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S03",
+        "parqueadero_id": "P-FIE1",
+        "numero": 3,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S03",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760028655,
+              -1.6566452735
+            ],
+            [
+              -78.676019393,
+              -1.6566310835
+            ],
+            [
+              -78.6760285878,
+              -1.656641784
+            ],
+            [
+              -78.6760120603,
+              -1.656655974
+            ],
+            [
+              -78.6760028655,
+              -1.6566452735
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S04",
+        "parqueadero_id": "P-FIE1",
+        "numero": 4,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S04",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760216468,
+              -1.6566291485
+            ],
+            [
+              -78.6760381743,
+              -1.6566149585
+            ],
+            [
+              -78.676047369,
+              -1.656625659
+            ],
+            [
+              -78.6760308415,
+              -1.656639849
+            ],
+            [
+              -78.6760216468,
+              -1.6566291485
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S05",
+        "parqueadero_id": "P-FIE1",
+        "numero": 5,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S05",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.676040428,
+              -1.6566130235
+            ],
+            [
+              -78.6760569555,
+              -1.6565988335
+            ],
+            [
+              -78.6760661503,
+              -1.656609534
+            ],
+            [
+              -78.6760496228,
+              -1.656623724
+            ],
+            [
+              -78.676040428,
+              -1.6566130235
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S06",
+        "parqueadero_id": "P-FIE1",
+        "numero": 6,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S06",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.675990163,
+              -1.6567064544
+            ],
+            [
+              -78.6760066905,
+              -1.6566922644
+            ],
+            [
+              -78.6760158852,
+              -1.6567029649
+            ],
+            [
+              -78.6759993577,
+              -1.6567171549
+            ],
+            [
+              -78.675990163,
+              -1.6567064544
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S07",
+        "parqueadero_id": "P-FIE1",
+        "numero": 7,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S07",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760089442,
+              -1.6566903294
+            ],
+            [
+              -78.6760254717,
+              -1.6566761394
+            ],
+            [
+              -78.6760346665,
+              -1.6566868399
+            ],
+            [
+              -78.676018139,
+              -1.6567010299
+            ],
+            [
+              -78.6760089442,
+              -1.6566903294
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S08",
+        "parqueadero_id": "P-FIE1",
+        "numero": 8,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S08",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760277255,
+              -1.6566742044
+            ],
+            [
+              -78.676044253,
+              -1.6566600144
+            ],
+            [
+              -78.6760534477,
+              -1.6566707149
+            ],
+            [
+              -78.6760369202,
+              -1.6566849049
+            ],
+            [
+              -78.6760277255,
+              -1.6566742044
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S09",
+        "parqueadero_id": "P-FIE1",
+        "numero": 9,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S09",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760465067,
+              -1.6566580794
+            ],
+            [
+              -78.6760630342,
+              -1.6566438894
+            ],
+            [
+              -78.676072229,
+              -1.6566545899
+            ],
+            [
+              -78.6760557015,
+              -1.6566687799
+            ],
+            [
+              -78.6760465067,
+              -1.6566580794
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE1-S10",
+        "parqueadero_id": "P-FIE1",
+        "numero": 10,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE1-S10",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.676065288,
+              -1.6566419544
+            ],
+            [
+              -78.6760818155,
+              -1.6566277644
+            ],
+            [
+              -78.6760910102,
+              -1.6566384649
+            ],
+            [
+              -78.6760744827,
+              -1.6566526549
+            ],
+            [
+              -78.676065288,
+              -1.6566419544
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S01",
+        "parqueadero_id": "P-OESTE",
+        "numero": 1,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-OESTE-S01",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6791919098,
+              -1.6566229193
+            ],
+            [
+              -78.6792107899,
+              -1.6566046686
+            ],
+            [
+              -78.6792300374,
+              -1.6566245632
+            ],
+            [
+              -78.6792111574,
+              -1.6566428139
+            ],
+            [
+              -78.6791919098,
+              -1.6566229193
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S02",
+        "parqueadero_id": "P-OESTE",
+        "numero": 2,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-OESTE-S02",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792133644,
+              -1.6566021798
+            ],
+            [
+              -78.6792322445,
+              -1.6565839291
+            ],
+            [
+              -78.679251492,
+              -1.6566038238
+            ],
+            [
+              -78.679232612,
+              -1.6566220745
+            ],
+            [
+              -78.6792133644,
+              -1.6566021798
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S03",
+        "parqueadero_id": "P-OESTE",
+        "numero": 3,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-OESTE-S03",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.679234819,
+              -1.6565814404
+            ],
+            [
+              -78.679253699,
+              -1.6565631897
+            ],
+            [
+              -78.6792729466,
+              -1.6565830843
+            ],
+            [
+              -78.6792540666,
+              -1.6566013351
+            ],
+            [
+              -78.679234819,
+              -1.6565814404
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S04",
+        "parqueadero_id": "P-OESTE",
+        "numero": 4,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-OESTE-S04",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792562736,
+              -1.6565607009
+            ],
+            [
+              -78.6792751536,
+              -1.6565424502
+            ],
+            [
+              -78.6792944012,
+              -1.6565623449
+            ],
+            [
+              -78.6792755212,
+              -1.6565805956
+            ],
+            [
+              -78.6792562736,
+              -1.6565607009
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S05",
+        "parqueadero_id": "P-OESTE",
+        "numero": 5,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S05",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792777282,
+              -1.6565399615
+            ],
+            [
+              -78.6792966082,
+              -1.6565217108
+            ],
+            [
+              -78.6793158558,
+              -1.6565416055
+            ],
+            [
+              -78.6792969758,
+              -1.6565598562
+            ],
+            [
+              -78.6792777282,
+              -1.6565399615
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S06",
+        "parqueadero_id": "P-OESTE",
+        "numero": 6,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S06",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792991828,
+              -1.656519222
+            ],
+            [
+              -78.6793180628,
+              -1.6565009713
+            ],
+            [
+              -78.6793373104,
+              -1.656520866
+            ],
+            [
+              -78.6793184304,
+              -1.6565391167
+            ],
+            [
+              -78.6792991828,
+              -1.656519222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S07",
+        "parqueadero_id": "P-OESTE",
+        "numero": 7,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S07",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793206374,
+              -1.6564984826
+            ],
+            [
+              -78.6793395174,
+              -1.6564802319
+            ],
+            [
+              -78.679358765,
+              -1.6565001266
+            ],
+            [
+              -78.679339885,
+              -1.6565183773
+            ],
+            [
+              -78.6793206374,
+              -1.6564984826
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S08",
+        "parqueadero_id": "P-OESTE",
+        "numero": 8,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S08",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.679342092,
+              -1.6564777432
+            ],
+            [
+              -78.679360972,
+              -1.6564594925
+            ],
+            [
+              -78.6793802196,
+              -1.6564793871
+            ],
+            [
+              -78.6793613396,
+              -1.6564976378
+            ],
+            [
+              -78.679342092,
+              -1.6564777432
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S09",
+        "parqueadero_id": "P-OESTE",
+        "numero": 9,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S09",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793635466,
+              -1.6564570037
+            ],
+            [
+              -78.6793824266,
+              -1.656438753
+            ],
+            [
+              -78.6794016742,
+              -1.6564586477
+            ],
+            [
+              -78.6793827942,
+              -1.6564768984
+            ],
+            [
+              -78.6793635466,
+              -1.6564570037
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S10",
+        "parqueadero_id": "P-OESTE",
+        "numero": 10,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S10",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793850012,
+              -1.6564362643
+            ],
+            [
+              -78.6794038812,
+              -1.6564180136
+            ],
+            [
+              -78.6794231288,
+              -1.6564379082
+            ],
+            [
+              -78.6794042488,
+              -1.6564561589
+            ],
+            [
+              -78.6793850012,
+              -1.6564362643
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S11",
+        "parqueadero_id": "P-OESTE",
+        "numero": 11,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S11",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794064558,
+              -1.6564155248
+            ],
+            [
+              -78.6794253358,
+              -1.6563972741
+            ],
+            [
+              -78.6794445834,
+              -1.6564171688
+            ],
+            [
+              -78.6794257034,
+              -1.6564354195
+            ],
+            [
+              -78.6794064558,
+              -1.6564155248
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S12",
+        "parqueadero_id": "P-OESTE",
+        "numero": 12,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S12",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794279104,
+              -1.6563947854
+            ],
+            [
+              -78.6794467904,
+              -1.6563765347
+            ],
+            [
+              -78.679466038,
+              -1.6563964294
+            ],
+            [
+              -78.679447158,
+              -1.6564146801
+            ],
+            [
+              -78.6794279104,
+              -1.6563947854
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S13",
+        "parqueadero_id": "P-OESTE",
+        "numero": 13,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S13",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.679449365,
+              -1.6563740459
+            ],
+            [
+              -78.679468245,
+              -1.6563557952
+            ],
+            [
+              -78.6794874926,
+              -1.6563756899
+            ],
+            [
+              -78.6794686126,
+              -1.6563939406
+            ],
+            [
+              -78.679449365,
+              -1.6563740459
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S14",
+        "parqueadero_id": "P-OESTE",
+        "numero": 14,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S14",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792466914,
+              -1.6566795426
+            ],
+            [
+              -78.6792655715,
+              -1.6566612919
+            ],
+            [
+              -78.6792848191,
+              -1.6566811865
+            ],
+            [
+              -78.679265939,
+              -1.6566994372
+            ],
+            [
+              -78.6792466914,
+              -1.6566795426
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S15",
+        "parqueadero_id": "P-OESTE",
+        "numero": 15,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S15",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.679268146,
+              -1.6566588031
+            ],
+            [
+              -78.6792870261,
+              -1.6566405524
+            ],
+            [
+              -78.6793062737,
+              -1.6566604471
+            ],
+            [
+              -78.6792873936,
+              -1.6566786978
+            ],
+            [
+              -78.679268146,
+              -1.6566588031
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S16",
+        "parqueadero_id": "P-OESTE",
+        "numero": 16,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S16",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792896006,
+              -1.6566380637
+            ],
+            [
+              -78.6793084807,
+              -1.656619813
+            ],
+            [
+              -78.6793277282,
+              -1.6566397076
+            ],
+            [
+              -78.6793088482,
+              -1.6566579584
+            ],
+            [
+              -78.6792896006,
+              -1.6566380637
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S17",
+        "parqueadero_id": "P-OESTE",
+        "numero": 17,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S17",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793110552,
+              -1.6566173242
+            ],
+            [
+              -78.6793299353,
+              -1.6565990735
+            ],
+            [
+              -78.6793491828,
+              -1.6566189682
+            ],
+            [
+              -78.6793303028,
+              -1.6566372189
+            ],
+            [
+              -78.6793110552,
+              -1.6566173242
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S18",
+        "parqueadero_id": "P-OESTE",
+        "numero": 18,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S18",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793325098,
+              -1.6565965848
+            ],
+            [
+              -78.6793513898,
+              -1.6565783341
+            ],
+            [
+              -78.6793706374,
+              -1.6565982288
+            ],
+            [
+              -78.6793517574,
+              -1.6566164795
+            ],
+            [
+              -78.6793325098,
+              -1.6565965848
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S19",
+        "parqueadero_id": "P-OESTE",
+        "numero": 19,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S19",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793539644,
+              -1.6565758453
+            ],
+            [
+              -78.6793728444,
+              -1.6565575946
+            ],
+            [
+              -78.679392092,
+              -1.6565774893
+            ],
+            [
+              -78.679373212,
+              -1.65659574
+            ],
+            [
+              -78.6793539644,
+              -1.6565758453
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S20",
+        "parqueadero_id": "P-OESTE",
+        "numero": 20,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S20",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.679375419,
+              -1.6565551059
+            ],
+            [
+              -78.679394299,
+              -1.6565368552
+            ],
+            [
+              -78.6794135466,
+              -1.6565567499
+            ],
+            [
+              -78.6793946666,
+              -1.6565750006
+            ],
+            [
+              -78.679375419,
+              -1.6565551059
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S21",
+        "parqueadero_id": "P-OESTE",
+        "numero": 21,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S21",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793968736,
+              -1.6565343665
+            ],
+            [
+              -78.6794157536,
+              -1.6565161158
+            ],
+            [
+              -78.6794350012,
+              -1.6565360104
+            ],
+            [
+              -78.6794161212,
+              -1.6565542611
+            ],
+            [
+              -78.6793968736,
+              -1.6565343665
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S22",
+        "parqueadero_id": "P-OESTE",
+        "numero": 22,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S22",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794183282,
+              -1.656513627
+            ],
+            [
+              -78.6794372082,
+              -1.6564953763
+            ],
+            [
+              -78.6794564558,
+              -1.656515271
+            ],
+            [
+              -78.6794375758,
+              -1.6565335217
+            ],
+            [
+              -78.6794183282,
+              -1.656513627
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S23",
+        "parqueadero_id": "P-OESTE",
+        "numero": 23,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S23",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794397828,
+              -1.6564928876
+            ],
+            [
+              -78.6794586628,
+              -1.6564746369
+            ],
+            [
+              -78.6794779104,
+              -1.6564945315
+            ],
+            [
+              -78.6794590304,
+              -1.6565127822
+            ],
+            [
+              -78.6794397828,
+              -1.6564928876
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S24",
+        "parqueadero_id": "P-OESTE",
+        "numero": 24,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S24",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794612374,
+              -1.6564721481
+            ],
+            [
+              -78.6794801174,
+              -1.6564538974
+            ],
+            [
+              -78.679499365,
+              -1.6564737921
+            ],
+            [
+              -78.679480485,
+              -1.6564920428
+            ],
+            [
+              -78.6794612374,
+              -1.6564721481
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S25",
+        "parqueadero_id": "P-OESTE",
+        "numero": 25,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S25",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.679482692,
+              -1.6564514087
+            ],
+            [
+              -78.679501572,
+              -1.656433158
+            ],
+            [
+              -78.6795208196,
+              -1.6564530527
+            ],
+            [
+              -78.6795019396,
+              -1.6564713034
+            ],
+            [
+              -78.679482692,
+              -1.6564514087
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S26",
+        "parqueadero_id": "P-OESTE",
+        "numero": 26,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S26",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6795041466,
+              -1.6564306692
+            ],
+            [
+              -78.6795230266,
+              -1.6564124185
+            ],
+            [
+              -78.6795422742,
+              -1.6564323132
+            ],
+            [
+              -78.6795233942,
+              -1.6564505639
+            ],
+            [
+              -78.6795041466,
+              -1.6564306692
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S27",
+        "parqueadero_id": "P-OESTE",
+        "numero": 27,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S27",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792675269,
+              -1.6567008639
+            ],
+            [
+              -78.6792879802,
+              -1.6566810923
+            ],
+            [
+              -78.6793072278,
+              -1.656700987
+            ],
+            [
+              -78.6792867745,
+              -1.6567207586
+            ],
+            [
+              -78.6792675269,
+              -1.6567008639
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S28",
+        "parqueadero_id": "P-OESTE",
+        "numero": 28,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S28",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6792907693,
+              -1.6566783962
+            ],
+            [
+              -78.6793112227,
+              -1.6566586246
+            ],
+            [
+              -78.6793304703,
+              -1.6566785192
+            ],
+            [
+              -78.6793100169,
+              -1.6566982908
+            ],
+            [
+              -78.6792907693,
+              -1.6566783962
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S29",
+        "parqueadero_id": "P-OESTE",
+        "numero": 29,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S29",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793140118,
+              -1.6566559284
+            ],
+            [
+              -78.6793344652,
+              -1.6566361568
+            ],
+            [
+              -78.6793537128,
+              -1.6566560515
+            ],
+            [
+              -78.6793332594,
+              -1.6566758231
+            ],
+            [
+              -78.6793140118,
+              -1.6566559284
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S30",
+        "parqueadero_id": "P-OESTE",
+        "numero": 30,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S30",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793372543,
+              -1.6566334607
+            ],
+            [
+              -78.6793577077,
+              -1.6566136891
+            ],
+            [
+              -78.6793769553,
+              -1.6566335838
+            ],
+            [
+              -78.6793565019,
+              -1.6566533554
+            ],
+            [
+              -78.6793372543,
+              -1.6566334607
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S31",
+        "parqueadero_id": "P-OESTE",
+        "numero": 31,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S31",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793604968,
+              -1.656610993
+            ],
+            [
+              -78.6793809502,
+              -1.6565912214
+            ],
+            [
+              -78.6794001978,
+              -1.6566111161
+            ],
+            [
+              -78.6793797444,
+              -1.6566308877
+            ],
+            [
+              -78.6793604968,
+              -1.656610993
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S32",
+        "parqueadero_id": "P-OESTE",
+        "numero": 32,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S32",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793837393,
+              -1.6565885252
+            ],
+            [
+              -78.6794041926,
+              -1.6565687536
+            ],
+            [
+              -78.6794234402,
+              -1.6565886483
+            ],
+            [
+              -78.6794029869,
+              -1.6566084199
+            ],
+            [
+              -78.6793837393,
+              -1.6565885252
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S33",
+        "parqueadero_id": "P-OESTE",
+        "numero": 33,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S33",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794069817,
+              -1.6565660575
+            ],
+            [
+              -78.6794274351,
+              -1.6565462859
+            ],
+            [
+              -78.6794466827,
+              -1.6565661806
+            ],
+            [
+              -78.6794262293,
+              -1.6565859522
+            ],
+            [
+              -78.6794069817,
+              -1.6565660575
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S34",
+        "parqueadero_id": "P-OESTE",
+        "numero": 34,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S34",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794302242,
+              -1.6565435898
+            ],
+            [
+              -78.6794506776,
+              -1.6565238182
+            ],
+            [
+              -78.6794699252,
+              -1.6565437129
+            ],
+            [
+              -78.6794494718,
+              -1.6565634845
+            ],
+            [
+              -78.6794302242,
+              -1.6565435898
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S35",
+        "parqueadero_id": "P-OESTE",
+        "numero": 35,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S35",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794534667,
+              -1.6565211221
+            ],
+            [
+              -78.6794739201,
+              -1.6565013505
+            ],
+            [
+              -78.6794931677,
+              -1.6565212451
+            ],
+            [
+              -78.6794727143,
+              -1.6565410167
+            ],
+            [
+              -78.6794534667,
+              -1.6565211221
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S36",
+        "parqueadero_id": "P-OESTE",
+        "numero": 36,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S36",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794767092,
+              -1.6564986543
+            ],
+            [
+              -78.6794971626,
+              -1.6564788827
+            ],
+            [
+              -78.6795164102,
+              -1.6564987774
+            ],
+            [
+              -78.6794959568,
+              -1.656518549
+            ],
+            [
+              -78.6794767092,
+              -1.6564986543
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S37",
+        "parqueadero_id": "P-OESTE",
+        "numero": 37,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S37",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794999517,
+              -1.6564761866
+            ],
+            [
+              -78.679520405,
+              -1.656456415
+            ],
+            [
+              -78.6795396526,
+              -1.6564763097
+            ],
+            [
+              -78.6795191993,
+              -1.6564960813
+            ],
+            [
+              -78.6794999517,
+              -1.6564761866
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S38",
+        "parqueadero_id": "P-OESTE",
+        "numero": 38,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S38",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6795231941,
+              -1.6564537189
+            ],
+            [
+              -78.6795436475,
+              -1.6564339473
+            ],
+            [
+              -78.6795628951,
+              -1.6564538419
+            ],
+            [
+              -78.6795424417,
+              -1.6564736135
+            ],
+            [
+              -78.6795231941,
+              -1.6564537189
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S39",
+        "parqueadero_id": "P-OESTE",
+        "numero": 39,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S39",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793208279,
+              -1.6567559568
+            ],
+            [
+              -78.6793412813,
+              -1.6567361852
+            ],
+            [
+              -78.6793605289,
+              -1.6567560799
+            ],
+            [
+              -78.6793400755,
+              -1.6567758515
+            ],
+            [
+              -78.6793208279,
+              -1.6567559568
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S40",
+        "parqueadero_id": "P-OESTE",
+        "numero": 40,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S40",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793440704,
+              -1.6567334891
+            ],
+            [
+              -78.6793645238,
+              -1.6567137175
+            ],
+            [
+              -78.6793837713,
+              -1.6567336122
+            ],
+            [
+              -78.679363318,
+              -1.6567533838
+            ],
+            [
+              -78.6793440704,
+              -1.6567334891
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S41",
+        "parqueadero_id": "P-OESTE",
+        "numero": 41,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S41",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793673128,
+              -1.6567110214
+            ],
+            [
+              -78.6793877662,
+              -1.6566912498
+            ],
+            [
+              -78.6794070138,
+              -1.6567111445
+            ],
+            [
+              -78.6793865604,
+              -1.6567309161
+            ],
+            [
+              -78.6793673128,
+              -1.6567110214
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S42",
+        "parqueadero_id": "P-OESTE",
+        "numero": 42,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S42",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6793905553,
+              -1.6566885537
+            ],
+            [
+              -78.6794110087,
+              -1.656668782
+            ],
+            [
+              -78.6794302563,
+              -1.6566886767
+            ],
+            [
+              -78.6794098029,
+              -1.6567084483
+            ],
+            [
+              -78.6793905553,
+              -1.6566885537
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S43",
+        "parqueadero_id": "P-OESTE",
+        "numero": 43,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S43",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794137978,
+              -1.6566660859
+            ],
+            [
+              -78.6794342512,
+              -1.6566463143
+            ],
+            [
+              -78.6794534988,
+              -1.656666209
+            ],
+            [
+              -78.6794330454,
+              -1.6566859806
+            ],
+            [
+              -78.6794137978,
+              -1.6566660859
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S44",
+        "parqueadero_id": "P-OESTE",
+        "numero": 44,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S44",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794370403,
+              -1.6566436182
+            ],
+            [
+              -78.6794574937,
+              -1.6566238466
+            ],
+            [
+              -78.6794767413,
+              -1.6566437413
+            ],
+            [
+              -78.6794562879,
+              -1.6566635129
+            ],
+            [
+              -78.6794370403,
+              -1.6566436182
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S45",
+        "parqueadero_id": "P-OESTE",
+        "numero": 45,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S45",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794602828,
+              -1.6566211505
+            ],
+            [
+              -78.6794807361,
+              -1.6566013789
+            ],
+            [
+              -78.6794999837,
+              -1.6566212735
+            ],
+            [
+              -78.6794795304,
+              -1.6566410451
+            ],
+            [
+              -78.6794602828,
+              -1.6566211505
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S46",
+        "parqueadero_id": "P-OESTE",
+        "numero": 46,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S46",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6794835252,
+              -1.6565986827
+            ],
+            [
+              -78.6795039786,
+              -1.6565789111
+            ],
+            [
+              -78.6795232262,
+              -1.6565988058
+            ],
+            [
+              -78.6795027728,
+              -1.6566185774
+            ],
+            [
+              -78.6794835252,
+              -1.6565986827
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S47",
+        "parqueadero_id": "P-OESTE",
+        "numero": 47,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S47",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6795067677,
+              -1.656576215
+            ],
+            [
+              -78.6795272211,
+              -1.6565564434
+            ],
+            [
+              -78.6795464687,
+              -1.6565763381
+            ],
+            [
+              -78.6795260153,
+              -1.6565961097
+            ],
+            [
+              -78.6795067677,
+              -1.656576215
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S48",
+        "parqueadero_id": "P-OESTE",
+        "numero": 48,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S48",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6795300102,
+              -1.6565537473
+            ],
+            [
+              -78.6795504636,
+              -1.6565339757
+            ],
+            [
+              -78.6795697112,
+              -1.6565538703
+            ],
+            [
+              -78.6795492578,
+              -1.6565736419
+            ],
+            [
+              -78.6795300102,
+              -1.6565537473
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S49",
+        "parqueadero_id": "P-OESTE",
+        "numero": 49,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S49",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6795532527,
+              -1.6565312795
+            ],
+            [
+              -78.6795737061,
+              -1.6565115079
+            ],
+            [
+              -78.6795929537,
+              -1.6565314026
+            ],
+            [
+              -78.6795725003,
+              -1.6565511742
+            ],
+            [
+              -78.6795532527,
+              -1.6565312795
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-OESTE-S50",
+        "parqueadero_id": "P-OESTE",
+        "numero": 50,
+        "tipo": "general",
+        "sensor_id": "MAG-P-OESTE-S50",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6795764952,
+              -1.6565088118
+            ],
+            [
+              -78.6795969485,
+              -1.6564890402
+            ],
+            [
+              -78.6796161961,
+              -1.6565089349
+            ],
+            [
+              -78.6795957428,
+              -1.6565287065
+            ],
+            [
+              -78.6795764952,
+              -1.6565088118
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S01",
+        "parqueadero_id": "P-AULAS",
+        "numero": 1,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-AULAS-S01",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761685613,
+              -1.6559089028
+            ],
+            [
+              -78.6761517207,
+              -1.6558901542
+            ],
+            [
+              -78.6761846249,
+              -1.6558606233
+            ],
+            [
+              -78.6762014655,
+              -1.6558793719
+            ],
+            [
+              -78.6761685613,
+              -1.6559089028
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S02",
+        "parqueadero_id": "P-AULAS",
+        "numero": 2,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-AULAS-S02",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761494243,
+              -1.6558875976
+            ],
+            [
+              -78.6761325837,
+              -1.655868849
+            ],
+            [
+              -78.6761654879,
+              -1.6558393181
+            ],
+            [
+              -78.6761823285,
+              -1.6558580667
+            ],
+            [
+              -78.6761494243,
+              -1.6558875976
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S03",
+        "parqueadero_id": "P-AULAS",
+        "numero": 3,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S03",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761302872,
+              -1.6558662923
+            ],
+            [
+              -78.6761134467,
+              -1.6558475437
+            ],
+            [
+              -78.6761463508,
+              -1.6558180128
+            ],
+            [
+              -78.6761631914,
+              -1.6558367614
+            ],
+            [
+              -78.6761302872,
+              -1.6558662923
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S04",
+        "parqueadero_id": "P-AULAS",
+        "numero": 4,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S04",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761111502,
+              -1.6558449871
+            ],
+            [
+              -78.6760943096,
+              -1.6558262385
+            ],
+            [
+              -78.6761272138,
+              -1.6557967076
+            ],
+            [
+              -78.6761440544,
+              -1.6558154562
+            ],
+            [
+              -78.6761111502,
+              -1.6558449871
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S05",
+        "parqueadero_id": "P-AULAS",
+        "numero": 5,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S05",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760920132,
+              -1.6558236819
+            ],
+            [
+              -78.6760751726,
+              -1.6558049333
+            ],
+            [
+              -78.6761080768,
+              -1.6557754024
+            ],
+            [
+              -78.6761249173,
+              -1.655794151
+            ],
+            [
+              -78.6760920132,
+              -1.6558236819
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S06",
+        "parqueadero_id": "P-AULAS",
+        "numero": 6,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S06",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760728761,
+              -1.6558023766
+            ],
+            [
+              -78.6760560355,
+              -1.655783628
+            ],
+            [
+              -78.6760889397,
+              -1.6557540971
+            ],
+            [
+              -78.6761057803,
+              -1.6557728457
+            ],
+            [
+              -78.6760728761,
+              -1.6558023766
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S07",
+        "parqueadero_id": "P-AULAS",
+        "numero": 7,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S07",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760537391,
+              -1.6557810714
+            ],
+            [
+              -78.6760368985,
+              -1.6557623228
+            ],
+            [
+              -78.6760698027,
+              -1.6557327919
+            ],
+            [
+              -78.6760866433,
+              -1.6557515405
+            ],
+            [
+              -78.6760537391,
+              -1.6557810714
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S08",
+        "parqueadero_id": "P-AULAS",
+        "numero": 8,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S08",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760346021,
+              -1.6557597662
+            ],
+            [
+              -78.6760177615,
+              -1.6557410176
+            ],
+            [
+              -78.6760506656,
+              -1.6557114867
+            ],
+            [
+              -78.6760675062,
+              -1.6557302353
+            ],
+            [
+              -78.6760346021,
+              -1.6557597662
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S09",
+        "parqueadero_id": "P-AULAS",
+        "numero": 9,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S09",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.676015465,
+              -1.655738461
+            ],
+            [
+              -78.6759986244,
+              -1.6557197124
+            ],
+            [
+              -78.6760315286,
+              -1.6556901815
+            ],
+            [
+              -78.6760483692,
+              -1.6557089301
+            ],
+            [
+              -78.676015465,
+              -1.655738461
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S10",
+        "parqueadero_id": "P-AULAS",
+        "numero": 10,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S10",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.675996328,
+              -1.6557171557
+            ],
+            [
+              -78.6759794874,
+              -1.6556984071
+            ],
+            [
+              -78.6760123916,
+              -1.6556688762
+            ],
+            [
+              -78.6760292322,
+              -1.6556876248
+            ],
+            [
+              -78.675996328,
+              -1.6557171557
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S11",
+        "parqueadero_id": "P-AULAS",
+        "numero": 11,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S11",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6762575245,
+              -1.65582906
+            ],
+            [
+              -78.6762406839,
+              -1.6558103114
+            ],
+            [
+              -78.676273588,
+              -1.6557807805
+            ],
+            [
+              -78.6762904286,
+              -1.6557995291
+            ],
+            [
+              -78.6762575245,
+              -1.65582906
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S12",
+        "parqueadero_id": "P-AULAS",
+        "numero": 12,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S12",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6762383874,
+              -1.6558077547
+            ],
+            [
+              -78.6762215468,
+              -1.6557890061
+            ],
+            [
+              -78.676254451,
+              -1.6557594752
+            ],
+            [
+              -78.6762712916,
+              -1.6557782238
+            ],
+            [
+              -78.6762383874,
+              -1.6558077547
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S13",
+        "parqueadero_id": "P-AULAS",
+        "numero": 13,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S13",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6762192504,
+              -1.6557864495
+            ],
+            [
+              -78.6762024098,
+              -1.6557677009
+            ],
+            [
+              -78.676235314,
+              -1.65573817
+            ],
+            [
+              -78.6762521546,
+              -1.6557569186
+            ],
+            [
+              -78.6762192504,
+              -1.6557864495
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S14",
+        "parqueadero_id": "P-AULAS",
+        "numero": 14,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S14",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6762001133,
+              -1.6557651443
+            ],
+            [
+              -78.6761832728,
+              -1.6557463957
+            ],
+            [
+              -78.6762161769,
+              -1.6557168648
+            ],
+            [
+              -78.6762330175,
+              -1.6557356134
+            ],
+            [
+              -78.6762001133,
+              -1.6557651443
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S15",
+        "parqueadero_id": "P-AULAS",
+        "numero": 15,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S15",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761809763,
+              -1.6557438391
+            ],
+            [
+              -78.6761641357,
+              -1.6557250905
+            ],
+            [
+              -78.6761970399,
+              -1.6556955596
+            ],
+            [
+              -78.6762138805,
+              -1.6557143082
+            ],
+            [
+              -78.6761809763,
+              -1.6557438391
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S16",
+        "parqueadero_id": "P-AULAS",
+        "numero": 16,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S16",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761618393,
+              -1.6557225338
+            ],
+            [
+              -78.6761449987,
+              -1.6557037852
+            ],
+            [
+              -78.6761779029,
+              -1.6556742543
+            ],
+            [
+              -78.6761947435,
+              -1.6556930029
+            ],
+            [
+              -78.6761618393,
+              -1.6557225338
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S17",
+        "parqueadero_id": "P-AULAS",
+        "numero": 17,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S17",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761427022,
+              -1.6557012286
+            ],
+            [
+              -78.6761258616,
+              -1.65568248
+            ],
+            [
+              -78.6761587658,
+              -1.6556529491
+            ],
+            [
+              -78.6761756064,
+              -1.6556716977
+            ],
+            [
+              -78.6761427022,
+              -1.6557012286
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S18",
+        "parqueadero_id": "P-AULAS",
+        "numero": 18,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S18",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761235652,
+              -1.6556799234
+            ],
+            [
+              -78.6761067246,
+              -1.6556611748
+            ],
+            [
+              -78.6761396288,
+              -1.6556316439
+            ],
+            [
+              -78.6761564694,
+              -1.6556503925
+            ],
+            [
+              -78.6761235652,
+              -1.6556799234
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S19",
+        "parqueadero_id": "P-AULAS",
+        "numero": 19,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S19",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6761044282,
+              -1.6556586182
+            ],
+            [
+              -78.6760875876,
+              -1.6556398696
+            ],
+            [
+              -78.6761204917,
+              -1.6556103387
+            ],
+            [
+              -78.6761373323,
+              -1.6556290873
+            ],
+            [
+              -78.6761044282,
+              -1.6556586182
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-AULAS-S20",
+        "parqueadero_id": "P-AULAS",
+        "numero": 20,
+        "tipo": "general",
+        "sensor_id": "MAG-P-AULAS-S20",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6760852911,
+              -1.6556373129
+            ],
+            [
+              -78.6760684505,
+              -1.6556185643
+            ],
+            [
+              -78.6761013547,
+              -1.6555890334
+            ],
+            [
+              -78.6761181953,
+              -1.655607782
+            ],
+            [
+              -78.6760852911,
+              -1.6556373129
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S01",
+        "parqueadero_id": "P-DISENO",
+        "numero": 1,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-DISENO-S01",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6765523841,
+              -1.6567142506
+            ],
+            [
+              -78.6765762541,
+              -1.6566926906
+            ],
+            [
+              -78.6765964854,
+              -1.6567150708
+            ],
+            [
+              -78.6765726154,
+              -1.6567366308
+            ],
+            [
+              -78.6765523841,
+              -1.6567142506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S02",
+        "parqueadero_id": "P-DISENO",
+        "numero": 2,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-DISENO-S02",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6765795091,
+              -1.6566897506
+            ],
+            [
+              -78.6766033791,
+              -1.6566681906
+            ],
+            [
+              -78.6766236104,
+              -1.6566905708
+            ],
+            [
+              -78.6765997404,
+              -1.6567121308
+            ],
+            [
+              -78.6765795091,
+              -1.6566897506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S03",
+        "parqueadero_id": "P-DISENO",
+        "numero": 3,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S03",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766066341,
+              -1.6566652506
+            ],
+            [
+              -78.6766305041,
+              -1.6566436906
+            ],
+            [
+              -78.6766507354,
+              -1.6566660708
+            ],
+            [
+              -78.6766268654,
+              -1.6566876308
+            ],
+            [
+              -78.6766066341,
+              -1.6566652506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S04",
+        "parqueadero_id": "P-DISENO",
+        "numero": 4,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S04",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766337591,
+              -1.6566407506
+            ],
+            [
+              -78.6766576291,
+              -1.6566191906
+            ],
+            [
+              -78.6766778604,
+              -1.6566415708
+            ],
+            [
+              -78.6766539904,
+              -1.6566631308
+            ],
+            [
+              -78.6766337591,
+              -1.6566407506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S05",
+        "parqueadero_id": "P-DISENO",
+        "numero": 5,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S05",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766608841,
+              -1.6566162506
+            ],
+            [
+              -78.6766847541,
+              -1.6565946906
+            ],
+            [
+              -78.6767049854,
+              -1.6566170708
+            ],
+            [
+              -78.6766811154,
+              -1.6566386308
+            ],
+            [
+              -78.6766608841,
+              -1.6566162506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S06",
+        "parqueadero_id": "P-DISENO",
+        "numero": 6,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S06",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766880091,
+              -1.6565917506
+            ],
+            [
+              -78.6767118791,
+              -1.6565701906
+            ],
+            [
+              -78.6767321104,
+              -1.6565925708
+            ],
+            [
+              -78.6767082404,
+              -1.6566141308
+            ],
+            [
+              -78.6766880091,
+              -1.6565917506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S07",
+        "parqueadero_id": "P-DISENO",
+        "numero": 7,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S07",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6767151341,
+              -1.6565672506
+            ],
+            [
+              -78.6767390041,
+              -1.6565456906
+            ],
+            [
+              -78.6767592354,
+              -1.6565680708
+            ],
+            [
+              -78.6767353654,
+              -1.6565896308
+            ],
+            [
+              -78.6767151341,
+              -1.6565672506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S08",
+        "parqueadero_id": "P-DISENO",
+        "numero": 8,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S08",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6767422591,
+              -1.6565427506
+            ],
+            [
+              -78.6767661291,
+              -1.6565211906
+            ],
+            [
+              -78.6767863604,
+              -1.6565435708
+            ],
+            [
+              -78.6767624904,
+              -1.6565651308
+            ],
+            [
+              -78.6767422591,
+              -1.6565427506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S09",
+        "parqueadero_id": "P-DISENO",
+        "numero": 9,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S09",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6767693841,
+              -1.6565182506
+            ],
+            [
+              -78.6767932541,
+              -1.6564966906
+            ],
+            [
+              -78.6768134854,
+              -1.6565190708
+            ],
+            [
+              -78.6767896154,
+              -1.6565406308
+            ],
+            [
+              -78.6767693841,
+              -1.6565182506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S10",
+        "parqueadero_id": "P-DISENO",
+        "numero": 10,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S10",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766070834,
+              -1.6567747599
+            ],
+            [
+              -78.6766309534,
+              -1.6567531999
+            ],
+            [
+              -78.6766511846,
+              -1.65677558
+            ],
+            [
+              -78.6766273146,
+              -1.65679714
+            ],
+            [
+              -78.6766070834,
+              -1.6567747599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S11",
+        "parqueadero_id": "P-DISENO",
+        "numero": 11,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S11",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766342084,
+              -1.6567502599
+            ],
+            [
+              -78.6766580784,
+              -1.6567286999
+            ],
+            [
+              -78.6766783096,
+              -1.65675108
+            ],
+            [
+              -78.6766544396,
+              -1.65677264
+            ],
+            [
+              -78.6766342084,
+              -1.6567502599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S12",
+        "parqueadero_id": "P-DISENO",
+        "numero": 12,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S12",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766613334,
+              -1.6567257599
+            ],
+            [
+              -78.6766852034,
+              -1.6567041999
+            ],
+            [
+              -78.6767054346,
+              -1.65672658
+            ],
+            [
+              -78.6766815646,
+              -1.65674814
+            ],
+            [
+              -78.6766613334,
+              -1.6567257599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S13",
+        "parqueadero_id": "P-DISENO",
+        "numero": 13,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S13",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6766884584,
+              -1.6567012599
+            ],
+            [
+              -78.6767123284,
+              -1.6566796999
+            ],
+            [
+              -78.6767325596,
+              -1.65670208
+            ],
+            [
+              -78.6767086896,
+              -1.65672364
+            ],
+            [
+              -78.6766884584,
+              -1.6567012599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S14",
+        "parqueadero_id": "P-DISENO",
+        "numero": 14,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S14",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6767155834,
+              -1.6566767599
+            ],
+            [
+              -78.6767394534,
+              -1.6566551999
+            ],
+            [
+              -78.6767596846,
+              -1.65667758
+            ],
+            [
+              -78.6767358146,
+              -1.65669914
+            ],
+            [
+              -78.6767155834,
+              -1.6566767599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S15",
+        "parqueadero_id": "P-DISENO",
+        "numero": 15,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S15",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6767427084,
+              -1.6566522599
+            ],
+            [
+              -78.6767665784,
+              -1.6566306999
+            ],
+            [
+              -78.6767868096,
+              -1.65665308
+            ],
+            [
+              -78.6767629396,
+              -1.65667464
+            ],
+            [
+              -78.6767427084,
+              -1.6566522599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S16",
+        "parqueadero_id": "P-DISENO",
+        "numero": 16,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S16",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6767698334,
+              -1.6566277599
+            ],
+            [
+              -78.6767937034,
+              -1.6566061999
+            ],
+            [
+              -78.6768139346,
+              -1.65662858
+            ],
+            [
+              -78.6767900646,
+              -1.65665014
+            ],
+            [
+              -78.6767698334,
+              -1.6566277599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S17",
+        "parqueadero_id": "P-DISENO",
+        "numero": 17,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S17",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6767969584,
+              -1.6566032599
+            ],
+            [
+              -78.6768208284,
+              -1.6565816999
+            ],
+            [
+              -78.6768410596,
+              -1.65660408
+            ],
+            [
+              -78.6768171896,
+              -1.65662564
+            ],
+            [
+              -78.6767969584,
+              -1.6566032599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-DISENO-S18",
+        "parqueadero_id": "P-DISENO",
+        "numero": 18,
+        "tipo": "general",
+        "sensor_id": "MAG-P-DISENO-S18",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6768240834,
+              -1.6565787599
+            ],
+            [
+              -78.6768479534,
+              -1.6565571999
+            ],
+            [
+              -78.6768681846,
+              -1.65657958
+            ],
+            [
+              -78.6768443146,
+              -1.65660114
+            ],
+            [
+              -78.6768240834,
+              -1.6565787599
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S01",
+        "parqueadero_id": "P-FIE2",
+        "numero": 1,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-FIE2-S01",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.675798374,
+              -1.6565775178
+            ],
+            [
+              -78.6757854669,
+              -1.6565646106
+            ],
+            [
+              -78.6757928211,
+              -1.6565572625
+            ],
+            [
+              -78.6758057282,
+              -1.6565701697
+            ],
+            [
+              -78.675798374,
+              -1.6565775178
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S02",
+        "parqueadero_id": "P-FIE2",
+        "numero": 2,
+        "tipo": "accesible",
+        "sensor_id": "MAG-P-FIE2-S02",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757837068,
+              -1.6565628506
+            ],
+            [
+              -78.6757707997,
+              -1.6565499434
+            ],
+            [
+              -78.6757781539,
+              -1.6565425953
+            ],
+            [
+              -78.6757910611,
+              -1.6565555025
+            ],
+            [
+              -78.6757837068,
+              -1.6565628506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S03",
+        "parqueadero_id": "P-FIE2",
+        "numero": 3,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S03",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757690396,
+              -1.6565481834
+            ],
+            [
+              -78.6757561325,
+              -1.6565352763
+            ],
+            [
+              -78.6757634867,
+              -1.6565279282
+            ],
+            [
+              -78.6757763939,
+              -1.6565408353
+            ],
+            [
+              -78.6757690396,
+              -1.6565481834
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S04",
+        "parqueadero_id": "P-FIE2",
+        "numero": 4,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S04",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757543724,
+              -1.6565335162
+            ],
+            [
+              -78.6757414653,
+              -1.6565206091
+            ],
+            [
+              -78.6757488196,
+              -1.656513261
+            ],
+            [
+              -78.6757617267,
+              -1.6565261681
+            ],
+            [
+              -78.6757543724,
+              -1.6565335162
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S05",
+        "parqueadero_id": "P-FIE2",
+        "numero": 5,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S05",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757397053,
+              -1.656518849
+            ],
+            [
+              -78.6757267981,
+              -1.6565059419
+            ],
+            [
+              -78.6757341524,
+              -1.6564985938
+            ],
+            [
+              -78.6757470595,
+              -1.6565115009
+            ],
+            [
+              -78.6757397053,
+              -1.656518849
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S06",
+        "parqueadero_id": "P-FIE2",
+        "numero": 6,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S06",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757250381,
+              -1.6565041818
+            ],
+            [
+              -78.6757121309,
+              -1.6564912747
+            ],
+            [
+              -78.6757194852,
+              -1.6564839266
+            ],
+            [
+              -78.6757323923,
+              -1.6564968337
+            ],
+            [
+              -78.6757250381,
+              -1.6565041818
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S07",
+        "parqueadero_id": "P-FIE2",
+        "numero": 7,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S07",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6758182577,
+              -1.6565576507
+            ],
+            [
+              -78.6758053506,
+              -1.6565447435
+            ],
+            [
+              -78.6758127048,
+              -1.6565373954
+            ],
+            [
+              -78.6758256119,
+              -1.6565503026
+            ],
+            [
+              -78.6758182577,
+              -1.6565576507
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S08",
+        "parqueadero_id": "P-FIE2",
+        "numero": 8,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S08",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6758035905,
+              -1.6565429835
+            ],
+            [
+              -78.6757906834,
+              -1.6565300764
+            ],
+            [
+              -78.6757980376,
+              -1.6565227283
+            ],
+            [
+              -78.6758109448,
+              -1.6565356354
+            ],
+            [
+              -78.6758035905,
+              -1.6565429835
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S09",
+        "parqueadero_id": "P-FIE2",
+        "numero": 9,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S09",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757889233,
+              -1.6565283163
+            ],
+            [
+              -78.6757760162,
+              -1.6565154092
+            ],
+            [
+              -78.6757833704,
+              -1.6565080611
+            ],
+            [
+              -78.6757962776,
+              -1.6565209682
+            ],
+            [
+              -78.6757889233,
+              -1.6565283163
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S10",
+        "parqueadero_id": "P-FIE2",
+        "numero": 10,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S10",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757742561,
+              -1.6565136491
+            ],
+            [
+              -78.675761349,
+              -1.656500742
+            ],
+            [
+              -78.6757687033,
+              -1.6564933939
+            ],
+            [
+              -78.6757816104,
+              -1.656506301
+            ],
+            [
+              -78.6757742561,
+              -1.6565136491
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S11",
+        "parqueadero_id": "P-FIE2",
+        "numero": 11,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S11",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757595889,
+              -1.6564989819
+            ],
+            [
+              -78.6757466818,
+              -1.6564860748
+            ],
+            [
+              -78.6757540361,
+              -1.6564787267
+            ],
+            [
+              -78.6757669432,
+              -1.6564916338
+            ],
+            [
+              -78.6757595889,
+              -1.6564989819
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "P-FIE2-S12",
+        "parqueadero_id": "P-FIE2",
+        "numero": 12,
+        "tipo": "general",
+        "sensor_id": "MAG-P-FIE2-S12",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.6757449218,
+              -1.6564843147
+            ],
+            [
+              -78.6757320146,
+              -1.6564714076
+            ],
+            [
+              -78.6757393689,
+              -1.6564640595
+            ],
+            [
+              -78.675752276,
+              -1.6564769666
+            ],
+            [
+              -78.6757449218,
+              -1.6564843147
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

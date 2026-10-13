@@ -5,6 +5,7 @@ import argparse
 import json
 import math
 import os
+from urllib.parse import parse_qs, urlsplit
 
 PORT = int(os.environ.get("PORT", 8000))
 MODULE_DIR = Path(__file__).resolve().parent
@@ -141,6 +142,10 @@ class PulseHandler(SimpleHTTPRequestHandler):
         elif clean_path == "/api/parking/historical":
             self.respond(200, database.get_predicciones())
             return
+        elif clean_path == "/api/parking/spaces":
+            params = parse_qs(urlsplit(self.path).query, keep_blank_values=True)
+            self.respond(200, database.get_plazas(params.get("parking_id", [None])[0]))
+            return
         elif clean_path == "/api/reports":
             if "format=geojson" in self.path:
                 self.respond(200, database.get_reportes_geojson())
@@ -167,6 +172,21 @@ class PulseHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         clean_path = self.path.split("?")[0]
+
+        if clean_path == "/api/parking/spaces/state":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= 65536:
+                    raise ValueError("Tamaño de evento inválido")
+                data = json.loads(self.rfile.read(length))
+                if not isinstance(data, dict):
+                    raise ValueError("Evento inválido")
+                result = database.update_plaza_estado(
+                    data.get("id"), data.get("estado"), data.get("evento", "sensor_simulado"))
+                self.respond(200, result)
+            except (ValueError, TypeError) as error:
+                self.respond(400, {"success": False, "error": str(error)})
+            return
 
         # Actualización de espacios en SQLite
         if clean_path == "/api/parking/occupancy":
@@ -247,4 +267,3 @@ if __name__ == "__main__":
             server.serve_forever()
         except KeyboardInterrupt:
             pass
-

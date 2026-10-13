@@ -1,0 +1,159 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CIRC-P-FIE1-01",
+        "parqueadero_id": "P-FIE1",
+        "tipo": "circulacion_interna",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6759826121,
+            -1.6566970973
+          ],
+          [
+            -78.6760737012,
+            -1.6566188911
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CIRC-P-OESTE-01",
+        "parqueadero_id": "P-OESTE",
+        "tipo": "circulacion_interna",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6792324459,
+            -1.6566577741
+          ],
+          [
+            -78.6795321938,
+            -1.6563680179
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CIRC-P-OESTE-02",
+        "parqueadero_id": "P-OESTE",
+        "tipo": "circulacion_interna",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6793072154,
+            -1.6567350573
+          ],
+          [
+            -78.6796069633,
+            -1.656445301
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CIRC-P-OESTE-03",
+        "parqueadero_id": "P-OESTE",
+        "tipo": "circulacion_interna",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6795321938,
+            -1.6563680179
+          ],
+          [
+            -78.6796069633,
+            -1.656445301
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CIRC-P-AULAS-01",
+        "parqueadero_id": "P-AULAS",
+        "tipo": "circulacion_interna",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6762277726,
+            -1.6558522985
+          ],
+          [
+            -78.6760421434,
+            -1.6556456378
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CIRC-P-DISENO-01",
+        "parqueadero_id": "P-DISENO",
+        "tipo": "circulacion_interna",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.6765918837,
+            -1.6567538578
+          ],
+          [
+            -78.676828685,
+            -1.6565399728
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CIRC-P-FIE2-01",
+        "parqueadero_id": "P-FIE2",
+        "tipo": "circulacion_interna",
+        "representacion": "esquematica"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -78.675811553,
+            -1.6565634701
+          ],
+          [
+            -78.6757261899,
+            -1.6564781071
+          ]
+        ]
+      }
+    }
+  ]
+}

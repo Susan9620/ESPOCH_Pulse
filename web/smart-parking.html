@@ -138,7 +138,12 @@
                     <p class="overline">SIMULACIÓN SENSORES IoT</p>
                     <span id="iot-status-badge" class="iot-badge paused">● Pausado</span>
                 </div>
-                <h2>Control de Telemetría</h2>
+                <h2>Control de Telemetría Simulada</h2>
+                <div class="iot-panel-desc">
+                    <strong>INFRAESTRUCTURA SIMULADA</strong>
+                    <p id="iot-infrastructure-summary">IoT plaza a plaza · Esperando datos simulados de las plazas.</p>
+                    <small>Implementación física sujeta a levantamiento de campo y estudio de cobertura.</small>
+                </div>
 
                 <!-- Selector de Fase / Modo de Simulación -->
                 <div class="iot-mode-selector" role="tablist">
@@ -160,8 +165,7 @@
 
                 <!-- Panel: Flujo vehicular continuo y automático -->
                 <div id="panel-auto" class="iot-panel hidden">
-                    <p class="iot-panel-desc">Flujo dinámico continuo de vehículos entrando y saliendo sin presionar
-                        botones:</p>
+                    <p class="iot-panel-desc">Cambios automáticos de ocupación y liberación de plazas mediante sensores geomagnéticos simulados:</p>
                     <div class="auto-control-box">
                         <button id="btn-toggle-auto" type="button" class="btn-auto-toggle start">
                             <span id="btn-auto-icon">▶</span> <span id="btn-auto-text">Iniciar flujo automático</span>
@@ -178,9 +182,9 @@
                             <div>
                                 <label for="auto-traffic-pattern">Tráfico</label>
                                 <select id="auto-traffic-pattern">
-                                    <option value="balanced" selected>Entradas / Salidas</option>
-                                    <option value="rush_in">Hora pico (Más entradas)</option>
-                                    <option value="rush_out">Salida (Más desocupación)</option>
+                                    <option value="balanced" selected>Ocupaciones / Liberaciones</option>
+                                    <option value="rush_in">Hora pico (Más ocupaciones)</option>
+                                    <option value="rush_out">Liberación (Más plazas libres)</option>
                                 </select>
                             </div>
                         </div>
@@ -229,16 +233,16 @@
                     </div>
                 </div>
 
-                <!-- Consola de Telemetría IoT en vivo -->
+                <!-- Consola de Telemetría IoT simulada -->
                 <div class="iot-feed-wrapper">
                     <div class="iot-feed-header">
-                        <span>TELEMETRÍA EN VIVO (MQTT/WS)</span>
+                        <span>TELEMETRÍA IoT — SIMULACIÓN PLAZA A PLAZA</span>
                         <button type="button" id="btn-clear-feed" class="btn-clear-feed"
                             title="Limpiar eventos">Limpiar</button>
                     </div>
+                    <p class="iot-panel-desc">Sensores geomagnéticos simulados · Comunicación propuesta: LoRaWAN · Eventos procesados mediante API</p>
                     <div id="iot-telemetry-feed" class="iot-feed" aria-live="polite">
-                        <div class="iot-log-line system"><span class="ts">[00:00:00]</span> [Sistema] Red de sensores
-                            IoT sincronizada.</div>
+                        <div class="iot-log-line system"><span class="ts">[00:00:00]</span> [Sistema] Prototipo de sensores geomagnéticos simulados · Esperando estados de plazas mediante API.</div>
                     </div>
                 </div>
 
@@ -336,7 +340,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="semaforo-legend" title="Semáforo de disponibilidad en tiempo real">
+                        <div class="semaforo-legend" title="Semáforo de disponibilidad del escenario actual">
                             <span class="semaforo-legend-item verde"><span class="semaforo-legend-dot verde"></span>
                                 Disponible</span>
                             <span class="semaforo-legend-item amarillo"><span
@@ -527,8 +531,7 @@
                         <div class="admin-kpi-card">
                             <span class="kpi-label">FLUJO VEHICULAR DE SESIÓN</span>
                             <div class="kpi-main-val" id="admin-kpi-turnover">0</div>
-                            <span class="kpi-subtext" id="admin-kpi-turnover-sub">0 entradas · 0 salidas
-                                registradas</span>
+                            <span class="kpi-subtext" id="admin-kpi-turnover-sub">0 ocupaciones · 0 liberaciones</span>
                         </div>
                         <div class="admin-kpi-card">
                             <span class="kpi-label">ESTADO GENERAL DEL CAMPUS</span>
@@ -552,8 +555,8 @@
 
                         <div class="admin-section-box">
                             <div class="admin-box-header">
-                                <h3>Ocupación en Vivo por Sector</h3>
-                                <small>Capacidad y porcentaje en tiempo real</small>
+                                <h3>Ocupación Simulada por Sector</h3>
+                                <small>Capacidad y porcentaje del escenario actual</small>
                             </div>
                             <div class="admin-sectors-list" id="admin-sectors-list">
                                 <!-- Generado dinámicamente -->
@@ -656,7 +659,7 @@
             <div class="admin-modal-footer">
                 <div class="admin-footer-status">
                     <span class="live-pulse-dot"></span>
-                    <span id="admin-footer-status-text">Datos sincronizados con nodos IoT en tiempo real</span>
+                    <span id="admin-footer-status-text">Telemetría simulada · Esperando datos de sensores por plaza</span>
                 </div>
                 <div class="admin-footer-buttons">
                     <button type="button" id="btn-admin-peak-sim" class="btn-admin-peak-sim"

@@ -217,10 +217,41 @@ def init_db():
             )
         """)
 
-        conn.commit()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS plazas_estacionamiento (
+                id TEXT PRIMARY KEY,
+                parqueadero_id TEXT NOT NULL,
+                numero INTEGER NOT NULL,
+                tipo TEXT NOT NULL DEFAULT 'general' CHECK (tipo IN ('general', 'accesible')),
+                estado TEXT NOT NULL DEFAULT 'libre' CHECK (estado IN ('libre', 'ocupada', 'fuera_servicio')),
+                sensor_id TEXT NOT NULL UNIQUE,
+                sensor_tipo TEXT NOT NULL DEFAULT 'geomagnetico',
+                conectividad TEXT NOT NULL DEFAULT 'LoRaWAN',
+                estado_sensor TEXT NOT NULL DEFAULT 'simulado',
+                updated_at TEXT,
+                UNIQUE (parqueadero_id, numero),
+                FOREIGN KEY (parqueadero_id) REFERENCES parqueaderos(id) ON DELETE CASCADE
+            )
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS telemetria_plazas_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                plaza_id TEXT NOT NULL,
+                parqueadero_id TEXT NOT NULL,
+                estado_anterior TEXT,
+                estado_nuevo TEXT NOT NULL,
+                tipo_evento TEXT NOT NULL DEFAULT 'sensor_simulado',
+                timestamp TEXT NOT NULL,
+                FOREIGN KEY (plaza_id) REFERENCES plazas_estacionamiento(id) ON DELETE CASCADE,
+                FOREIGN KEY (parqueadero_id) REFERENCES parqueaderos(id) ON DELETE CASCADE
+            )
+        """)
 
+        # Serializar la siembra para evitar duplicados en arranques simultáneos.
+        conn.execute("BEGIN IMMEDIATE")
         # Sembrar datos si las tablas están vacías
         _seed_parqueaderos(cursor)
+        _seed_plazas_estacionamiento(cursor)
         _seed_predicciones(cursor)
         _seed_reportes(cursor)
         conn.commit()
@@ -269,7 +300,11 @@ def _seed_parqueaderos(cursor):
                         plazas_discapacidad = ?,
                         plazas_accesibles_totales = ?,
                         plazas_accesibles_libres = CASE 
-                            WHEN plazas_accesibles_libres IS NULL OR plazas_accesibles_libres = 0 
+                            WHEN plazas_accesibles_libres IS NULL OR
+                                (plazas_accesibles_libres = 0 AND NOT EXISTS (
+                                    SELECT 1 FROM plazas_estacionamiento
+                                    WHERE parqueadero_id = parqueaderos.id
+                                ))
                             THEN ? ELSE plazas_accesibles_libres END,
                         tipo_acceso = ?,
                         descripcion_acceso = ?,
@@ -289,6 +324,88 @@ def _seed_parqueaderos(cursor):
             print("[SQLite] Tabla 'parqueaderos' sincronizada con permisos y plazas accesibles.", flush=True)
         except Exception as e:
             print(f"[SQLite Error] Error al sincronizar parqueaderos: {e}", flush=True)
+
+
+def _plazas_iniciales():
+    """Distribución determinista compartida por la siembra y el reset."""
+    for p in INITIAL_PARQUEADEROS:
+        accesibles = p["plazas_accesibles_totales"]
+        accesibles_libres = p["plazas_accesibles_libres"]
+        generales_libres = p["libres_iniciales"] - accesibles_libres
+        for numero in range(1, p["capacidad"] + 1):
+            tipo = "accesible" if numero <= accesibles else "general"
+            libre = (numero <= accesibles_libres if tipo == "accesible"
+                     else numero - accesibles <= generales_libres)
+            yield (f'{p["id"]}-S{numero:02d}', p["id"], numero,
+                   tipo, "libre" if libre else "ocupada")
+
+
+def _sincronizar_totales_plazas(cursor, parqueadero_id, now_iso):
+    cursor.execute("""
+        SELECT COUNT(CASE WHEN estado = 'libre' THEN 1 END) AS libres,
+               COUNT(CASE WHEN tipo = 'accesible' AND estado = 'libre' THEN 1 END) AS accesibles
+        FROM plazas_estacionamiento WHERE parqueadero_id = ?
+    """, (parqueadero_id,))
+    totales = cursor.fetchone()
+    cursor.execute("""
+        UPDATE parqueaderos SET libres_actuales = ?, plazas_accesibles_libres = ?, updated_at = ?
+        WHERE id = ?
+    """, (totales["libres"], totales["accesibles"], now_iso, parqueadero_id))
+    return totales["libres"]
+
+
+def _seed_plazas_estacionamiento(cursor):
+    if cursor.execute("SELECT 1 FROM plazas_estacionamiento LIMIT 1").fetchone():
+        return
+    now_iso = datetime.now(timezone.utc).isoformat()
+    for plaza_id, pid, numero, tipo, estado in _plazas_iniciales():
+        cursor.execute("""
+            INSERT INTO plazas_estacionamiento
+                (id, parqueadero_id, numero, tipo, estado, sensor_id, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (plaza_id, pid, numero, tipo, estado, "MAG-" + plaza_id, now_iso))
+    for p in INITIAL_PARQUEADEROS:
+        cursor.execute("UPDATE parqueaderos SET libres_iniciales = ? WHERE id = ?",
+                       (p["libres_iniciales"], p["id"]))
+        _sincronizar_totales_plazas(cursor, p["id"], now_iso)
+
+
+def get_plazas(parqueadero_id=None):
+    """Consulta las plazas y sus sensores simulados, opcionalmente por parqueadero."""
+    with get_connection() as conn:
+        query = "SELECT * FROM plazas_estacionamiento"
+        params = ()
+        if parqueadero_id is not None:
+            query += " WHERE parqueadero_id = ?"
+            params = (parqueadero_id,)
+        return [dict(row) for row in conn.execute(query + " ORDER BY parqueadero_id, numero", params)]
+
+
+def update_plaza_estado(plaza_id, nuevo_estado, evento="sensor_simulado"):
+    """Actualiza plaza, evento y contadores del padre en una sola transacción."""
+    if nuevo_estado not in ("libre", "ocupada", "fuera_servicio"):
+        raise ValueError("Estado de plaza inválido")
+    if not isinstance(plaza_id, str) or not plaza_id:
+        raise ValueError("ID de plaza inválido")
+    if not isinstance(evento, str) or not evento.strip():
+        raise ValueError("Tipo de evento inválido")
+    with get_connection() as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        cursor = conn.cursor()
+        plaza = cursor.execute("SELECT * FROM plazas_estacionamiento WHERE id = ?", (plaza_id,)).fetchone()
+        if plaza is None:
+            raise ValueError("Plaza inexistente")
+        now_iso = datetime.now(timezone.utc).isoformat()
+        cursor.execute("UPDATE plazas_estacionamiento SET estado = ?, updated_at = ? WHERE id = ?",
+                       (nuevo_estado, now_iso, plaza_id))
+        cursor.execute("""
+            INSERT INTO telemetria_plazas_log
+                (plaza_id, parqueadero_id, estado_anterior, estado_nuevo, tipo_evento, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (plaza_id, plaza["parqueadero_id"], plaza["estado"], nuevo_estado, evento, now_iso))
+        libres = _sincronizar_totales_plazas(cursor, plaza["parqueadero_id"], now_iso)
+        return {"success": True, "id": plaza_id, "estado": nuevo_estado,
+                "parqueadero_id": plaza["parqueadero_id"], "libres_actuales": libres}
 
 
 def _seed_predicciones(cursor):
@@ -418,10 +535,13 @@ def reset_parqueaderos():
     """Restaura los valores de libres_actuales y plazas_accesibles_libres a sus valores iniciales."""
     with get_connection() as conn:
         now_iso = datetime.now(timezone.utc).isoformat()
+        for plaza_id, pid, numero, tipo, estado in _plazas_iniciales():
+            conn.execute("UPDATE plazas_estacionamiento SET estado = ?, updated_at = ? WHERE id = ?",
+                         (estado, now_iso, plaza_id))
         for p in INITIAL_PARQUEADEROS:
             conn.execute(
-                "UPDATE parqueaderos SET libres_actuales = ?, plazas_accesibles_libres = ?, updated_at = ? WHERE id = ?",
-                (p["libres_iniciales"], p.get("plazas_accesibles_libres", 2), now_iso, p["id"])
+                "UPDATE parqueaderos SET libres_iniciales = ?, libres_actuales = ?, plazas_accesibles_libres = ?, updated_at = ? WHERE id = ?",
+                (p["libres_iniciales"], p["libres_iniciales"], p.get("plazas_accesibles_libres", 2), now_iso, p["id"])
             )
         conn.commit()
 

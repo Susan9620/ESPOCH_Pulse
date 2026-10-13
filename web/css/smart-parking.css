@@ -4725,3 +4725,60 @@ footer strong {
     padding: 6px 4px;
   }
 }
+/* Plazas esquemáticas: controles independientes de ocupación global y rutas. */
+.parking-spaces-legend {
+  background: rgba(255, 255, 255, .95);
+  color: #243447;
+  border-radius: 6px;
+  padding: 9px 11px;
+  max-width: 205px;
+  font: 11px/1.4 system-ui, sans-serif;
+  box-shadow: 0 1px 5px #0003;
+}
+.parking-spaces-legend[hidden] { display: none !important; }
+.parking-spaces-legend strong { display: block; margin-bottom: 5px; font-size: 11px; }
+.parking-spaces-legend span { display: flex; align-items: center; gap: 7px; margin: 2px 0; }
+.parking-spaces-legend small { display: block; margin-top: 6px; font-size: 10px; }
+.space-key { display: inline-block; width: 12px; height: 10px; box-sizing: border-box; flex-shrink: 0; }
+.space-key-free { background: #16a34a; }
+.space-key-occupied { background: #dc2626; }
+.space-key-unavailable { background: #6b7280; }
+.space-key-accessible { border: 2.5px solid #2563eb; }
+.space-key-circulation { height: 0; border-top: 1.5px dashed #64748b; }
+.parking-space-popup { font: 12px/1.4 system-ui, sans-serif; }
+.parking-space-popup dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 7px; margin: 8px 0; }
+.parking-space-popup dt { font-weight: 600; }
+.parking-space-popup dd { margin: 0; overflow-wrap: anywhere; }
+.parking-space-popup small { display: block; color: #64748b; font-size: 10px; }
+
+/* La sugerencia mantiene la ocupación y el borde azul de accesibilidad. */
+.parking-space-recommended {
+  filter: drop-shadow(0 0 2px #facc15) drop-shadow(0 0 3px #eab308);
+}
+.rec-space {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid #eab308;
+  border-radius: 8px;
+  background: #fefce8;
+  color: #334155;
+  font-size: 12px;
+}
+.rec-space-label { font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+.rec-space > strong { color: #334155; font-size: 14px; overflow-wrap: anywhere; }
+.rec-space > small { font-size: 10px; }
+.rec-space > p { margin: 0; }
+.btn-focus-space {
+  justify-self: start;
+  padding: 6px 10px;
+  border: 1px solid #a16207;
+  border-radius: 5px;
+  background: #fff;
+  color: #713f12;
+  font: inherit;
+  cursor: pointer;
+}
+.btn-focus-space:hover { background: #fef3c7; }
+.btn-focus-space:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
